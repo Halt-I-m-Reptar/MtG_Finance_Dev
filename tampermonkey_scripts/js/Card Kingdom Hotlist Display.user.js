@@ -3,7 +3,7 @@
 // @namespace    https://www.cardkingdom.com/
 // @version      0.1
 // @description  Security through obfuscation is bad, m'kay.
-// @author       Halt-I-Am-Reptar (MtG Cabal Cast)
+// @author       Halt_I_m_Reptar (MtG Cabal Cast)
 // @match        https://www.cardkingdom.com/
 // @grant        none
 // ==/UserScript==
@@ -24,8 +24,7 @@
         hotListMap.forEach( itemInfo => {
             div.style.height = adjustHeight(div);
             div.innerText += itemInfo;
-        }
-                          );
+        });
     }
 
     function sleep (milliseconds) {
