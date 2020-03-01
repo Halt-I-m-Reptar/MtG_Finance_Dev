@@ -1,0 +1,6 @@
+#cardNames {
+    width: 50%;
+    height: 50%;
+    border: 1px solid #000;
+    resize: none;
+}
