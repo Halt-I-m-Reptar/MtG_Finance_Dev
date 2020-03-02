@@ -3,7 +3,7 @@ Allows you to gather buylist prices from Star City Games in bulk
 
 ### Required:
 * Chrome
-* [CORS disabled for locahost testing](https://medium.com/@siddhartha.ng/disable-cross-origin-on-chrome-for-localhost-c644b131db19) - When copying the string, replace the curly "s with straight "s
+* [CORS disabled for locahost testing](https://medium.com/@siddhartha.ng/disable-cross-origin-on-chrome-for-localhost-c644b131db19) // or an HTTP server
 
 ## Info
 * Once CORS has been disabled for localhost, per the link above, you will be able to utilize this utility, until that is completed, this will not work
