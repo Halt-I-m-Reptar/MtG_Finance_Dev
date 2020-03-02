@@ -4,7 +4,7 @@
 // @version      0.1
 // @description  Added currency difference to interest list
 // @author       Halt_I_m_Reptar (MtG Cabal Cast)
-// @match        https://www.mtgstocks.com/interests*
+// @match        https://www.mtgstocks.com/*
 // @grant        none
 // ==/UserScript==
 
@@ -12,17 +12,26 @@
     'use strict';
 
     Array.from(document.getElementsByClassName("nav-item")).forEach( link => link.addEventListener("click", createCells) );
-
+    createCells();
 })();
 
 async function createCells() {
     await sleep(2000);
     addButtonListener();
+    addDollaryDoos();
+}
+
+
+function addButtonListener() {
+    console.log('woo buttons');
+    Array.from(document.getElementsByClassName("btn btn-outline-primary float-right mr-1")).forEach( btn => btn.addEventListener("click", createCells) );
+}
+
+function addDollaryDoos() {
     Array.from(document.getElementsByTagName("tr")).forEach( row => {
         if ( Array.from(row.cells).length > 5 ) { return; }
         var newPrice = parseFloat(Array.from(row.cells)[2].innerText.substr(1));
         var oldPrice = parseFloat(Array.from(row.cells)[3].innerText.substr(1));
-        console.log( Array.from(row.cells).length );
         if ( newPrice && oldPrice ) {
             row.insertCell(5).innerText = (newPrice-oldPrice).toFixed(2);
             Array.from(row.cells)[5].className = (newPrice-oldPrice).toFixed(2) > 0 ? "text-right alert-success" : "text-right alert-danger";
@@ -32,10 +41,6 @@ async function createCells() {
             Array.from(row.cells)[5].scope = "col";
         }
     });
-}
-
-function addButtonListener() {
-    Array.from(document.getElementsByClassName("btn btn-outline-primary float-right mr-1")).forEach( btn => btn.addEventListener("click", createCells) );
 }
 
 function sleep (milliseconds) {
