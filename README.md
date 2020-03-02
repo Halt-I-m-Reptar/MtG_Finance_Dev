@@ -10,7 +10,7 @@ Allows you to generate a list of links for listed cards that go directly to thei
 
 ### Required:
 * Chrome
-* [CORS disabled for locahost testing](https://medium.com/@siddhartha.ng/disable-cross-origin-on-chrome-for-localhost-c644b131db19)
+* [CORS disabled for locahost testing](https://medium.com/@siddhartha.ng/disable-cross-origin-on-chrome-for-localhost-c644b131db19) // or a local HTTP server
 
 ## TamperMonkey Scripts
 Various plugins developed for use browsing various MtG vendor snippets
