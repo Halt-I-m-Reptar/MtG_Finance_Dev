@@ -1,20 +1,21 @@
 <html>
     <head>
-        <title>CK BL Link Creation</title>
+        <title>SCG BL Prices</title>
         <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
     </head>
 <body>
     <div id="buttonWrapper" class="buttonWrapper">
-        <button id="getLinks" class="genButton" onclick="linkWorker()">Generate Links</button>
+        <button id="getLinks" class="genButton" onclick="priceWorker()">Get Prices</button>
         <button id="clearData" class="clearData" onclick="clearData()">Clear Data</button>
     </div>
     <br /><br />
     <div id="dataDisplay" class="dataDisplay">
-        <textarea id="cardNames" class="cardNames"></textarea>
+        <textarea id="cardNames" class="cardNames">Underworld Breach</textarea>
         <div id="linkDisplay" class="linkDisplay"></div>
     </div>
     <br style="clear:both" />
     <script src="js/genericFunctions.js" ></script>
-    <script src="js/linkCreationModule.js" ></script>
+    <script src="js/priceModule.js" ></script>
+    <script src="js/curlModule.js" ></script>
 </body>
 </html>
