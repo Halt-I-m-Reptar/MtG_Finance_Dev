@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>CardKingdom Prices</title>
+        <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+    </head>
+<body>
+    <h1>TO DO:</h1>
+    <ul>
+        <li>Write out CK card data to table</li>
+        <li>Add (mass) filtering to table</li>
+        <li>Add sorting to table</li>
+        <li>Clear sort and filter, restoring table</li>
+        <li> var json = json || getJson()</li>
+    </ul>
+    <div id="buttonWrapper" class="buttonWrapper">
+        <button id="getPrices" class="getPrices" onclick="jsonWorker()">Get Prices</button>
+        <button id-"filterCards " class="filterCards" onclick="filterWorker()">Filter Cards</button>
+    </div>
+    <br /><br />
+    <div id="dataFilter" class="dataFilter">
+        <textarea id="cardNames" class="cardNames">Abomination</textarea>
+    </div>
+    <br />
+    <div id="listDisplay" class="listDisplay"></div>
+    <br style="clear:both" />
+    <script src="js/genericFunctions.js" ></script>
+    <script src="modules/displayModule.js" ></script>
+    <script src="modules/curlModule.js" ></script>
+    <script src="modules/filterModule.js" ></script>
+    <!-- Testing Only -->
+    <script src="testArr.js"></script>
+</body>
+</html>

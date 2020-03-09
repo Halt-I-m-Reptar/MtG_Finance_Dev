@@ -1,0 +1,27 @@
+#dataFilter {
+    width: 100%;
+}
+
+#cardNames {
+    width: 40%;
+    height: 25%;
+    border: 1px solid #000;
+    resize: none;
+}
+
+#listDisplay {
+    width: 45%;
+    position: relative;
+}
+
+#displayData {
+    border-collapse: collapse;
+}
+
+#displayData td,
+#displayData th{
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: left;
+    padding: 3;
+}
