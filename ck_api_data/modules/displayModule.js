@@ -1,8 +1,9 @@
 function jsonWorker() {
     document.getElementById("getPrices").disabled = true;
-    writeToDisplay("Gathering and collating all inventory from CK");
+    writeToDisplay("Gathering and collating all inventory from CK.");
+    loaderDisplay();
     curlRequest();
-    //readableOutput(getJson());
+    //readableOutput(getJson());    
 }
 
 function readableOutput(json) {
@@ -21,6 +22,6 @@ function createRows(ckData) {
 }
 
 function writeTable(rows) {
-    var display = document.getElementById("listDisplay");
-    display.innerHTML += '<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>Url</th><th>Name</th><th>Edition</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th></tr></thead><tbody id="cardDisplayTable">'+rows+'</tbody></table>';
+    loaderDisplay();
+    document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>Url</th><th>Name</th><th>Edition</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th></tr></thead><tbody id="cardDisplayTable">'+rows+'</tbody></table>';
 }

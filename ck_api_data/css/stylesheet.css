@@ -25,3 +25,8 @@
     text-align: left;
     padding: 3;
 }
+
+td,
+th {
+    width: fit-content;
+}

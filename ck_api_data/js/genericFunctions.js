@@ -11,3 +11,8 @@ function writeError(err) {
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+function loaderDisplay() {
+    var loaderDisplay = document.getElementById("loader").style.display === "none" || document.getElementById("loader").style.display === "" ? "inherit" : "none";
+    document.getElementById("loader").style.display = loaderDisplay;
+}
