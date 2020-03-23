@@ -1,4 +1,4 @@
-# TamperMonkey Script
+# TamperMonkey Scripts
 
 These scripts are ready to be imported directly into TamperMonkey
 
