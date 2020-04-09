@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Card_Kingdom_Hotlist_Display
 // @namespace    https://www.cardkingdom.com/
-// @version      0.1
+// @version      0.2
 // @description  Security through obfuscation is bad, m'kay.
 // @author       Halt_I_m_Reptar (MtG Cabal Cast)
 // @match        https://www.cardkingdom.com/
@@ -19,11 +19,11 @@
 
     async function beginDisplay() {
         await sleep(1000);
-        var hotListMap = mapCards(getSlideContent());
+        var hotListMap = readableList(mapCards(getSlideContent()));
         var div = document.getElementsByClassName('hotList')[0];
         hotListMap.forEach( itemInfo => {
             div.style.height = adjustHeight(div);
-            div.innerText += itemInfo;
+            div.innerText += itemInfo + "\n\t";
         });
     }
 
@@ -36,7 +36,14 @@
     }
 
     function mapCards(slideArr) {
-        return slideArr.map(elem => elem.innerText.replace(/[\n\r]+/g,' - ') + "\n\t").sort();
+        return slideArr.map(elem => elem.innerText.replace(/[\n\r]+/g,'--').replace(": ","--"));
+    }
+
+    function readableList(cardList) {
+        return cardList.map(elem => {
+            var tempName = elem.split("--");
+            return tempName[1]+" - "+tempName[0]+" - "+tempName[2];
+        }).sort();
     }
 
     function adjustHeight(div) {
