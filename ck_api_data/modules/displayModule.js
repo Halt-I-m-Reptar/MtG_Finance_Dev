@@ -7,6 +7,7 @@ function jsonWorker() {
 }
 
 function readableOutput(json) {
+    updateAPITimestamp(json.meta.created_at);
     json.data.forEach(data => ckData[data.id] = data);
     createTable(ckData);
 }
@@ -24,4 +25,8 @@ function createRows(ckData) {
 function writeTable(rows) {
     loaderDisplay();
     document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>Url</th><th>Name</th><th>Edition</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th></tr></thead><tbody id="cardDisplayTable">'+rows+'</tbody></table>';
+}
+
+function updateAPITimestamp(timestamp) {
+    document.getElementById("repriceTimestamp").innerHTML = "<strong>CK API Last Updated:</strong> "+timestamp;
 }
