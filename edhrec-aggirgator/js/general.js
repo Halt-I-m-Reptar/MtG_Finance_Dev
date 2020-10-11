@@ -1,5 +1,7 @@
-function getTopCards() {
+async function getTopCards() {
 
-getTopCardJson();
+    var topcardArr = await getTopCardJson();
+    console.log(topcardArr)
+    outputTopCards(topcardArr);
 
 }
