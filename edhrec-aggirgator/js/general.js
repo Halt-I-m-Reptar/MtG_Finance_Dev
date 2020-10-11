@@ -1,11 +1,11 @@
 async function getTopCards() {
+    resetDisplay();
 
     window.isDebug = checkForDebug();
 
-    var topcardArr = await getTopCardJson();
-    outputTopCards(topcardArr);
-
+    outputTopCards( await getTopCardJson(document.querySelector('input[class="recSelection"]:checked').value) );
 }
+
 function checkForDebug() {
     return window.location.search.includes("_debug=true");
 }

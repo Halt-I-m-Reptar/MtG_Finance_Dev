@@ -5,9 +5,14 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 
+<div id="radioContainer">
+    <input type="radio" class="recSelection" id="topCards" name="edhRecSelector" value="topCards" checked><label for="topCards">Top Cards</label>
+    <input type="radio" class="recSelection" id="topCommanders" name="edhRecSelector" value="topCommanders"><label for="topCommanders">Top Commanders</label>
+</div>
 <button id="getTopCards" onclick="getTopCards()">Get Top Cards</button>
 <div id="displayStatus"></div>
 <br id="clear"/>
+<br />
 <div id="displayTopCards"></div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
