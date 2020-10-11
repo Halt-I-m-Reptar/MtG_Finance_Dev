@@ -1,0 +1,21 @@
+h3 {
+    margin: 0;
+}
+
+#clear {
+    clear: both;
+}
+
+#getTopCards {
+    float: left;
+    margin-right: 15px;
+}
+
+#displayStatus {
+    float: left;
+}
+
+#displayTable {
+    float: left;
+    margin-right: 15px;
+}

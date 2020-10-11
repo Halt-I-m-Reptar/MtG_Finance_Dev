@@ -17,9 +17,8 @@ function getTopCommandersJson() {
 }
 
 function createTopCardArr(topCardObj, cardLoc){
-    var dataDisplay = document.getElementById("displayTopCards").innerText;
     var cardArr = topCardObj.container.json_dict[cardLoc].map(data => data);
-    console.log(cardArr);
+    if (window.isDebug) { debugOutput({"name": "cardArr", "data": cardArr}); }
     var cardMapArr = cardArr.map(dates => {
         var cardData = dates.cardviews.map((cardData) => {
             return {'name': cardData.name, 'deckInfo': cardData.label.replace(/[\n\r]+/g,' '), 'prices': cardData.prices}
