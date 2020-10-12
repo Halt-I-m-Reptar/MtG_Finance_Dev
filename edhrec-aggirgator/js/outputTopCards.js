@@ -5,7 +5,7 @@ function outputTopCards(cardArr) {
 function createSectionHtml(cardArr) {
     return cardArr.reduce((acc, cur) => {
         Object.keys(cur).forEach(dateRange => {
-            acc += "<div id='displayTable'><h3>" + dateRange + "</h3><table><tr><th>Card Name</th><th>Playability Info</th><th>CK</th><th>TCG</th></tr>";
+            acc += "<div class='displayTable'><h3 class='" + dateRange +"'>" + dateRange + "</h3><table id='" + dateRange + "-table'><tr><th>Card Name</th><th>Playability Info</th><th>CK</th><th>TCG</th></tr>";
         });
         Object.values(cur).forEach(cardInfo => {
             cardInfo.forEach(cardData => {
@@ -21,4 +21,5 @@ function createSectionHtml(cardArr) {
 async function outputToTable(cardArr) {
     document.getElementById("displayTopCards").innerHTML = await createSectionHtml(cardArr);
     updateStatus({"status": true, "statusMsg": "Successfully Retrieved"});
+    toggleVisibility();
 }
