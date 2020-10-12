@@ -3,11 +3,20 @@
 <title>EDHRec Aggrigator</title>
 <link rel="stylesheet" href="css/table.css">
 <link rel="stylesheet" href="css/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
 
 <div id="radioContainer">
-    <input type="radio" class="recSelection" id="topCards" name="edhRecSelector" value="topCards" checked><label for="topCards">Top Cards</label>
-    <input type="radio" class="recSelection" id="topCommanders" name="edhRecSelector" value="topCommanders"><label for="topCommanders">Top Commanders</label>
+    <input type="radio" class="recSelection" id="topCommanders" name="edhRecSelector" value="topCommanders" checked><label for="topCommanders">Top Commanders</label>
+    <input type="radio" class="recSelection" id="topCards" name="edhRecSelector" value="topCards"><label for="topCards">Top Cards Overall</label>
+    <input type="radio" class="recSelection" id="topCreatures" name="edhRecSelector" value="topCreatures"><label for="topCreatures">Top Creatures</label>
+    <input type="radio" class="recSelection" id="topInstants" name="edhRecSelector" value="topInstants"><label for="topInstants">Top Instants</label>
+    <input type="radio" class="recSelection" id="topSorceries" name="edhRecSelector" value="topSorceries"><label for="topSorceries">Top Sorceries</label>
+    <input type="radio" class="recSelection" id="topArtifacts" name="edhRecSelector" value="topArtifacts"><label for="topArtifacts">Top Artifcats</label>
+    <input type="radio" class="recSelection" id="topEnchantments" name="edhRecSelector" value="topEnchantments"><label for="topEnchantments">Top Enchantments</label>
+    <input type="radio" class="recSelection" id="topPlaneswalkers" name="edhRecSelector" value="topPlaneswalkers"><label for="topPlaneswalkers">Top Planeswalkers</label>
+    <input type="radio" class="recSelection" id="topLands" name="edhRecSelector" value="topLands"><label for="topLands">Top Lands</label>
 </div>
 <button id="getTopCards" onclick="getTopCards()">Get Top Cards</button>
 <div id="displayStatus"></div>
@@ -15,7 +24,6 @@
 <br />
 <div id="displayTopCards"></div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="js/general.js"></script>
 <script src="js/updates.js"></script>
 <script src="js/fetchTopCardJson.js"></script>

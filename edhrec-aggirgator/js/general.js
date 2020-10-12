@@ -1,8 +1,6 @@
 async function getTopCards() {
     resetDisplay();
-
     window.isDebug = checkForDebug();
-
     outputTopCards( await getTopCardJson(document.querySelector('input[class="recSelection"]:checked').value) );
 }
 
@@ -13,4 +11,12 @@ function checkForDebug() {
 function debugOutput(debugInfo) {
     console.log("element: " + debugInfo.name);
     console.log(debugInfo.data);
+}
+
+function toggleVisibility() {
+    ['pastweek', 'pastmonth', 'past2years'].forEach(dateRange => {
+        $("." + dateRange + "").click(function (e) {
+            $("#" + dateRange + "-table").toggle("fold");
+        });
+    });
 }
