@@ -5,7 +5,7 @@ A stripped down view of the EDH Top Card data
 * Chrome
 
 ## Info
-* You can toggle each table by click on its header for better viewing on smaller screens
+* You can toggle each table by clicking on its header for better viewing on smaller screens
 
 ## Instructions
 * Open index.html
