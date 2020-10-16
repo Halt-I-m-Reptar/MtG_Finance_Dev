@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title>Troll and Toad Prices</title>
+        <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+    </head>
+<body>
+    <div id="buttonWrapper" class="buttonWrapper">
+        <button id="getLinks" class="genButton" onclick="priceWorker()">Get Prices</button>
+        <button id="clearData" class="clearData" onclick="clearData()">Clear Data</button>
+    </div>
+    <br /><br />
+    <div id="dataDisplay" class="dataDisplay">
+        <textarea id="cardNames" class="cardNames">Charizard</textarea>
+        <div id="errorDisplay" class="errorDisplay"></div>
+    </div>
+    <br style="clear:both" />
+    <div id="linkDisplay" class="linkDisplay">
+        <table id="productContainer"><thead><tr><th>Name</th><th>isFoil</th><th>Category</th><th>Condition</th><th>Buy Qty</th><th>Buy Price</th><th>Sell Qty</th><th>Hot Buy</th></tr></thead><tbody id="trollBuylist"></tbody></table>
+    </div>
+
+    <script src="js/genericFunctions.js" ></script>
+    <script src="js/priceModule.js" ></script>
+    <script src="js/curlModule.js" ></script>
+</body>
+</html>
