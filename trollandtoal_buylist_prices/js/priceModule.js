@@ -6,11 +6,21 @@ function readTextArea() {
     return document.getElementById("cardNames").value.split("\n");
 }
 
-async function startPull(cardArr) {
-    for (var i in cardArr){
-        curlRequest(cardArr[i]);
-        await sleep(2000);
-    }
+function startPull(productAdd) {
+    var interval = 1000;
+    var promise = Promise.resolve();
+    productAdd.forEach(product=> {
+        promise = promise.then(function () {
+            curlRequest(product);
+            return new Promise(function (resolve) {
+                setTimeout(resolve, interval);
+            });
+        });
+    });
+    promise.then(function () {
+        writeStatus('All products searched.');
+    });
+
 }
 
 function startOutput(productList) {
