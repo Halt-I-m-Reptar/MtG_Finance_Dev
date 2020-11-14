@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         MtG Stocks Currency Difference
 // @namespace    https://www.mtgstocks.com/
-// @version      0.1
+// @version      0.2
 // @description  Added currency difference to interest list
 // @author       Halt_I_m_Reptar (MtG Cabal Cast)
 // @match        https://www.mtgstocks.com/*
+// @match        https://www.pikastocks.com/*
 // @grant        none
 // ==/UserScript==
 
