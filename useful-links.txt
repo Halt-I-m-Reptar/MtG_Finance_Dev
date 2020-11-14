@@ -1,6 +1,0 @@
-https://old.starcitygames.com/buylist/search?search-type=name&name=Underground%20Sea
-
-Troll:
-POST
-https://www2.trollandtoad.com/buylist/ajax_scripts/buylist.php
-{"action":"buylistsearch","deptCode":null,"searchwords":"underground sea"}:
