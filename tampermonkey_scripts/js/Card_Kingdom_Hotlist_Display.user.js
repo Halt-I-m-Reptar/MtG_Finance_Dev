@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Card_Kingdom_Hotlist_Display
-// @namespace    https://www.cardkingdom.com/
-// @version      0.3
+// @namespace    https://*cardkingdom.com/
+// @version      0.4
 // @description  Security through obfuscation is bad, m'kay.
 // @author       Halt_I_m_Reptar (MtG Cabal Cast)
-// @match        https://www.cardkingdom.com/
+// @match        https://*cardkingdom.com/
 // @grant        none
 // ==/UserScript==
 
