@@ -18,7 +18,7 @@ function createTable(ckData) {
 
 function createRows(ckData) {
     return ckData.reduce( (row, cardData)  => {
-        return row += '<tr><td>'+cardData.id+'</td><td>'+cardData.sku+'</td><td>'+cardData.url+'</td><td class="cardName">'+cardData.name+'</td><td>'+cardData.edition+'</td><td>'+cardData.is_foil+'</td><td>'+cardData.price_retail+'</td><td>'+cardData.qty_retail+'</td><td>'+cardData.price_buy+'</td><td>'+cardData.qty_buying+'</td></tr>'
+        return row += '<tr><td>'+cardData.id+'</td><td>'+cardData.sku+'</td><td>'+cardData.url+'</td><td class="cardName">'+cardData.name+'</td><td>'+cardData.edition+'</td><td>'+cardData.is_foil+'</td><td class="retailPrice">'+cardData.price_retail+'</td><td>'+cardData.qty_retail+'</td><td class="buyPrice">'+cardData.price_buy+'</td><td>'+cardData.qty_buying+'</td></tr>'
     }, '');
 }
 
