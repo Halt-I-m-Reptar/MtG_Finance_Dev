@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Card_Kingdom_Hotlist_Display
 // @namespace    https://*cardkingdom.com/
-// @version      0.4
+// @version      0.6
 // @description  Security through obfuscation is bad, m'kay.
 // @author       Halt_I_m_Reptar (MtG Cabal Cast)
 // @match        https://*cardkingdom.com/
@@ -28,7 +28,8 @@
         var div = document.getElementsByClassName('hotList')[0];
         hotListMap.forEach( itemInfo => {
             div.style.height = adjustHeight(div);
-            div.innerText += itemInfo + "\n\t";
+            //div.innerText += itemInfo + "\n\t";
+            div.innerHTML += itemInfo;
         });
     }
 
@@ -57,7 +58,8 @@
     function readableList(cardList) {
         return cardList.map(elem => {
             var tempName = elem.split("--");
-            return tempName[1]+" - "+tempName[0]+" - "+tempName[2];
+            //return tempName[1] + ' - ' + tempName[0] + ' - ' + tempName[2];
+            return '<a href="https://cardkingdom.com/purchasing/mtg_singles?filter%5Bsort%5D=price_desc&filter%5Bsearch%5D=mtg_advanced&filter%5Bname%5D=' + tempName[1] + '&filter%5Bcategory_id%5D=0&filter%5Bfoil%5D=1&filter%5Bnonfoil%5D=1&filter%5Bprice_op%5D=&filter%5Bprice%5D=" target="_blank">' + tempName[1] + ' - ' + tempName[0] + ' - ' + tempName[2] + '</a><br />';
         }).sort();
     }
 
