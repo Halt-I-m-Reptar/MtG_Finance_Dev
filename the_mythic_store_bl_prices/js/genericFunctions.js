@@ -1,3 +1,8 @@
+function clearData() {
+    document.getElementById("cardNames").value = '';
+    document.getElementById("listDisplay").innerHTML = '';
+}
+
 function writeToDisplay(msg) {
     document.getElementById("listDisplay").innerHTML = "<strong>"+msg+"</strong>";
 }

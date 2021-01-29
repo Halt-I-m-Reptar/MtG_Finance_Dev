@@ -12,6 +12,6 @@ Allows you to gather buylist prices from The Mythic Store in bulk
 
 ## Instructions
 * Open index.html in Chrome (drag and drop)
-* Add each card you wish to create a link for into the text box with, each on a new line
+* Add each card you wish to view buy prices for
 * Click "Get Prices" to create a table of results
 * Click "Clear Data" to clear the text area, data display, and any errors
