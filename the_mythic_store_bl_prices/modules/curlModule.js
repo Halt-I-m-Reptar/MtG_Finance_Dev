@@ -1,6 +1,15 @@
 function curlWorker() {
+    var interval = 1000;
+    var promise = Promise.resolve();
     var curlUrls = generateCurlUrls(getCardNames());
-    curlUrls.forEach(url => curlRequest(url));
+    curlUrls.forEach(url=> {
+        promise = promise.then(function () {
+            curlRequest(url)
+            return new Promise(function (resolve) {
+                setTimeout(resolve, interval);
+            });
+        });
+    });
 }
 
 function curlRequest(url) {
