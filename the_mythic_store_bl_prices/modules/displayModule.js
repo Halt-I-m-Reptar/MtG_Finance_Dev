@@ -1,13 +1,16 @@
 function jsonWorker() {
-    document.getElementById("getPrices").disabled = true;
+    toggleGetPrices();
     writeToDisplay("Pulling buylist data from The Mythic Store.");
     createTable();
     curlWorker();
-    document.getElementById("getPrices").disabled = false;
+    toggleGetPrices();
+}
+
+function toggleGetPrices() {
+    document.getElementById("getPrices").disabled = !document.getElementById("getPrices").disabled;
 }
 
 function parseVariants(json) {
-    console.log(json);
     var cardBuylistArr = json.map(buylistElement => {
         return buylistElement.variants.map(variants => {
             return variants.cardBuylistTypes.filter(type => type.buyPrice > 0).map(type => {
@@ -24,25 +27,8 @@ function createTable() {
 }
 
 function readableOutput(json) {
-    console.log(json);
-    //writeTable(createRows(json));
     createRows(json)
 }
-
-/*function createRows(tmsData) {
-    return tmsData.reduce( (row, allCardVariants)  => {
-        return row += allCardVariants.reduce( (row, conditions) => {
-            return row += conditions.reduce( (row, cardData) => {
-                console.log(cardData);
-                return row += '<tr><td class="cardName">'+cardData.cardName+'</td><td>'+cardData.set+'</td><td>'+cardData.type+'</td><td class="retailPrice">'+cardData.storeSellPrice+'</td><td class="buyPrice">'+cardData.buyPrice+'</td><td>'+cardData.creditBuyPrice+'</td><td>'+cardData.maxPurchaseQuantity+'</td><td>'+cardData.canPurchaseOverstock+'</td><td>'+cardData.overStockBuyPrice+'</td><td>'+cardData.creditOverstockBuyPrice+'</td></tr>'
-            }, '' )
-        }, '');
-    }, '');
-}
-
-function writeTable(rows) {
-    document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>Name</th><th>Set</th><th>Foil</th><th>Retail Price</th><th>Buy Price Cash</th><th>Buy Price Credit</th><th>Buy Quantity</th><th>Can Buy Overstock</th><th>Overstock Cash Price</th><th>Overstock Credit Price</th></tr></thead><tbody id="cardDisplayTable">'+rows+'</tbody></table>';
-}*/
 
 function createRows(tmsData) {
     var table = document.getElementById("displayData");
@@ -50,7 +36,6 @@ function createRows(tmsData) {
         allCardVariants.forEach( conditions => {
             conditions.forEach( cardData => {
                 var row = table.insertRow(1);
-                console.log(cardData);
                 var cell1 = row.insertCell(0);
                 var cell2 = row.insertCell(1);
                 var cell3 = row.insertCell(2);

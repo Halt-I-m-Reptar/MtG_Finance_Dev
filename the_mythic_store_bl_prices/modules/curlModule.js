@@ -1,8 +1,5 @@
-var tmsCardNames = [];
-
 function curlWorker() {
     var curlUrls = generateCurlUrls(getCardNames());
-    console.log(curlUrls);
     curlUrls.forEach(url => curlRequest(url));
 }
 

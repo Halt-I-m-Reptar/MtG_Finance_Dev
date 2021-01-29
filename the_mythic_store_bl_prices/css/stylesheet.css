@@ -27,6 +27,10 @@
     width: fit-content;
 }
 
+td {
+    white-space: nowrap;
+}
+
 th {
     width: fit-content;
     background: white;
