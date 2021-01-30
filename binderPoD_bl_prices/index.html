@@ -7,17 +7,18 @@
 <div id="buttonWrapper" class="buttonWrapper">
     <button id="getPrices" class="getPrices" onclick="jsonWorker()">Get Prices</button>
     <button id="clearData" class="clearData" onclick="clearData()">Clear Data</button>
+    <input type="checkbox" class="filterZeros" id="filterZeros"><label for="filterZeros">Filter Out 0 Buylist Qty</label>
 </div>
 <br /><br />
 <div id="dataFilter" class="dataFilter">
-    <textarea id="cardNames" class="cardNames"></textarea>
+    <textarea id="cardNames" class="cardNames">Mox Emerald</textarea>
 </div>
 <br />
 <div id="listDisplay" class="listDisplay"></div>
 <br style="clear:both" />
 <script src="js/genericFunctions.js" ></script>
+<script src="js/binderPosStoreList.js" ></script>
 <script src="modules/curlModule.js" ></script>
 <script src="modules/displayModule.js" ></script>
-<script src="modules/priceModule.js" ></script>
 </body>
 </html>
