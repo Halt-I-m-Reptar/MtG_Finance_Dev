@@ -10,3 +10,8 @@ function writeToDisplay(msg) {
 function writeError(err) {
     console.log("There was an error: "+err);
 }
+
+getCardNames = () => document.getElementById("cardNames").value.split("\n");
+
+
+zeroFilterStatus = () => document.getElementById("filterZeros").checked

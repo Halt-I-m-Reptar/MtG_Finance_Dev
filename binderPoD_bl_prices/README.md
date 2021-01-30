@@ -1,5 +1,5 @@
-The Mythic Store Buylist Prices
-Allows you to gather buylist prices from The Mythic Store in bulk
+BinderPoS Buylist Prices
+Allows you to gather buylist prices from stores in the BinderPoS Network
 
 ### Required:
 * Chrome
