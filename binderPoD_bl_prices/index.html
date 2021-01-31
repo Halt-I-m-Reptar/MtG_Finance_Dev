@@ -9,10 +9,22 @@
     <button id="clearData" class="clearData" onclick="clearData()">Clear Data</button>
     <input type="checkbox" class="filterZeros" id="filterZeros"><label for="filterZeros">Filter Out 0 Buylist Qty</label>
 </div>
-<br /><br />
-<div id="dataFilter" class="dataFilter">
-    <textarea id="cardNames" class="cardNames">Mox Emerald</textarea>
+<br />
+<div class="cardWrapper">
+    <div id="dataFilter" class="dataFilter">
+        <textarea id="cardNames" class="cardNames"></textarea>
+    </div>
+    <div id="information">
+        Punctuation matters.
+        <ul>
+            <li>Oko, Thief of Crowns  <span class="correct">&#10003;</span></li>
+            <li>Oko Thief of Crowns  <span class="incorrect">&#215;</span></li>
+            <li>Ice-Fang Coatl  <span class="correct">&#10003;</span></li>
+            <li>Ice Fang Coatl  <span class="incorrect">&#215;</span></li>
+        </ul>
+    </div>
 </div>
+<br style="clear:both" />
 <br />
 <div id="listDisplay" class="listDisplay"></div>
 <br style="clear:both" />
