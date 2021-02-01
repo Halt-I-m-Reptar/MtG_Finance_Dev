@@ -1,23 +1,17 @@
-var cTest;
+let cTest;
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-function curUnixTime() {
-    return Date.now();
-}
+const curUnixTime = () => Date.now();
 
-function clearData() {
+const clearData = () => {
     document.getElementById("linkDisplay").innerHTML = '';
     document.getElementById("cardNames").value = '';
 }
 
-function writeError(msg, cardName) {
+const writeError = (msg, cardName) => {
     document.getElementById("linkDisplay").innerHTML += "<strong>" + cardName + ": " + msg + "</strong><br />";
     writeHR();
 }
 
-function writeHR() {
-    document.getElementById("linkDisplay").innerHTML += "-------<br />";
-}
+const writeHR = () => document.getElementById("linkDisplay").innerHTML += "-------<br />";

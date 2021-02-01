@@ -1,18 +1,9 @@
-function priceWorker() {
-    /*readTextArea().forEach( async (cardName) => {
-        curlRequest(cardName)
-        await sleep(2000)
-    });*/
-    startPull(readTextArea());
+const priceWorker= () => startPull(readTextArea());
 
-}
-
-function readTextArea() {
-    return document.getElementById("cardNames").value.split("\n");
-}
+const readTextArea = () => document.getElementById("cardNames").value.split("\n");
 
 async function startPull(cardArr) {
-    for (var i in cardArr){
+    for (let i in cardArr){
         curlRequest(cardArr[i]);
         await sleep(2000);
     }
@@ -29,7 +20,7 @@ function startOutput(cardVersions) {
 }
 
 function  generateOutput(cardDetails) {
-    var outPut = "";
+    let outPut = "";
     if ( cardDetails["foil"] ) { outPut = "<strong>Foil</strong> "; }
     outPut += cardDetails["name"];
     if ( cardDetails["language"].replace(/\s/g,'').toLowerCase() !== "english" ) { outPut += " (" + cardDetails["language"] + ")"; }
@@ -40,6 +31,4 @@ function  generateOutput(cardDetails) {
     writeInformation(outPut);
 }
 
-function writeInformation(display) {
-    document.getElementById("linkDisplay").innerHTML +=  display + "<br />";
-}
+const writeInformation = (display) => document.getElementById("linkDisplay").innerHTML +=  display + "<br />";

@@ -1,8 +1,8 @@
 function curlRequest(cardName) {
-    var url = "https://old.starcitygames.com/buylist/search?search-type=name&name="+cardName.replace(/\s/g,'%20');
-    var proxyUrl = "https://cors-anywhere.herokuapp.com/";
+    const url = "https://old.starcitygames.com/buylist/search?search-type=name&name="+cardName.replace(/\s/g,'%20');
+    const proxyUrl = "https://cors-anywhere.herokuapp.com/";
 
-    var requestOptions = {
+    const requestOptions = {
         method: 'GET',
         redirect: 'follow',
     };
