@@ -1,23 +1,8 @@
-var cTest;
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+const curUnixTime = () => Date.now();
 
-function curUnixTime() {
-    return Date.now();
-}
-
-function clearData() {
-    document.getElementById("linkDisplay").innerHTML = '';
+const clearData = () => {
     document.getElementById("cardNames").value = '';
-}
-
-function writeError(msg, cardName) {
-    document.getElementById("linkDisplay").innerHTML += "<strong>" + cardName + ": " + msg + "</strong><br />";
-    writeHR();
-}
-
-function writeHR() {
-    document.getElementById("linkDisplay").innerHTML += "-------<br />";
+    document.getElementById("listDisplay").innerHTML = '';
 }

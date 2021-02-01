@@ -4,11 +4,9 @@ async function getTopCards() {
     outputTopCards( await getTopCardJson(document.querySelector('input[class="recSelection"]:checked').value) );
 }
 
-function checkForDebug() {
-    return window.location.search.includes("_debug=true");
-}
+const checkForDebug = () => window.location.search.includes("_debug=true");
 
-function debugOutput(debugInfo) {
+const debugOutput = (debugInfo) => {
     console.log("element: " + debugInfo.name);
     console.log(debugInfo.data);
 }
@@ -20,3 +18,5 @@ function toggleVisibility() {
         });
     });
 }
+
+const resetDisplay = () => document.getElementById("displayTopCards").innerHTML = '';

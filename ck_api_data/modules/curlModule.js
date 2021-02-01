@@ -1,7 +1,7 @@
 function curlRequest() {
-    var url = "https://api.cardkingdom.com/api/pricelist";
+    const url = "https://api.cardkingdom.com/api/pricelist";
 
-    var requestOptions = {
+    const requestOptions = {
         method: 'GET',
         redirect: 'follow',
     };

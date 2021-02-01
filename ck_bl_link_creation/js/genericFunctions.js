@@ -1,12 +1,8 @@
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-function curUnixTime() {
-    return Date.now();
-}
+const curUnixTime = () => Date.now();
 
-function clearData() {
+const clearData = () => {
     document.getElementById("linkDisplay").innerHTML = '';
     document.getElementById("cardNames").value = '';
 }

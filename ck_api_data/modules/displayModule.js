@@ -3,7 +3,7 @@ function jsonWorker() {
     writeToDisplay("Gathering and collating all inventory from CK.");
     loaderDisplay();
     curlRequest();
-    //readableOutput(getJson());    
+    //readableOutput(getJson());
 }
 
 function readableOutput(json) {
@@ -12,9 +12,7 @@ function readableOutput(json) {
     createTable(ckData);
 }
 
-function createTable(ckData) {
-    writeTable(createRows(ckData));
-}
+const createTable = (ckData) => writeTable(createRows(ckData));
 
 function createRows(ckData) {
     return ckData.reduce( (row, cardData)  => {
@@ -22,11 +20,9 @@ function createRows(ckData) {
     }, '');
 }
 
-function writeTable(rows) {
+const writeTable = (rows) => {
     loaderDisplay();
     document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>Url</th><th>Name</th><th>Edition</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th></tr></thead><tbody id="cardDisplayTable">'+rows+'</tbody></table>';
 }
 
-function updateAPITimestamp(timestamp) {
-    document.getElementById("repriceTimestamp").innerHTML = "<strong>CK API Last Updated:</strong> "+timestamp;
-}
+const updateAPITimestamp = (timestamp) => document.getElementById("repriceTimestamp").innerHTML = "<strong>CK API Last Updated:</strong> "+timestamp;
