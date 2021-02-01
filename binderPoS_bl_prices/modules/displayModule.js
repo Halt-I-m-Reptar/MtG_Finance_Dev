@@ -6,9 +6,9 @@ function jsonWorker() {
     toggleGetPrices();
 }
 
-function toggleGetPrices() {
-    document.getElementById("getPrices").disabled = !document.getElementById("getPrices").disabled;
-}
+const toggleGetPrices = () => document.getElementById("getPrices").disabled = !document.getElementById("getPrices").disabled;
+
+const createTable = () => document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>Store Name</th><th>Game</th><th>Item Name</th><th>Set</th><th>Type/Foil</th><th>Condition</th><th>Retail Price</th><th>Condition Multiplier</th><th>Buy Price Cash</th><th>Buy Price Credit</th><th>Max Buy Quantity</th><th>Can Buy Overstock</th><th>Overstock Cash Price</th><th>Overstock Credit Price</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
 
 function parseVariants(json, storeName) {
     let cardBuylistArr = json.map(buylistElement => {
@@ -21,10 +21,6 @@ function parseVariants(json, storeName) {
         }).filter(arr => arr.length > 0);
     });
     createRows(cardBuylistArr);
-}
-
-function createTable() {
-    document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>Store Name</th><th>Game</th><th>Item Name</th><th>Set</th><th>Type/Foil</th><th>Condition</th><th>Retail Price</th><th>Condition Multiplier</th><th>Buy Price Cash</th><th>Buy Price Credit</th><th>Max Buy Quantity</th><th>Can Buy Overstock</th><th>Overstock Cash Price</th><th>Overstock Credit Price</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
 }
 
 function createRows(tmsData) {
