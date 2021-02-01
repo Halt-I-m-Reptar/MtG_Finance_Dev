@@ -5,17 +5,18 @@
     </head>
 <body>
     <div id="buttonWrapper" class="buttonWrapper">
-        <button id="getLinks" class="genButton" onclick="priceWorker()">Get Prices</button>
+        <button id="getLinks" class="genButton" onclick="displayWorker()">Get Prices</button>
         <button id="clearData" class="clearData" onclick="clearData()">Clear Data</button>
     </div>
-    <br /><br />
+    <br style="clear:both" /><br />
     <div id="dataDisplay" class="dataDisplay">
         <textarea id="cardNames" class="cardNames"></textarea>
-        <div id="linkDisplay" class="linkDisplay"></div>
+        <div id="messageDisplay" class="messageDisplay"></div>
     </div>
     <br style="clear:both" />
+    <div id="listDisplay" class="listDisplay"></div>
     <script src="js/genericFunctions.js" ></script>
-    <script src="js/priceModule.js" ></script>
+    <script src="js/displayModule.js" ></script>
     <script src="js/curlModule.js" ></script>
 </body>
 </html>

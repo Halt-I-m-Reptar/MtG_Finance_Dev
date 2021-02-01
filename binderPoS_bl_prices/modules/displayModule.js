@@ -27,11 +27,12 @@ function createRows(tmsData) {
     const table = document.getElementById("displayData");
     let cardDataKeys;
     let cell;
+    let row;
     tmsData.forEach(allCardVariants  => {
         allCardVariants.forEach( conditions => {
             conditions.forEach( cardData => {
                 cardDataKeys = Object.keys(cardData);
-                let row = table.insertRow(1);
+                row = table.insertRow(1);
                 cardDataKeys.forEach((keyName,index) => {
                     cell = row.insertCell(index);
                     cell.innerHTML = cardData[cardDataKeys[index]];

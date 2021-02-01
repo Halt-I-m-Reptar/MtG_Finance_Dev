@@ -9,6 +9,6 @@ function curlRequest(cardName) {
 
     fetch(proxyUrl+url, requestOptions)
         .then(response => response.json())
-        .then(result => startOutput(result.results))
+        .then(result => createDataPoints(result.results))
         .catch(error => writeError(error, cardName));
 }
