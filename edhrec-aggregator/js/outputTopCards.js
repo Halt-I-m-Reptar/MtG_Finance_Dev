@@ -1,21 +1,18 @@
-function outputTopCards(cardArr) {
-    outputToTable(cardArr);
-}
+const outputTopCards = (cardArr) => outputToTable(cardArr);
+
+const updateStatus = (displayData) => document.getElementById("displayStatus").innerText = displayData.statusMsg;
 
 function createSectionHtml(cardArr) {
-    return cardArr.reduce((acc, cur) => {
-        Object.keys(cur).forEach(dateRange => {
-            acc += "<div class='displayTable'><h3 class='" + dateRange +"'>" + dateRange + "</h3><table id='" + dateRange + "-table'><tr><th>Card Name</th><th>Playability Info</th><th>CK</th><th>TCG</th></tr>";
+    let displayData = '';
+    Object.keys(cardArr).forEach( dateRange => {
+        displayData += "<div class='displayTable'><h3 class='" + dateRange +"'>" + dateRange + "</h3><table id='" + dateRange + "-table'><tr><th>Card Name</th><th>Playability Info</th><th>CK</th><th>TCG</th></tr>";
+        cardArr[dateRange].forEach( cardArr => {
+            displayData += "<tr><td id='cardName'><a href='https://www.edhrec.com" + cardArr.url + "' target='_blank'>" + cardArr.name + "</a></td>" + "<td id='deckInfo'>" + cardArr.deckInfo + "</td>" +
+                "<td><a href='" + cardArr.prices.cardkingdom.url.split("?")[0] + "' target='_blank'>" + cardArr.prices.cardkingdom.price + "</a></td><td><a href='" + cardArr.prices.tcgplayer.url.split("?")[0] + "' target='_blank'>" + cardArr.prices.tcgplayer.price + "</a></td></tr>";
         });
-        Object.values(cur).forEach(cardInfo => {
-            cardInfo.forEach(cardData => {
-                acc += "<tr><td id='cardName'><a href='https://www.edhrec.com" + cardData.url + "' target='_blank'>" + cardData.name + "</a></td>" + "<td id='deckInfo'>" + cardData.deckInfo + "</td>" +
-                    "<td><a href='" + cardData.prices.cardkingdom.url.split("?")[0] + "' target='_blank'>" + cardData.prices.cardkingdom.price + "</a></td><td><a href='" + cardData.prices.tcgplayer.url.split("?")[0] + "' target='_blank'>" + cardData.prices.tcgplayer.price + "</a></td></tr>";
-            })
-        });
-        acc += "</table></div>";
-        return acc;
-    }, '');
+        displayData += "</table></div>";
+    });
+    return displayData;
 }
 
 async function outputToTable(cardArr) {
