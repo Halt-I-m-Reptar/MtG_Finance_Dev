@@ -11,11 +11,11 @@ function toggleGetPrices() {
 }
 
 function parseVariants(json, storeName) {
-    var cardBuylistArr = json.map(buylistElement => {
-        return buylistElement.variants.map(variants => {
+    let cardBuylistArr = json.map(buylistElement => {
+        return buylistElement.variants.map(({cardBuylistTypes, multiplier, variantName}) => {
             //changing type.buyPrice to type.maxPurchaseQuantity filters out 0 qty but does not allow for viewing of historic buylist numbers
-            return variants.cardBuylistTypes.filter(type => (type.buyPrice && !zeroFilterStatus()) || (zeroFilterStatus() && type.maxPurchaseQuantity > 0)).map(type => {
-                return {'storeName': storeName, 'game': buylistElement.game, 'itemName': buylistElement.cardName,'set': buylistElement.setName, 'type': type.type, 'condition': variants.variantName, 'retailPrice': type.storeSellPrice, 'conditionMultiplier': variants.multiplier, 'buyPrice': type.buyPrice, 'creditBuyPrice': type.creditBuyPrice,'maxPurchaseQuantity': type.maxPurchaseQuantity, 'canPurchaseOverstock': type.canPurchaseOverstock, 'creditOverstockBuyPrice': type.creditOverstockBuyPrice,
+            return cardBuylistTypes.filter(type => (type.buyPrice && !zeroFilterStatus()) || (zeroFilterStatus() && type.maxPurchaseQuantity > 0)).map(type => {
+                return {'storeName': storeName, 'game': buylistElement.game, 'itemName': buylistElement.cardName,'set': buylistElement.setName, 'type': type.type, 'condition': variantName, 'retailPrice': type.storeSellPrice, 'conditionMultiplier': multiplier, 'buyPrice': type.buyPrice, 'creditBuyPrice': type.creditBuyPrice,'maxPurchaseQuantity': type.maxPurchaseQuantity, 'canPurchaseOverstock': type.canPurchaseOverstock, 'creditOverstockBuyPrice': type.creditOverstockBuyPrice,
                     'overStockBuyPrice': type.overStockBuyPrice}
             });
         }).filter(arr => arr.length > 0);
@@ -28,14 +28,14 @@ function createTable() {
 }
 
 function createRows(tmsData) {
-    var table = document.getElementById("displayData");
-    var cardDataKeys;
-    var cell;
+    const table = document.getElementById("displayData");
+    let cardDataKeys;
+    let cell;
     tmsData.forEach(allCardVariants  => {
         allCardVariants.forEach( conditions => {
             conditions.forEach( cardData => {
                 cardDataKeys = Object.keys(cardData);
-                var row = table.insertRow(1);
+                let row = table.insertRow(1);
                 cardDataKeys.forEach((keyName,index) => {
                     cell = row.insertCell(index);
                     cell.innerHTML = cardData[cardDataKeys[index]];

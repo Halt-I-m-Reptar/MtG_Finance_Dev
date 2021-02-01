@@ -1,7 +1,7 @@
 function curlWorker() {
-    var interval = 1000;
-    var promise = Promise.resolve();
-    var curlArr = generateCurlUrls(getCardNames(), getStoreList());
+    const interval = 1000;
+    let promise = Promise.resolve();
+    const curlArr = generateCurlUrls(getCardNames(), getStoreList());
     curlArr.forEach(storeData=> {
         promise = promise.then(function () {
             curlRequest(storeData)
@@ -13,7 +13,7 @@ function curlWorker() {
 }
 
 function curlRequest(storeData) {
-    var requestOptions = {
+    const requestOptions = {
         method: 'GET',
         redirect: 'follow',
     };
@@ -25,7 +25,7 @@ function curlRequest(storeData) {
 }
 
 function generateCurlUrls(cardArr, binderPosStores) {
-    var curlArr = []
+    let curlArr = []
     Object.keys(binderPosStores).forEach( (storeName) => {
         cardArr.map(cardName => curlArr.push([storeName, "https://portal.binderpos.com/external/shopify/"+binderPosStores[storeName]+"/cards/mtg?keyword="+cardName+"&limit=20"]));
     }, []);
