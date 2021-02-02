@@ -1,5 +1,5 @@
 // TODO
-Add retail prices to data pull
+Add retail qty to data pull
 
 landing page:
 https://kesselrungames.ca/products/shock-onslaught?_pos=2&_sid=cae2d20f2&_ss=r
