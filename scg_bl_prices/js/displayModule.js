@@ -27,7 +27,7 @@ function  generateOutput(cardDetails) {
     let cell;
     cardDetails.forEach(cardBySet => {
         cardBySet.forEach( cardArr => {
-            row = table.insertRow(1);
+            row = table.insertRow();
             Object.keys(cardArr).forEach( (cardDataKey, index) => {
                 cell = row.insertCell(index);
                 cell.innerHTML = cardArr[cardDataKey];

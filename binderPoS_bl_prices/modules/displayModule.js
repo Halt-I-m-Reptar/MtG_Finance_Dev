@@ -32,7 +32,7 @@ function createRows(tmsData) {
         allCardVariants.forEach( conditions => {
             conditions.forEach( cardData => {
                 cardDataKeys = Object.keys(cardData);
-                row = table.insertRow(1);
+                row = table.insertRow();
                 cardDataKeys.forEach((keyName,index) => {
                     cell = row.insertCell(index);
                     cell.innerHTML = cardData[cardDataKeys[index]];
