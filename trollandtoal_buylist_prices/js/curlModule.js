@@ -1,5 +1,4 @@
 function curlRequest(product) {
-    //https://github.com/Rob--W/cors-anywhere/#documentation
     let url = 'https://www2.trollandtoad.com/buylist/ajax_scripts/buylist.php',
     proxyUrl = "https://cors-anywhere.herokuapp.com/",
     curlHeaders = new Headers();
