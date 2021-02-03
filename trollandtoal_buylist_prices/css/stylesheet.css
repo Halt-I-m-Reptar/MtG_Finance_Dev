@@ -1,7 +1,3 @@
-#buttonWrapper {
-    position: fixed;
-}
-
 #dataDisplay {
     width: 100%;
 }
@@ -14,21 +10,55 @@
     margin-right: 15px;
 }
 
-#linkDisplay {
-    width: 100%;
-}
-
 #statusDisplay {
     width: 60%;
     float: right;
 }
 
-table {
+#listDisplay {
+    width: 45%;
+    position: relative;
+}
+
+#displayData {
     border-collapse: collapse;
 }
 
-th, td {
-    border: 1px solid #000;
-    padding: 0.5rem;
+#displayData td,
+#displayData th{
+    border: 1px solid black;
+    border-collapse: collapse;
     text-align: left;
+    padding: 3px;
+    width: fit-content;
+}
+
+td {
+    white-space: nowrap;
+}
+
+th {
+    width: fit-content;
+    background: white;
+    position: sticky;
+    box-shadow: 0 2px 2px -1px black;
+    top: 0; /* Don't forget this, required for the stickiness */
+}
+
+.retailPrice {
+    background-color: beige;
+}
+
+.buyPrice {
+    background-color: aquamarine;
+}
+
+.warning {
+    background-color: #fdbac4;
+}
+
+.foil {
+    font-weight: bold;
+    color: white;
+    background-color: deepskyblue;
 }

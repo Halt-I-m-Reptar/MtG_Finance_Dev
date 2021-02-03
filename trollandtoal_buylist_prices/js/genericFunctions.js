@@ -1,14 +1,14 @@
-function clearData() {
+const clearData = () => {
     document.getElementById("cardNames").value = '';
     document.getElementById("statusDisplay").innerHTML = '';
-    document.getElementById("trollBuylist").innerHTML = '';
+    document.getElementById("displayData").innerHTML = '';
 }
 
-function writeStatus(msg, cardName = "") {
+const writeStatus = (msg, cardName = "") => {
     document.getElementById("statusDisplay").innerHTML += cardName ? "<strong>" + cardName + ": " + msg + "</strong><br />" : msg + "<br />";
     writeHR();
 }
 
-function writeHR() {
-    document.getElementById("statusDisplay").innerHTML += "-------<br />";
-}
+const readTextArea = () => document.getElementById("cardNames").value.split("\n");
+
+const writeHR = () => document.getElementById("statusDisplay").innerHTML += "-------<br />";
