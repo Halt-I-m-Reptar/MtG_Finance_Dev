@@ -1,10 +1,6 @@
 #  Troll and Toad Buylist Price
 Allows you to gather buylist prices from Troll and Toad in bulk
 
-# NOTICE: THIS NO LONGER FUNCTIONS!
-### There has been a change on the T&T side that hasc currently rendered this code useless
-### A good faith effort will be made to return functionality if possible
-
 ---
 
 ### Required:
