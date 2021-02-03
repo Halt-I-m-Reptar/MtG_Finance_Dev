@@ -15,7 +15,7 @@ function curlWorker() {
 function curlRequest(storeData) {
     const requestOptions = {
         method: 'GET',
-        redirect: 'follow',
+        redirect: 'follow'
     };
 
     fetch(storeData[2], requestOptions)
@@ -27,16 +27,7 @@ function curlRequest(storeData) {
 function generateCurlBuyListUrls(cardArr, binderPosStores) {
     let curlArr = [];
     Object.keys(binderPosStores).forEach( (storeName) => {
-        cardArr.map(cardName => curlArr.push([storeName, binderPosStores[storeName].url, "https://portal.binderpos.com/external/shopify/"+binderPosStores[storeName].binderPosId+"/cards/mtg?keyword="+cardName+"&limit=20"]));
-    }, []);
-    return curlArr;
-}
-
-function generateCurlRetailListUrls(cardArr, binderPosStores) {
-    let curlArr = [];
-    Object.keys(binderPosStores).forEach( (storeName) => {
-        //https://kesselrungames.ca/products/shock-onslaught.js
-        //cardArr.map(cardName => curlArr.push([storeName, "https://"+storename+"/"+cardName+"-"+cardSet".js"]));
+        cardArr.map(cardName => {curlArr.push([storeName, binderPosStores[storeName].url, "https://portal.binderpos.com/external/shopify/"+binderPosStores[storeName].binderPosId+"/cards/mtg?keyword="+cardName+"&limit=20"])});
     }, []);
     return curlArr;
 }
