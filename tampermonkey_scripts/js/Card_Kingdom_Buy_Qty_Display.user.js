@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Card_Kingdom_Buy_Qty_Display
-// @namespace    cardkingdom.com
-// @version      0.4
+// @namespace    https://www.cardkingdom.com/
+// @version      0.5
 // @description  Security through obfuscation is bad, m'kay.
 // @author       Halt_I_m_Reptar (MtG Cabal Cast)
 // @match        */purchasing/*
