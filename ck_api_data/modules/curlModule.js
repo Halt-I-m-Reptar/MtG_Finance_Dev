@@ -1,4 +1,4 @@
-function curlRequest() {
+const curlRequest = () => {
     const url = "https://api.cardkingdom.com/api/pricelist";
 
     const requestOptions = {
@@ -8,6 +8,6 @@ function curlRequest() {
 
     fetch(url, requestOptions)
         .then(response => response.json())
-        .then(result => readableOutput(result))
+        .then(result => startDisplayOutput(result))
         .catch(error => writeError(error));
 }
