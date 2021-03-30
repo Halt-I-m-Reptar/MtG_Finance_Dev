@@ -38,6 +38,9 @@ const writeToTable = (ckCardData) => {
                 case 3:
                     cell.className = "cardName";
                     break;
+                case 6:
+                    if (cardArr[cardDataKey] === 'true') {cell.className = "isFoil";}
+                    break;
                 case 7:
                     cell.className = "retailPrice";
                     break;

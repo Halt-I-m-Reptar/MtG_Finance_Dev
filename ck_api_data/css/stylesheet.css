@@ -46,3 +46,8 @@ th {
 .buyPrice {
     background-color: aquamarine;
 }
+
+.isFoil {
+    background-color: cornflowerblue;
+    color: white;
+}
