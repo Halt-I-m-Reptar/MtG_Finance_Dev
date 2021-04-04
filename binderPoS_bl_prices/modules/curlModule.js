@@ -20,14 +20,14 @@ function curlRequest(storeData) {
 
     fetch(storeData[2], requestOptions)
         .then(response => response.json())
-        .then(result => parseVariants(result, storeData[0]))
+        .then(result => parseVariants(result, storeData[0], storeData[1]))
         .catch(error => writeError(error));
 }
 
 function generateCurlBuyListUrls(cardArr, binderPosStores) {
     let curlArr = [];
     Object.keys(binderPosStores).forEach( (storeName) => {
-        cardArr.map(cardName => {curlArr.push([storeName, binderPosStores[storeName].url, "https://portal.binderpos.com/external/shopify/"+binderPosStores[storeName].binderPosId+"/cards/mtg?keyword="+cardName+"&limit=20"])});
+        cardArr.map(cardName => {curlArr.push([storeName, binderPosStores[storeName].url, "https://portal.binderpos.com/external/shopify/"+binderPosStores[storeName].binderPosId+"/cards/mtg?keyword="+cardName+"&limit=20", binderPosStores[storeName].retailPattern])});
     }, []);
     return curlArr;
 }
