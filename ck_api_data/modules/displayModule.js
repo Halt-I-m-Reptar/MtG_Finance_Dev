@@ -48,7 +48,7 @@ const writeToTable = (ckCardData) => {
                     cell.className = "buyPrice";
                     break;
                 case 10:
-                    cell.className = cardDataKey.qty_buying > 0 ? "" : "warning";
+                    cell.className = cardDataKey.qty_buying > +"0" ? "" : "warning";
                     break;
                 default:
                     cell.className = "";
