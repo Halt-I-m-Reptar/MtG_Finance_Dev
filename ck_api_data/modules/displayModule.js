@@ -39,7 +39,7 @@ const writeToTable = (ckCardData) => {
                     cell.className = "cardName";
                     break;
                 case 6:
-                    if (cardArr[cardDataKey] === 'true') {cell.className = "isFoil";}
+                    cell.className = cardArr[cardDataKey] === 'true' ? "isFoil" : "";
                     break;
                 case 7:
                     cell.className = "retailPrice";
@@ -48,7 +48,7 @@ const writeToTable = (ckCardData) => {
                     cell.className = "buyPrice";
                     break;
                 case 10:
-                    cell.className = cardDataKey.qty_buying > +"0" ? "" : "warning";
+                    cell.className = cardArr[cardDataKey] === 0 ? "warning" : "";
                     break;
                 default:
                     cell.className = "";
