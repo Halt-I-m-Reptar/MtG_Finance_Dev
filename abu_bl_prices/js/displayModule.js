@@ -3,7 +3,7 @@ const displayWorker = () => {
     startPull(readTextArea());
 }
 
-const writeTableHeader = () => document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>Card Name</th><th>Set</th><th>Condition</th><th>isFoil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Trade Price</th><th>Buy Quantity</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
+const writeTableHeader = () => document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>Card Name</th><th>Set</th><th>Variant</th><th>Condition</th><th>isFoil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Trade Price</th><th>Buy Quantity</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
 
 const readTextArea = () => document.getElementById("cardNames").value.split("\n");
 
@@ -21,11 +21,13 @@ const startPull = (cardArr) => {
 };
 
 const createDataPoints = (json) => {
+    console.log(json);
     const cardArr = json.map( cardVariantList => {
         return cardVariantList.doclist.docs.map(cardVariation => {
             return {
                 "name": cardVariation.simple_title,
                 "set": cardVariation.magic_edition_sort,
+                "variant": cardVariation.display_title.split(cardVariation.simple_title)[1].replace('- ','').trim(),
                 "condition": cardVariation.condition,
                 "isFoil": cardVariation.card_style[0],
                 "retailPrice": cardVariation.price,
@@ -40,6 +42,7 @@ const createDataPoints = (json) => {
 }
 
 const generateOutput = (cardList) => {
+    console.log(cardList);
     const table = document.getElementById("displayData");
     let row;
     let cell;
@@ -53,16 +56,16 @@ const generateOutput = (cardList) => {
                     case 0:
                         cell.className = "cardName";
                         break;
-                    case 3:
+                    case 4:
                         if (cardArr[cardDataKey].toLowerCase().includes('foil')) {cell.className = "isFoil";}
                         break;
-                    case 4:
+                    case 5:
                         cell.className = "retailPrice";
                         break;
-                    case 6:
+                    case 7:
                         cell.className = "buyPrice";
                         break;
-                    case 8:
+                    case 9:
                         cell.className = cardArr[cardDataKey] > 0 ? "" : "warning";
                         break;
                     default:
