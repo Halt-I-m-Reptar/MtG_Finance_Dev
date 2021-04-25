@@ -51,3 +51,7 @@ th {
     background-color: cornflowerblue;
     color: white;
 }
+
+.warning {
+    background-color: #fdbac4;
+}
