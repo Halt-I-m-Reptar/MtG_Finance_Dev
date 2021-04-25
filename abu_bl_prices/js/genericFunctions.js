@@ -1,4 +1,4 @@
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const writeError = (err) => console.log("There was an error: "+err);
 
 const clearData = () => {
     document.getElementById("cardNames").value = '';
