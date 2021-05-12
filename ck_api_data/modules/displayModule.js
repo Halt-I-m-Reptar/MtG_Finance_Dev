@@ -7,13 +7,12 @@ const jsonWorker = () => {
 
 const startDisplayOutput = (json) => {
     updateAPITimestamp(json.meta.created_at);
-    displayData(createCKData(json));
+    createCKData(json);
+    loaderDisplay();
+    writeToDisplay("CK inventory has been gathered, you can now filter your data.");
 }
 
-const createCKData = (json) => {
-    json.data.forEach(data => ckData[data.id] = data);
-    return ckData;
-}
+const createCKData = (json) => json.data.forEach(data => ckData[data.id] = data);
 
 const updateAPITimestamp = (timestamp) => document.getElementById("repriceTimestamp").innerHTML = "<br /><strong>CK API Last Updated:</strong> "+timestamp;
 

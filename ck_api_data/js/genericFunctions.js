@@ -4,4 +4,6 @@ const writeToDisplay = (msg) => document.getElementById("listDisplay").innerHTML
 
 const writeError = (err) => console.log("There was an error: "+err);
 
-const loaderDisplay = () => document.getElementById("loader").style.display = document.getElementById("loader").style.display === "none" || document.getElementById("loader").style.display === "" ? "inherit" : "none";
+const loaderDisplay = () => document.getElementById("loader").style.display = (document.getElementById("loader").style.display === "none" || document.getElementById("loader").style.display === "") ? "inherit" : "none";
+
+const clearDisplayData = () => document.getElementById("listDisplay").innerHTML = '';
