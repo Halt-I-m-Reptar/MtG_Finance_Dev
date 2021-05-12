@@ -15,6 +15,7 @@
       "price_retail": "0.25",
       "qty_retail": 17,
       "price_buy": "0.05",
+      "qty_buying": 1
     },
     {
       "id": 10001,
