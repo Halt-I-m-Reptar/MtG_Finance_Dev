@@ -19,16 +19,16 @@
             clearInterval(intervalId);
             beginDisplay();
         }
-        if (timesChecked > 10) {
+        if (timesChecked > 100) {
             clearInterval(intervalId);
         }
     }
 
-    const intervalId = setInterval(displayStatus, 1000);
+    const intervalId = setInterval(displayStatus, 500);
 
     async function beginDisplay() {
         document.getElementsByClassName("price-guide__latest-sales__more")[0].children[0].click();
-        await sleep(1000);
+        await sleep(100);
         const salesByCondition = getPriceData();
         document.getElementsByClassName("modal__overlay")[0].click();
         writeSalesDataContainer();
