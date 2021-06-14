@@ -2,7 +2,7 @@
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
 // @version      0.1
-// @description  Unobfuscate TCG Player Sales Data
+// @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
 // @icon         https://www.tcgplayer.com/favicon.ico
@@ -11,36 +11,42 @@
 
 (function() {
     'use strict';
+    let timesChecked = 0;
 
-    window.addEventListener('load', (event) => {
-        beginDisplay();
-    });
-
-    async function beginDisplay() {
-        await sleep(5000);
-        console.log('done napping');
-        console.log(document.readyState);
-        document.getElementsByClassName("price-guide__latest-sales__more")[0].children[0].click();
-
-        const salesByCondition = getPriceData();
-
-        document.getElementsByClassName("modal__overlay")[0].click();
-
-        writeHotlist(salesByCondition);
-        displayHostlist(salesByCondition);
+    const displayStatus = () => {
+        timesChecked++;
+        if (document.getElementsByClassName("price-guide__latest-sales__more")[0]?.children[0]) {
+            clearInterval(intervalId);
+            beginDisplay();
+        }
+        if (timesChecked > 10) {
+            clearInterval(intervalId);
+        }
     }
 
-    function sleep() {
-        (milliseconds) => new Promise(resolve => setTimeout(resolve, milliseconds));
+    const intervalId = setInterval(displayStatus, 1000);
+
+    async function beginDisplay() {
+        document.getElementsByClassName("price-guide__latest-sales__more")[0].children[0].click();
+        await sleep(1000);
+        const salesByCondition = getPriceData();
+        document.getElementsByClassName("modal__overlay")[0].click();
+        writeSalesDataContainer();
+        displaySalesData(Object.entries(salesByCondition).sort((elementOne, elementTwo) =>  elementOne[1].totalQty - elementTwo[1].totalQty ).reverse());
+        createSalesToggle();
+    }
+
+    function sleep(milliseconds) {
+        return new Promise(resolve => setTimeout(resolve, milliseconds));
     }
 
     const getPriceData = () => {
         const salesByCondition = {};
 
         Array.from(document.getElementsByClassName("is-modal")[0].children).forEach( (children, index) => {
-            let listOfSales = Array.from(document.getElementsByClassName("is-modal")[0].children);
-            if (listOfSales[index].children[1]) {
-                let currentCondition = listOfSales[index].children[1].innerText;
+            const listOfSales = Array.from(document.getElementsByClassName("is-modal")[0].children);
+            if (listOfSales[index]?.children[1]) {
+                const currentCondition = listOfSales[index]?.children[1].innerText;
                 if ( !Object.keys(salesByCondition).includes(currentCondition) ) {
                     salesByCondition[currentCondition] = addCondition();
                 }
@@ -52,34 +58,43 @@
         return salesByCondition;
     }
 
-    const addCondition = (condition) => ({
+    const addCondition = () => ({
         totalPrice: 0,
         totalQty: 0,
-        averagePrice: 0
+        marketPrice: function() {
+            return (this.totalPrice / this.totalQty).toFixed(2);
+        }
     });
 
     const cleanPrice = (price) => +price.substring(1);
 
-    const adjustHeight = (div) => (parseInt(div.style.height.replace(/[a-zA-Z]/g,'')) + 25) + "px";
-
-    const writeHotlist = (salesByCondition) => {
+    const createSalesToggle = () => {
         const div = document.createElement('div');
-        div.innerHTML = ('<div class="pricesList" style="position:fixed;bottom:0;left:0;z-index:9999;width:auto;height:0px;padding:0 5px 0 0;border:1px solid #d00;background:#fff"></div>');
+        div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:0;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
         document.body.prepend(div);
     }
 
-    const displayHostlist = (salesByCondition) => {
-        //display the hotlist
-        const div = document.getElementsByClassName('pricesList')[0];
+    const adjustHeight = (div) => (parseInt(div.style.height.replace(/[a-zA-Z]/g,'')) + 25) + "px";
 
-        Object.keys(salesByCondition).forEach(condition => {
-            const totalPrice = salesByCondition[condition].totalPrice.toFixed(2);
-            const totalQty = salesByCondition[condition].totalQty;
-            const priceAverage = (totalPrice / totalQty).toFixed(2);
-            const displayString = `<strong>${condition}</strong> - Total Price: ${totalPrice} - Total Qty: ${totalQty} - Average Price: ${priceAverage}`;
+    const writeSalesDataContainer = () => {
+        const div = document.createElement('div');
+        const setBottom = document.getElementsByClassName("_hj_feedback_container") ? 'bottom:100px' : 'bottom:0';
+        div.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:9999;width:auto;height:0;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff"></div>`);
+        document.body.prepend(div);
+    }
+
+    const displaySalesData = (salesByCondition) => {
+        const div = document.getElementsByClassName('salesDataDisplay')[0];
+        salesByCondition.forEach(condition => {
+            const displayString = `<strong>${condition[0]}</strong> - Total Price: ${condition[1].totalPrice.toFixed(2)} - Total Qty Sold: ${condition[1].totalQty} - Market Price: ${condition[1].marketPrice()}`;
             div.innerHTML += displayString + "<br />";
             div.style.height = adjustHeight(div);
         });
+    }
+
+    window.toggleSalesData = function() {
+        const display = document.getElementsByClassName('salesDataDisplay')[0].style.display;
+        document.getElementsByClassName('salesDataDisplay')[0].style.display = display === 'none' ? 'inline' : 'none';
     }
 
 })();
