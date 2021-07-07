@@ -43,8 +43,8 @@
     const getPriceData = () => {
         const salesByCondition = {};
 
-        Array.from(document.getElementsByClassName("is-modal")[0].children).forEach( (children, index) => {
-            const listOfSales = Array.from(document.getElementsByClassName("is-modal")[0].children);
+        Array.from(document.getElementsByClassName("is-modal")[1].children).forEach( (children, index) => {
+            const listOfSales = Array.from(document.getElementsByClassName("is-modal")[1].children);
             if (listOfSales[index]?.children[1]) {
                 const currentCondition = listOfSales[index]?.children[1].innerText;
                 if ( !Object.keys(salesByCondition).includes(currentCondition) ) {
