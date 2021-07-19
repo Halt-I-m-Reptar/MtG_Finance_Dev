@@ -23,18 +23,17 @@
 
     const cleanPrice = (price) => +price.substring(1);
 
-    const checkSaleDate = (salesArray, dateAggregate, saleDate, price) => {
-        const dateComparison = {
-            min: {
-                date: new Date(salesArray[dateAggregate]) < new Date(saleDate) ? salesArray[dateAggregate] : saleDate,
-                price: price
-            },
-            max: {
-                date: new Date(salesArray[dateAggregate]) > new Date(saleDate) ? salesArray[dateAggregate] : saleDate,
-                price: price
-            }
+    const checkSaleDate = (salesArray, saleDate, price) => {
+        if (!salesArray.min || !salesArray.max) {
+            return {min: {date: saleDate, price: price}, max: {date: saleDate, price: price}};
         }
-        return dateComparison[dateAggregate] || null;
+        if (new Date(saleDate).getTime() < new Date(salesArray?.min?.date).getTime() || new Date(saleDate).getTime() === new Date(salesArray?.min?.date).getTime()) {
+            return Object.assign(salesArray, {min: {date: saleDate,price: price}});
+        }
+        if (new Date(saleDate).getTime() > new Date(salesArray?.max?.date).getTime() || new Date(saleDate).getTime() === new Date(salesArray?.max?.date).getTime()) {
+            return Object.assign(salesArray, {min: {date: saleDate,price: price}});
+        }
+
     }
 
     const getPriceData = () => {
@@ -49,11 +48,10 @@
                 }
                 salesByCondition[currentCondition].totalPrice += cleanPrice(listOfSales[index].children[2].innerText);
                 salesByCondition[currentCondition].totalQty += 1;
-                salesByCondition[currentCondition].min = checkSaleDate(salesByCondition[currentCondition], 'min', listOfSales[index].children[0].innerText, cleanPrice(listOfSales[index].children[2].innerText));
-                salesByCondition[currentCondition].max = checkSaleDate(salesByCondition[currentCondition], 'max', listOfSales[index].children[0].innerText, cleanPrice(listOfSales[index].children[2].innerText));
+                Object.assign(salesByCondition[currentCondition], checkSaleDate(salesByCondition[currentCondition], listOfSales[index].children[0].innerText, cleanPrice(listOfSales[index].children[2].innerText)));
             }
         });
-
+        console.table(salesByCondition);
         return salesByCondition;
     }
 
@@ -63,7 +61,7 @@
         document.body.prepend(div);
     }
 
-    const adjustHeight = (div) => (parseInt(div.style.height.replace(/[a-zA-Z]/g,'')) + 75) + "px";
+    const adjustHeight = (div) => (parseInt(div.style.height.replace(/[a-zA-Z]/g,'')) + 100) + "px";
 
     const writeSalesDataContainer = () => {
         const div = document.createElement('div');
