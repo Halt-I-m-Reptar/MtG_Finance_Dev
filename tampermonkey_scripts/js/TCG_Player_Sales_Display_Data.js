@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.3
+// @version      0.4
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -23,10 +23,16 @@
 
     const cleanPrice = (price) => +price.substring(1);
 
-    const checkSaleDate = (salesArray, dateAggregate, saleDate) => {
+    const checkSaleDate = (salesArray, dateAggregate, saleDate, price) => {
         const dateComparison = {
-            minDate: new Date(salesArray[dateAggregate]) < new Date(saleDate) ? salesArray[dateAggregate] : saleDate,
-            maxDate: new Date(salesArray[dateAggregate]) > new Date(saleDate) ? salesArray[dateAggregate] : saleDate
+            min: {
+                date: new Date(salesArray[dateAggregate]) < new Date(saleDate) ? salesArray[dateAggregate] : saleDate,
+                price: price
+            },
+            max: {
+                date: new Date(salesArray[dateAggregate]) > new Date(saleDate) ? salesArray[dateAggregate] : saleDate,
+                price: price
+            }
         }
         return dateComparison[dateAggregate] || null;
     }
@@ -43,8 +49,8 @@
                 }
                 salesByCondition[currentCondition].totalPrice += cleanPrice(listOfSales[index].children[2].innerText);
                 salesByCondition[currentCondition].totalQty += 1;
-                salesByCondition[currentCondition].minDate = checkSaleDate(salesByCondition[currentCondition], 'minDate', listOfSales[index].children[0].innerText);
-                salesByCondition[currentCondition].maxDate = checkSaleDate(salesByCondition[currentCondition], 'maxDate', listOfSales[index].children[0].innerText);
+                salesByCondition[currentCondition].min = checkSaleDate(salesByCondition[currentCondition], 'min', listOfSales[index].children[0].innerText, cleanPrice(listOfSales[index].children[2].innerText));
+                salesByCondition[currentCondition].max = checkSaleDate(salesByCondition[currentCondition], 'max', listOfSales[index].children[0].innerText, cleanPrice(listOfSales[index].children[2].innerText));
             }
         });
 
@@ -57,19 +63,22 @@
         document.body.prepend(div);
     }
 
-    const adjustHeight = (div) => (parseInt(div.style.height.replace(/[a-zA-Z]/g,'')) + 50) + "px";
+    const adjustHeight = (div) => (parseInt(div.style.height.replace(/[a-zA-Z]/g,'')) + 75) + "px";
 
     const writeSalesDataContainer = () => {
         const div = document.createElement('div');
         const setBottom = document.getElementsByClassName("_hj_feedback_container") ? 'bottom:100px' : 'bottom:0';
-        div.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:9999;width:auto;height:0;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff"></div>`);
+        div.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:9999;width:auto;height:0;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff;line-height:normal"></div>`);
         document.body.prepend(div);
     }
 
     const displaySalesData = (salesByCondition) => {
         const div = document.getElementsByClassName('salesDataDisplay')[0];
         salesByCondition.forEach(condition => {
-            const displayString = `<strong>${condition[0]}</strong> - Total Price: ${condition[1].totalPrice.toFixed(2)} - Total Qty Sold: ${condition[1].totalQty} - Market Price: ${condition[1].marketPrice()}<br/><span style="margin-left: 40px;">Min Sale Date: ${condition[1].minDate} - Max Sale Date: ${condition[1].maxDate}</span>`;
+            const displayString = `<div class="displayContainer"><strong>${condition[0]}</strong><br />
+            <span id="conditionData" style="margin-left: 40px;">Total Qty Sold: ${condition[1].totalQty} - Total Price: ${condition[1].totalPrice.toFixed(2)} - Market Price: ${condition[1].marketPrice()}</span><br />
+            <span id="minData" style="margin-left: 40px;">Min Sale Date: ${condition[1]?.min?.date} - Min Sale Price ${condition[1]?.min?.price}</span><br />
+            <span id="maxData" style="margin-left: 40px;">Max Sale Date: ${condition[1]?.max?.date} - Max Sale Price: ${condition[1]?.max?.price}</span></div>`;
             div.innerHTML += displayString + "<br />";
             div.style.height = adjustHeight(div);
         });
