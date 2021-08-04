@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.5
+// @version      0.6
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -15,9 +15,13 @@
 
     const addCondition = () => ({
         totalPrice: 0,
-        totalQty: 0,
-        marketPrice: function() {
-            return (this.totalPrice / this.totalQty).toFixed(2);
+        totalQtySold: 0,
+        totalOrders:0,
+        marketPriceByQty: function() {
+            return (this.totalPrice / this.totalQtySold).toFixed(2);
+        },
+        marketPriceByOrder: function() {
+            return (this.totalPrice / this.totalOrders).toFixed(2);
         }
     });
 
@@ -50,7 +54,8 @@
                 }
                 const cleanPrice = cleanPriceValue(listOfSales[index].children[3].innerText);
                 salesByCondition[currentCondition].totalPrice += cleanPrice;
-                salesByCondition[currentCondition].totalQty += strToInt(listOfSales[index].children[2].innerText);
+                salesByCondition[currentCondition].totalQtySold += strToInt(listOfSales[index].children[2].innerText);
+                salesByCondition[currentCondition].totalOrders += 1;
                 Object.assign(salesByCondition[currentCondition], checkSaleDate(salesByCondition[currentCondition], listOfSales[index].children[0].innerText, cleanPrice));
             }
         });
@@ -76,7 +81,8 @@
         const div = document.getElementsByClassName('salesDataDisplay')[0];
         salesByCondition.forEach(condition => {
             const displayString = `<div class="displayContainer"><strong>${condition[0]}</strong><br />
-            <span id="conditionData" style="margin-left: 40px;">Total Qty Sold: ${condition[1].totalQty} - Total Price: ${condition[1].totalPrice.toFixed(2)} - Market Price: ${condition[1].marketPrice()}</span><br />
+            <span id="conditionData" style="margin-left: 40px;">Total Sold: ${condition[1].totalQtySold} - Total Orders: ${condition[1].totalOrders} - Total Price: ${condition[1].totalPrice.toFixed(2)}</span><br />
+            <span id="conditionData" style="margin-left: 40px;">Market Price By Qty: ${condition[1].marketPriceByQty()} - Market Price By Order: ${condition[1].marketPriceByOrder()}</span><br />
             <span id="minData" style="margin-left: 40px;">Min Sale Date: ${condition[1]?.min?.date} - Min Sale Price ${condition[1]?.min?.price}</span><br />
             <span id="maxData" style="margin-left: 40px;">Max Sale Date: ${condition[1]?.max?.date} - Max Sale Price: ${condition[1]?.max?.price}</span></div>`;
             div.innerHTML += displayString + "<br />";
@@ -108,7 +114,7 @@
         const salesByCondition = getPriceData();
         document.getElementsByClassName("modal__overlay")[0].click();
         writeSalesDataContainer();
-        displaySalesData(Object.entries(salesByCondition).sort((elementOne, elementTwo) => elementOne[1].totalQty - elementTwo[1].totalQty ).reverse());
+        displaySalesData(Object.entries(salesByCondition).sort((elementOne, elementTwo) => elementOne[1].totalQtySold - elementTwo[1].totalQtySold ).reverse());
         createSalesToggle();
     }
 
