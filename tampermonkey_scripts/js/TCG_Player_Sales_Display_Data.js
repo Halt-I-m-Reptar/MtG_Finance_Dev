@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.4
+// @version      0.5
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -21,7 +21,9 @@
         }
     });
 
-    const cleanPrice = (price) => +price.substring(1);
+    const cleanPriceValue = (price) => +price.substring(1);
+
+    const strToInt = (str) => +str;
 
     const checkSaleDate = (salesArray, saleDate, price) => {
         if (!salesArray.min || !salesArray.max) {
@@ -46,12 +48,12 @@
                 if ( !Object.keys(salesByCondition).includes(currentCondition) ) {
                     salesByCondition[currentCondition] = addCondition();
                 }
-                salesByCondition[currentCondition].totalPrice += cleanPrice(listOfSales[index].children[2].innerText);
-                salesByCondition[currentCondition].totalQty += 1;
-                Object.assign(salesByCondition[currentCondition], checkSaleDate(salesByCondition[currentCondition], listOfSales[index].children[0].innerText, cleanPrice(listOfSales[index].children[2].innerText)));
+                const cleanPrice = cleanPriceValue(listOfSales[index].children[3].innerText);
+                salesByCondition[currentCondition].totalPrice += cleanPrice;
+                salesByCondition[currentCondition].totalQty += strToInt(listOfSales[index].children[2].innerText);
+                Object.assign(salesByCondition[currentCondition], checkSaleDate(salesByCondition[currentCondition], listOfSales[index].children[0].innerText, cleanPrice));
             }
         });
-        console.table(salesByCondition);
         return salesByCondition;
     }
 
