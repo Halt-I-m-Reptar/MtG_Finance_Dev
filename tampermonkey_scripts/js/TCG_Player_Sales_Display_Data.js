@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.6
+// @version      0.7
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -68,7 +68,7 @@
         document.body.prepend(div);
     }
 
-    const adjustHeight = (div) => (parseInt(div.style.height.replace(/[a-zA-Z]/g,'')) + 100) + "px";
+    const adjustHeight = (div) => (parseInt(div.style.height.replace(/[a-zA-Z]/g,'')) + 115) + "px";
 
     const writeSalesDataContainer = () => {
         const div = document.createElement('div');
