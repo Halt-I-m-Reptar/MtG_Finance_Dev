@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.7
+// @version      0.8
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -42,21 +42,25 @@
 
     }
 
+    const shapeSalesData = (salesData) => salesData.length === 4 ? {date: salesData[0].innerText, condition: salesData[1].innerText, quantity: salesData[2].innerText, price: salesData[3].innerText} :
+        {date: salesData[0].innerText, condition: `${salesData[2].innerText} with Photo`, quantity: salesData[3].innerText, price: salesData[4].innerText};
+
     const getPriceData = () => {
         const salesByCondition = {};
         const modalDisplayLength = Array.from(document.getElementsByClassName("is-modal")).length -= 1;
         Array.from(document.getElementsByClassName("is-modal")[modalDisplayLength].children).forEach( (children, index) => {
             const listOfSales = Array.from(document.getElementsByClassName("is-modal")[modalDisplayLength].children);
             if (listOfSales[index]?.children[1]) {
-                const currentCondition = listOfSales[index]?.children[1].innerText;
+                const reshapedSalesData = shapeSalesData( Array.from(listOfSales[index].children) );
+                const currentCondition = reshapedSalesData.condition;
                 if ( !Object.keys(salesByCondition).includes(currentCondition) ) {
                     salesByCondition[currentCondition] = addCondition();
                 }
-                const cleanPrice = cleanPriceValue(listOfSales[index].children[3].innerText);
+                const cleanPrice = cleanPriceValue(reshapedSalesData.price);
                 salesByCondition[currentCondition].totalPrice += cleanPrice;
-                salesByCondition[currentCondition].totalQtySold += strToInt(listOfSales[index].children[2].innerText);
+                salesByCondition[currentCondition].totalQtySold += strToInt(reshapedSalesData.quantity);
                 salesByCondition[currentCondition].totalOrders += 1;
-                Object.assign(salesByCondition[currentCondition], checkSaleDate(salesByCondition[currentCondition], listOfSales[index].children[0].innerText, cleanPrice));
+                Object.assign(salesByCondition[currentCondition], checkSaleDate(salesByCondition[currentCondition], reshapedSalesData.date, cleanPrice));
             }
         });
         return salesByCondition;
