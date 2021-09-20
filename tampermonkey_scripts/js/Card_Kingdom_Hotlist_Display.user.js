@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Card_Kingdom_Hotlist_Display
 // @namespace    https://*cardkingdom.com/
-// @version      0.6
+// @version      0.7
 // @description  Security through obfuscation is bad, m'kay.
 // @author       Halt_I_m_Reptar (MtG Cabal Cast)
 // @match        https://*cardkingdom.com/
@@ -17,7 +17,7 @@
     document.body.prepend(div);
     //write hotlist
     div = document.createElement('div');
-    div.innerHTML = ('<div class="hotList" style="position:fixed;bottom:0;left:0;z-index:999;width:auto;height:0px;padding:0 5px 0 0;border:1px solid #d00;background:#fff"></div>');
+    div.innerHTML = ('<div class="hotList" style="position:fixed;bottom:0;left:0;z-index:8888;width:auto;height:0px;max-height:600px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#fff"></div>');
     document.body.prepend(div);
     //display the hotlist
     beginDisplay();
