@@ -28,7 +28,6 @@
         var div = document.getElementsByClassName('hotList')[0];
         hotListMap.forEach( itemInfo => {
             div.style.height = adjustHeight(div);
-            //div.innerText += itemInfo + "\n\t";
             div.innerHTML += itemInfo;
         });
     }
@@ -43,7 +42,7 @@
     }
 
     function getSlideContent() {
-        return Array.from(document.getElementsByClassName("sliderDescription"));
+        return Array.from(document.getElementsByClassName("slick-slide"));
     }
 
     function mapCards(slideArr) {
