@@ -23,7 +23,7 @@
     beginDisplay();
 
     async function beginDisplay() {
-        await sleep(1000);
+        await sleep(2000);
         var hotListMap = readableList(mapCards(getSlideContent()));
         var div = document.getElementsByClassName('hotList')[0];
         hotListMap.forEach( itemInfo => {
