@@ -4,7 +4,7 @@
 // @version      0.8
 // @description  Security through obfuscation is bad, m'kay.
 // @author       Halt_I_m_Reptar (MtG Cabal Cast)
-// @match        https://*cardkingdom.com/
+// @match        https://*.cardkingdom.com/
 // @grant        none
 // ==/UserScript==
 
