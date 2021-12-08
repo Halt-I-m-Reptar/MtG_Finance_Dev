@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.9
+// @version      0.10
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -77,7 +77,7 @@
     const writeSalesDataContainer = () => {
         const div = document.createElement('div');
         const setBottom = document.getElementsByClassName("_hj_feedback_container") ? 'bottom:100px' : 'bottom:0';
-        div.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:8888;width:auto;height:0;max-height:600px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff;line-height:normal"></div>`);
+	div.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:8888;width:auto;height:0;max-height:600px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff;line-height:normal"></div>`);
         document.body.prepend(div);
     }
 
@@ -86,6 +86,7 @@
         salesByCondition.forEach(condition => {
             const displayString = `<div class="displayContainer"><strong>${condition[0]}</strong><br />
             <span id="conditionData" style="margin-left: 40px;">Total Sold: ${condition[1].totalQtySold} - Total Orders: ${condition[1].totalOrders} - Total Price: ${condition[1].totalPrice.toFixed(2)}</span><br />
+            <span id="conditionData" style="margin-left: 40px;">Avg Qty Per Order: ${(condition[1].totalQtySold / condition[1].totalOrders).toFixed(2)}</span><br />
             <span id="conditionData" style="margin-left: 40px;">Market Price By Qty: ${condition[1].marketPriceByQty()} - Market Price By Order: ${condition[1].marketPriceByOrder()}</span><br />
             <span id="minData" style="margin-left: 40px;">Min Sale Date: ${condition[1]?.min?.date} - Min Sale Price ${condition[1]?.min?.price}</span><br />
             <span id="maxData" style="margin-left: 40px;">Max Sale Date: ${condition[1]?.max?.date} - Max Sale Price: ${condition[1]?.max?.price}</span></div>`;
@@ -127,3 +128,4 @@
     }
 
 })();
+
