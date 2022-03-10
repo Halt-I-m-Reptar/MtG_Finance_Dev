@@ -3,7 +3,6 @@ const jsonWorker = () => {
     writeToDisplay("Gathering and collating all inventory from CK.");
     loaderDisplay();
     curlRequest();
-    //startDisplayOutput(testJson());
 }
 
 const startDisplayOutput = (json) => {
