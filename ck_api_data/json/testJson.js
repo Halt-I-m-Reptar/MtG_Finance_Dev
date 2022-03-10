@@ -1,4 +1,4 @@
-const testJson = () => (
+const testJsonShort = () => (
     {
         "meta": {
         "created_at": "2020-03-07 17:01:39",
