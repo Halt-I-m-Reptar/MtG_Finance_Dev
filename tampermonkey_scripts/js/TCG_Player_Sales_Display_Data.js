@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.10
+// @version      0.11
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -17,7 +17,7 @@
         totalPrice: 0,
         totalQtySold: 0,
         totalOrders:0,
-        marketPriceByQty: function() {
+        avgMarketPriceByQty: function() {
             return (this.totalPrice / this.totalQtySold).toFixed(2);
         },
         marketPriceByOrder: function() {
@@ -30,16 +30,17 @@
     const strToInt = (str) => +str;
 
     const checkSaleDate = (salesArray, saleDate, price) => {
-        if (!salesArray.min || !salesArray.max) {
-            return {min: {date: saleDate, price: price}, max: {date: saleDate, price: price}};
+        //Min price sold and date
+        //Max price sold and date
+        if (!salesArray.earliestSaleDateData || !salesArray.latestSaleDateData) {
+            return {earliestSaleDateData: {date: saleDate, price: price}, latestSaleDateData: {date: saleDate, price: price}};
         }
-        if (new Date(saleDate).getTime() < new Date(salesArray?.min?.date).getTime() || new Date(saleDate).getTime() === new Date(salesArray?.min?.date).getTime()) {
-            return Object.assign(salesArray, {min: {date: saleDate,price: price}});
+        if (new Date(saleDate).getTime() < new Date(salesArray?.earliestSaleDateData?.date).getTime() || new Date(saleDate).getTime() === new Date(salesArray?.earliestSaleDateData?.date).getTime()) {
+            if (price < salesArray?.earliestSaleDateData?.price) { return Object.assign(salesArray, {earliestSaleDateData: {date: saleDate,price: price}}); }
         }
-        if (new Date(saleDate).getTime() > new Date(salesArray?.max?.date).getTime() || new Date(saleDate).getTime() === new Date(salesArray?.max?.date).getTime()) {
-            return Object.assign(salesArray, {min: {date: saleDate,price: price}});
+        if (new Date(saleDate).getTime() > new Date(salesArray?.latestSaleDateData?.date).getTime() || new Date(saleDate).getTime() === new Date(salesArray?.latestSaleDateData?.date).getTime()) {
+            if ( price > salesArray?.latestSaleDateData?.price) { return Object.assign(salesArray, {latestSaleDateData: {date: saleDate,price: price}}); }
         }
-
     }
 
     const shapeSalesData = (salesData) => salesData.length === 4 ? {date: salesData[0].innerText, condition: salesData[1].innerText, quantity: salesData[2].innerText, price: salesData[3].innerText} :
@@ -77,7 +78,7 @@
     const writeSalesDataContainer = () => {
         const div = document.createElement('div');
         const setBottom = document.getElementsByClassName("_hj_feedback_container") ? 'bottom:100px' : 'bottom:0';
-	div.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:8888;width:auto;height:0;max-height:600px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff;line-height:normal"></div>`);
+        div.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:8888;width:auto;height:0;max-height:300px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff;line-height:normal"></div>`);
         document.body.prepend(div);
     }
 
@@ -85,11 +86,11 @@
         const div = document.getElementsByClassName('salesDataDisplay')[0];
         salesByCondition.forEach(condition => {
             const displayString = `<div class="displayContainer"><strong>${condition[0]}</strong><br />
-            <span id="conditionData" style="margin-left: 40px;">Total Sold: ${condition[1].totalQtySold} - Total Orders: ${condition[1].totalOrders} - Total Price: ${condition[1].totalPrice.toFixed(2)}</span><br />
-            <span id="conditionData" style="margin-left: 40px;">Avg Qty Per Order: ${(condition[1].totalQtySold / condition[1].totalOrders).toFixed(2)}</span><br />
-            <span id="conditionData" style="margin-left: 40px;">Market Price By Qty: ${condition[1].marketPriceByQty()} - Market Price By Order: ${condition[1].marketPriceByOrder()}</span><br />
-            <span id="minData" style="margin-left: 40px;">Min Sale Date: ${condition[1]?.min?.date} - Min Sale Price ${condition[1]?.min?.price}</span><br />
-            <span id="maxData" style="margin-left: 40px;">Max Sale Date: ${condition[1]?.max?.date} - Max Sale Price: ${condition[1]?.max?.price}</span></div>`;
+                <span id="conditionData" style="margin-left: 40px;">Total Sold: ${condition[1].totalQtySold} - Total Orders: ${condition[1].totalOrders} - Total Price: ${condition[1].totalPrice.toFixed(2)}</span><br />
+	            <span id="conditionData" style="margin-left: 40px;">Avg Qty Per Order: ${(condition[1].totalQtySold / condition[1].totalOrders).toFixed(2)}</span><br />
+                <span id="conditionData" style="margin-left: 40px;">Market Price By Qty (Avg): ${condition[1].avgMarketPriceByQty()} - Market Price By Order: ${condition[1].marketPriceByOrder()}</span><br />
+                <span id="earliestSaleDateDataData" style="margin-left: 40px;">Earliest Sale Date: ${condition[1]?.earliestSaleDateData?.date} - Min Sale Price ${condition[1]?.earliestSaleDateData?.price}</span><br />
+                <span id="maxData" style="margin-left: 40px;">Latest Sale Date: ${condition[1]?.latestSaleDateData?.date} - Max Sale Price: ${condition[1]?.latestSaleDateData?.price}</span></div>`;
             div.innerHTML += displayString + "<br />";
             div.style.height = adjustHeight(div);
         });
