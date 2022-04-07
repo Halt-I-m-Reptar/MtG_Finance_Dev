@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.11
+// @version      0.12
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -35,12 +35,19 @@
         if (!salesArray.earliestSaleDateData || !salesArray.latestSaleDateData) {
             return {earliestSaleDateData: {date: saleDate, price: price}, latestSaleDateData: {date: saleDate, price: price}};
         }
+        //the date equality was mucking with the result set when looking at cards with almost a year of displayed data...
         if (new Date(saleDate).getTime() < new Date(salesArray?.earliestSaleDateData?.date).getTime() || new Date(saleDate).getTime() === new Date(salesArray?.earliestSaleDateData?.date).getTime()) {
+            return Object.assign(salesArray, {earliestSaleDateData: {date: saleDate,price: price}});
+        }
+        if (new Date(saleDate).getTime() > new Date(salesArray?.latestSaleDateData?.date).getTime() || new Date(saleDate).getTime() === new Date(salesArray?.latestSaleDateData?.date).getTime()) {
+            return Object.assign(salesArray, {latestSaleDateData: {date: saleDate,price: price}});
+        }
+        /*if (new Date(saleDate).getTime() < new Date(salesArray?.earliestSaleDateData?.date).getTime() || new Date(saleDate).getTime() === new Date(salesArray?.earliestSaleDateData?.date).getTime()) {
             if (price < salesArray?.earliestSaleDateData?.price) { return Object.assign(salesArray, {earliestSaleDateData: {date: saleDate,price: price}}); }
         }
         if (new Date(saleDate).getTime() > new Date(salesArray?.latestSaleDateData?.date).getTime() || new Date(saleDate).getTime() === new Date(salesArray?.latestSaleDateData?.date).getTime()) {
             if ( price > salesArray?.latestSaleDateData?.price) { return Object.assign(salesArray, {latestSaleDateData: {date: saleDate,price: price}}); }
-        }
+        }*/
     }
 
     const shapeSalesData = (salesData) => salesData.length === 4 ? {date: salesData[0].innerText, condition: salesData[1].innerText, quantity: salesData[2].innerText, price: salesData[3].innerText} :
@@ -117,11 +124,21 @@
     async function beginDisplay() {
         document.getElementsByClassName("price-guide__latest-sales__more")[0].children[0].click();
         await sleep(500);
+        loadMoreSalesData();
+        await sleep(500);
         const salesByCondition = getPriceData();
         document.getElementsByClassName("modal__overlay")[0].click();
         writeSalesDataContainer();
         displaySalesData(Object.entries(salesByCondition).sort((elementOne, elementTwo) => elementOne[1].totalQtySold - elementTwo[1].totalQtySold ).reverse());
         createSalesToggle();
+    }
+
+    function loadMoreSalesData() {
+        const max = 40;
+        for (var i = 0; i < max; i++) {
+            if ( document.getElementsByClassName('price-guide-modal__load-more')[0] ) {document.getElementsByClassName('price-guide-modal__load-more')[0].click();}
+            else i = max;
+        }
     }
 
     function sleep(milliseconds) {
