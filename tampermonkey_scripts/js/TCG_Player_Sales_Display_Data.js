@@ -14,7 +14,7 @@
     let timesChecked = 0;
     let intervalId = 0;
     createDataRequestButton();
-    
+
     const addCondition = () => ({
         totalPrice: 0,
         totalQtySold: 0,
@@ -127,7 +127,7 @@
 
     const loadMoreSalesData = () => {
         const max = 50;
-        for (var i = 0; i < max; i++) {
+        for (let i = 0; i < max; i++) {
             if ( document.getElementsByClassName('price-guide-modal__load-more')[0] ) {document.getElementsByClassName('price-guide-modal__load-more')[0].click();}
             else i = max;
             console.log(i);
