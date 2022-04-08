@@ -12,7 +12,9 @@
 (function() {
     'use strict';
     let timesChecked = 0;
-
+    let intervalId = 0;
+    createDataRequestButton();
+    
     const addCondition = () => ({
         totalPrice: 0,
         totalQtySold: 0,
@@ -30,24 +32,15 @@
     const strToInt = (str) => +str;
 
     const checkSaleDate = (salesArray, saleDate, price) => {
-        //Min price sold and date
-        //Max price sold and date
         if (!salesArray.earliestSaleDateData || !salesArray.latestSaleDateData) {
             return {earliestSaleDateData: {date: saleDate, price: price}, latestSaleDateData: {date: saleDate, price: price}};
         }
-        //the date equality was mucking with the result set when looking at cards with almost a year of displayed data...
         if (new Date(saleDate).getTime() < new Date(salesArray?.earliestSaleDateData?.date).getTime() || new Date(saleDate).getTime() === new Date(salesArray?.earliestSaleDateData?.date).getTime()) {
             return Object.assign(salesArray, {earliestSaleDateData: {date: saleDate,price: price}});
         }
         if (new Date(saleDate).getTime() > new Date(salesArray?.latestSaleDateData?.date).getTime() || new Date(saleDate).getTime() === new Date(salesArray?.latestSaleDateData?.date).getTime()) {
             return Object.assign(salesArray, {latestSaleDateData: {date: saleDate,price: price}});
         }
-        /*if (new Date(saleDate).getTime() < new Date(salesArray?.earliestSaleDateData?.date).getTime() || new Date(saleDate).getTime() === new Date(salesArray?.earliestSaleDateData?.date).getTime()) {
-            if (price < salesArray?.earliestSaleDateData?.price) { return Object.assign(salesArray, {earliestSaleDateData: {date: saleDate,price: price}}); }
-        }
-        if (new Date(saleDate).getTime() > new Date(salesArray?.latestSaleDateData?.date).getTime() || new Date(saleDate).getTime() === new Date(salesArray?.latestSaleDateData?.date).getTime()) {
-            if ( price > salesArray?.latestSaleDateData?.price) { return Object.assign(salesArray, {latestSaleDateData: {date: saleDate,price: price}}); }
-        }*/
     }
 
     const shapeSalesData = (salesData) => salesData.length === 4 ? {date: salesData[0].innerText, condition: salesData[1].innerText, quantity: salesData[2].innerText, price: salesData[3].innerText} :
@@ -76,7 +69,13 @@
 
     const createSalesToggle = () => {
         const div = document.createElement('div');
-        div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:0;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
+        div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:20px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
+        document.body.prepend(div);
+    }
+
+    function createDataRequestButton() {
+        const div = document.createElement('div');
+        div.innerHTML = ('<button class="dataRequestButton" style="position:fixed;top:0;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#00b;color:#fff;font-weight:bold;" onclick="startDataRequest()">Gather Sales Data</button>');
         document.body.prepend(div);
     }
 
@@ -94,18 +93,13 @@
         salesByCondition.forEach(condition => {
             const displayString = `<div class="displayContainer"><strong>${condition[0]}</strong><br />
                 <span id="conditionData" style="margin-left: 40px;">Total Sold: ${condition[1].totalQtySold} - Total Orders: ${condition[1].totalOrders} - Total Price: ${condition[1].totalPrice.toFixed(2)}</span><br />
-	            <span id="conditionData" style="margin-left: 40px;">Avg Qty Per Order: ${(condition[1].totalQtySold / condition[1].totalOrders).toFixed(2)}</span><br />
+                <span id="conditionData" style="margin-left: 40px;">Avg Qty Per Order: ${(condition[1].totalQtySold / condition[1].totalOrders).toFixed(2)}</span><br />
                 <span id="conditionData" style="margin-left: 40px;">Market Price By Qty (Avg): ${condition[1].avgMarketPriceByQty()} - Market Price By Order: ${condition[1].marketPriceByOrder()}</span><br />
-                <span id="earliestSaleDateDataData" style="margin-left: 40px;">Earliest Sale Date: ${condition[1]?.earliestSaleDateData?.date} - Min Sale Price ${condition[1]?.earliestSaleDateData?.price}</span><br />
-                <span id="maxData" style="margin-left: 40px;">Latest Sale Date: ${condition[1]?.latestSaleDateData?.date} - Max Sale Price: ${condition[1]?.latestSaleDateData?.price}</span></div>`;
+                <span id="earliestSaleDateDataData" style="margin-left: 40px;">Earliest Sale Date: ${condition[1]?.earliestSaleDateData?.date} - Sale Price ${condition[1]?.earliestSaleDateData?.price}</span><br />
+                <span id="maxData" style="margin-left: 40px;">Latest Sale Date: ${condition[1]?.latestSaleDateData?.date} - Sale Price: ${condition[1]?.latestSaleDateData?.price}</span></div>`;
             div.innerHTML += displayString + "<br />";
             div.style.height = adjustHeight(div);
         });
-    }
-
-    window.toggleSalesData = function() {
-        const display = document.getElementsByClassName('salesDataDisplay')[0].style.display;
-        document.getElementsByClassName('salesDataDisplay')[0].style.display = display === 'none' ? 'inline' : 'none';
     }
 
     const displayStatus = () => {
@@ -119,13 +113,11 @@
         }
     }
 
-    let intervalId = setInterval(displayStatus, 500);
-
     async function beginDisplay() {
         document.getElementsByClassName("price-guide__latest-sales__more")[0].children[0].click();
         await sleep(500);
         loadMoreSalesData();
-        await sleep(500);
+        await sleep(1000);
         const salesByCondition = getPriceData();
         document.getElementsByClassName("modal__overlay")[0].click();
         writeSalesDataContainer();
@@ -133,11 +125,12 @@
         createSalesToggle();
     }
 
-    function loadMoreSalesData() {
-        const max = 40;
+    const loadMoreSalesData = () => {
+        const max = 50;
         for (var i = 0; i < max; i++) {
             if ( document.getElementsByClassName('price-guide-modal__load-more')[0] ) {document.getElementsByClassName('price-guide-modal__load-more')[0].click();}
             else i = max;
+            console.log(i);
         }
     }
 
@@ -145,5 +138,21 @@
         return new Promise(resolve => setTimeout(resolve, milliseconds));
     }
 
+    const clearHtmlElements = () => {
+        const htmlElementsToClear = ['salesDataDisplay', 'salesDataToggle'];
+        htmlElementsToClear.forEach( selector => {
+            if ( document.getElementsByClassName(selector)[0] ) { document.getElementsByClassName(selector)[0].remove(); }
+        });
+    }
+
+    window.toggleSalesData = function() {
+        const display = document.getElementsByClassName('salesDataDisplay')[0].style.display;
+        document.getElementsByClassName('salesDataDisplay')[0].style.display = display === 'none' ? 'inline' : 'none';
+    }
+
+    window.startDataRequest = function() {
+        clearHtmlElements();
+        intervalId = setInterval(displayStatus, 500);
+    }
 })();
 
