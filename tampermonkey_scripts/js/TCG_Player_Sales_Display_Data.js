@@ -96,11 +96,12 @@
         writeSalesData();
     }
 
-    const loadMoreSalesData = () => {
+    async function loadMoreSalesData() {
         const max = 50;
         for (let i = 0; i < max; i++) {
-            if (!document.getElementsByClassName('price-guide-modal__load-more')[0]) { i = max; }
-            else { document.getElementsByClassName('price-guide-modal__load-more')[0].click(); }
+            if ( document.getElementsByClassName('price-guide-modal__load-more')[0] ) {document.getElementsByClassName('price-guide-modal__load-more')[0].click();}
+            else i = max;
+            await sleep(500);
         }
     }
 
@@ -151,4 +152,3 @@
     }
 
 })();
-
