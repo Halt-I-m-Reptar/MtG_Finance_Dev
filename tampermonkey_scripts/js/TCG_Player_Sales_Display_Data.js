@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.14
+// @version      0.15
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -91,7 +91,7 @@
             const displayString = `<div class="displayContainer"><strong>${condition[0]}</strong><br />
                 <span id="totalSold" style="margin-left: 40px;">Total Sold: ${condition[1].totalQtySold} - Total Orders: ${condition[1].totalOrders} - Total Price: ${condition[1].totalPrice.toFixed(2)}</span><br />
                 <span id="qtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${(condition[1].totalQtySold / condition[1].totalOrders).toFixed(2)}</span><br />
-                <span id="marketPrice" style="margin-left: 40px;">Market Price By Qty (Avg): ${condition[1].avgMarketPriceByQty()} - Market Price By Order: ${condition[1].marketPriceByOrder()}</span><br />
+                <span id="marketPrice" style="margin-left: 40px;">Market Price By Order: ${condition[1].marketPriceByOrder()}</span><br />
                 <span id="earliestSaleDate" style="margin-left: 40px;">Earliest Sale Date: ${condition[1]?.earliestSaleDateData?.date} - Sale Price ${condition[1]?.earliestSaleDateData?.price}</span><br />
                 <span id="latestSaleData" style="margin-left: 40px;">Latest Sale Date: ${condition[1]?.latestSaleDateData?.date} - Sale Price: ${condition[1]?.latestSaleDateData?.price}</span><br />
                 <span id="largestOrderInfo" style="margin-left: 40px;">Largest Order... Date: ${condition[1].largestQtySold.date} - Qty: ${condition[1].largestQtySold.qty} - Price Per: ${condition[1].largestQtySold.price}</span></div>`;
