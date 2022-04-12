@@ -11,11 +11,34 @@
 
 (function() {
     'use strict';
-    let timesChecked = 0;
-    let intervalId = 0;
+
     createDataRequestButton();
-    
-    const addCondition = () => ({
+
+    const fetchPriceData = () => {
+        const salesByCondition = {};
+        const modalDisplayLength = Array.from(document.getElementsByClassName("is-modal")).length -= 1;
+        Array.from(document.getElementsByClassName("is-modal")[modalDisplayLength].children).forEach( (children, index) => {
+            const listOfSales = Array.from(document.getElementsByClassName("is-modal")[modalDisplayLength].children);
+            if (listOfSales[index]?.children[1]) {
+                const reshapedSalesData = shapeSalesData( Array.from(listOfSales[index].children) );
+                const currentCondition = reshapedSalesData.condition;
+                if ( !Object.keys(salesByCondition).includes(currentCondition) ) {
+                    salesByCondition[currentCondition] = addConditionToArray();
+                }
+                const cleanPrice = cleanPriceValue(reshapedSalesData.price);
+                salesByCondition[currentCondition].totalPrice += cleanPrice;
+                salesByCondition[currentCondition].totalQtySold += strToInt(reshapedSalesData.quantity);
+                salesByCondition[currentCondition].totalOrders += 1;
+                Object.assign(salesByCondition[currentCondition], checkSaleDate(salesByCondition[currentCondition], reshapedSalesData.date, cleanPrice));
+            }
+        });
+        return salesByCondition;
+    }
+
+    const shapeSalesData = (salesData) => salesData.length === 4 ? {date: salesData[0].innerText, condition: salesData[1].innerText, quantity: salesData[2].innerText, price: salesData[3].innerText} :
+        {date: salesData[0].innerText, condition: `${salesData[2].innerText} with Photo`, quantity: salesData[3].innerText, price: salesData[4].innerText};
+
+    const addConditionToArray = () => ({
         totalPrice: 0,
         totalQtySold: 0,
         totalOrders:0,
@@ -26,10 +49,6 @@
             return (this.totalPrice / this.totalOrders).toFixed(2);
         }
     });
-
-    const cleanPriceValue = (price) => +price.substring(1);
-
-    const strToInt = (str) => +str;
 
     const checkSaleDate = (salesArray, saleDate, price) => {
         if (!salesArray.earliestSaleDateData || !salesArray.latestSaleDateData) {
@@ -43,50 +62,9 @@
         }
     }
 
-    const shapeSalesData = (salesData) => salesData.length === 4 ? {date: salesData[0].innerText, condition: salesData[1].innerText, quantity: salesData[2].innerText, price: salesData[3].innerText} :
-        {date: salesData[0].innerText, condition: `${salesData[2].innerText} with Photo`, quantity: salesData[3].innerText, price: salesData[4].innerText};
+    const cleanPriceValue = (price) => +price.substring(1);
 
-    const getPriceData = () => {
-        const salesByCondition = {};
-        const modalDisplayLength = Array.from(document.getElementsByClassName("is-modal")).length -= 1;
-        Array.from(document.getElementsByClassName("is-modal")[modalDisplayLength].children).forEach( (children, index) => {
-            const listOfSales = Array.from(document.getElementsByClassName("is-modal")[modalDisplayLength].children);
-            if (listOfSales[index]?.children[1]) {
-                const reshapedSalesData = shapeSalesData( Array.from(listOfSales[index].children) );
-                const currentCondition = reshapedSalesData.condition;
-                if ( !Object.keys(salesByCondition).includes(currentCondition) ) {
-                    salesByCondition[currentCondition] = addCondition();
-                }
-                const cleanPrice = cleanPriceValue(reshapedSalesData.price);
-                salesByCondition[currentCondition].totalPrice += cleanPrice;
-                salesByCondition[currentCondition].totalQtySold += strToInt(reshapedSalesData.quantity);
-                salesByCondition[currentCondition].totalOrders += 1;
-                Object.assign(salesByCondition[currentCondition], checkSaleDate(salesByCondition[currentCondition], reshapedSalesData.date, cleanPrice));
-            }
-        });
-        return salesByCondition;
-    }
-
-    const createSalesToggle = () => {
-        const div = document.createElement('div');
-        div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:20px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
-        document.body.prepend(div);
-    }
-
-    function createDataRequestButton() {
-        const div = document.createElement('div');
-        div.innerHTML = ('<button class="dataRequestButton" style="position:fixed;top:0;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#00b;color:#fff;font-weight:bold;" onclick="startDataRequest()">Gather Sales Data</button>');
-        document.body.prepend(div);
-    }
-
-    const adjustHeight = (div) => (parseInt(div.style.height.replace(/[a-zA-Z]/g,'')) + 115) + "px";
-
-    const writeSalesDataContainer = () => {
-        const div = document.createElement('div');
-        const setBottom = document.getElementsByClassName("_hj_feedback_container") ? 'bottom:100px' : 'bottom:0';
-        div.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:8888;width:auto;height:0;max-height:300px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff;line-height:normal"></div>`);
-        document.body.prepend(div);
-    }
+    const strToInt = (str) => +str;
 
     const displaySalesData = (salesByCondition) => {
         const div = document.getElementsByClassName('salesDataDisplay')[0];
@@ -102,27 +80,20 @@
         });
     }
 
-    const displayStatus = () => {
-        timesChecked++;
-        if (document.getElementsByClassName("price-guide__latest-sales__more")[0]?.children[0]) {
-            clearInterval(intervalId);
-            beginDisplay();
-        }
-        if (timesChecked > 100) {
-            clearInterval(intervalId);
-        }
+    const adjustHeight = (div) => (parseInt(div.style.height.replace(/[a-zA-Z]/g,'')) + 115) + "px";
+
+    const checkForSalesData = () => {
+        if (document.getElementsByClassName("price-guide__latest-sales__more")[0]?.children[0]) { beginSalesDataDisplay(); }
+        else { console.warn('Sales History was inaccessible.'); }
     }
 
-    async function beginDisplay() {
+    async function beginSalesDataDisplay() {
         document.getElementsByClassName("price-guide__latest-sales__more")[0].children[0].click();
         await sleep(500);
         loadMoreSalesData();
         await sleep(1000);
-        const salesByCondition = getPriceData();
         document.getElementsByClassName("modal__overlay")[0].click();
-        writeSalesDataContainer();
-        displaySalesData(Object.entries(salesByCondition).sort((elementOne, elementTwo) => elementOne[1].totalQtySold - elementTwo[1].totalQtySold ).reverse());
-        createSalesToggle();
+        writeSalesData();
     }
 
     async function loadMoreSalesData() {
@@ -131,12 +102,13 @@
             if ( document.getElementsByClassName('price-guide-modal__load-more')[0] ) {document.getElementsByClassName('price-guide-modal__load-more')[0].click();}
             else i = max;
             await sleep(500);
-            console.log(i);
         }
     }
 
-    function sleep(milliseconds) {
-        return new Promise(resolve => setTimeout(resolve, milliseconds));
+    const writeSalesData = () => {
+        writeSalesDataContainer();
+        displaySalesData(Object.entries(fetchPriceData()).sort((elementOne, elementTwo) => elementOne[1].totalQtySold - elementTwo[1].totalQtySold ).reverse());
+        createSalesToggle();
     }
 
     const clearHtmlElements = () => {
@@ -146,6 +118,19 @@
         });
     }
 
+    const createSalesToggle = () => {
+        const div = document.createElement('div');
+        div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:20px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
+        document.body.prepend(div);
+    }
+
+    const writeSalesDataContainer = () => {
+        const div = document.createElement('div');
+        const setBottom = document.getElementsByClassName("_hj_feedback_container") ? 'bottom:100px' : 'bottom:0';
+        div.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:8888;width:auto;height:0;max-height:300px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff;line-height:normal"></div>`);
+        document.body.prepend(div);
+    }
+
     window.toggleSalesData = function() {
         const display = document.getElementsByClassName('salesDataDisplay')[0].style.display;
         document.getElementsByClassName('salesDataDisplay')[0].style.display = display === 'none' ? 'inline' : 'none';
@@ -153,6 +138,17 @@
 
     window.startDataRequest = function() {
         clearHtmlElements();
-        intervalId = setInterval(displayStatus, 500);
+        checkForSalesData();
     }
+
+    function createDataRequestButton() {
+        const div = document.createElement('div');
+        div.innerHTML = ('<button class="dataRequestButton" style="position:fixed;top:0;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#00b;color:#fff;font-weight:bold;" onclick="startDataRequest()">Gather Sales Data</button>');
+        document.body.prepend(div);
+    }
+
+    function sleep(milliseconds) {
+        return new Promise(resolve => setTimeout(resolve, milliseconds));
+    }
+
 })();
