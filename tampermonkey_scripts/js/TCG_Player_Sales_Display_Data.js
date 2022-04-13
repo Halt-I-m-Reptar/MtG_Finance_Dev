@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.16
+// @version      0.17
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -26,7 +26,7 @@
         }
     });
 
-    const cleanPriceValue = (price) => +price.substring(1);
+    const cleanPriceValue = (price) => +(+(price.replace(',','').substring(1))).toFixed(2)
 
     const strToInt = (str) => +str;
 
@@ -99,8 +99,8 @@
         const div = document.getElementsByClassName('salesDataDisplay')[0];
         salesByCondition.forEach(condition => {
             let displayString = `<div class="displayContainer"><strong>${condition[0]}</strong><br />
-                <span id="totalSold" style="margin-left: 40px;">Total Sold: ${condition[1].totalQtySold} - Total Orders: ${condition[1].totalOrders} - Total Price: ${condition[1].totalPrice.toFixed(2)}</span><br />
-                <span id="avgQtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${(condition[1].totalQtySold / condition[1].totalOrders).toFixed(2)}</span><br />
+                <span id="totalSold" style="margin-left: 40px;">Total Sold: ${condition[1].totalQtySold} - Total Orders: ${condition[1].totalOrders} - Total Price: ${condition[1].totalPrice}</span><br />
+                <span id="avgQtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${(condition[1].totalQtySold / condition[1].totalOrders)}</span><br />
                 <span id="earliestSaleDate" style="margin-left: 40px;">Earliest Sale Date: ${condition[1]?.earliestSaleDateData?.date} - Sale Price ${condition[1]?.earliestSaleDateData?.price}</span><br />
                 <span id="latestSaleData" style="margin-left: 40px;">Latest Sale Date: ${condition[1]?.latestSaleDateData?.date} - Sale Price: ${condition[1]?.latestSaleDateData?.price}</span><br />
                 <span id="largestOrderInfo" style="margin-left: 40px;">Largest Order... Date: ${condition[1].largestQtySold.date} - Qty: ${condition[1].largestQtySold.qty} - Price Per: ${condition[1].largestQtySold.price}</span>`;
@@ -108,8 +108,8 @@
                 displayString += `<br /><span id="historicSalesHeader" style="margin-left: 20px;"><strong>Historic Sales Data</strong></span><br />`;
                 Object.keys(condition[1].historicSalesData.daysAgo).forEach( daysAgo =>
                     displayString += `<span id="${daysAgo}-daysAgoMarker" style="margin-left: 30px;"><strong>Days Ago: ${daysAgo} - ${condition[1].historicSalesData.daysAgo[daysAgo].saleDate}</strong></span><br />
-                        <span id="${daysAgo}-dayAgo-TotalSold" style="margin-left: 40px;">Total Orders: ${condition[1].historicSalesData.daysAgo[daysAgo].totalOrders} - Total Price: ${condition[1].historicSalesData.daysAgo[daysAgo].totalPrice.toFixed(2)} - Total Qty Sold: ${condition[1].historicSalesData.daysAgo[daysAgo].totalQtySold}</span><br />
-                        <span id="${daysAgo}-dayAgo-AvgQtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${(condition[1].historicSalesData.daysAgo[daysAgo].totalQtySold / condition[1].historicSalesData.daysAgo[daysAgo].totalOrders).toFixed(2)}</span><br />
+                        <span id="${daysAgo}-dayAgo-TotalSold" style="margin-left: 40px;">Total Orders: ${condition[1].historicSalesData.daysAgo[daysAgo].totalOrders} - Total Price: ${condition[1].historicSalesData.daysAgo[daysAgo].totalPrice} - Total Qty Sold: ${condition[1].historicSalesData.daysAgo[daysAgo].totalQtySold}</span><br />
+                        <span id="${daysAgo}-dayAgo-AvgQtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${(condition[1].historicSalesData.daysAgo[daysAgo].totalQtySold / condition[1].historicSalesData.daysAgo[daysAgo].totalOrders)}</span><br />
                         <span id="${daysAgo}-dayAgo-MarketPrice" style="margin-left: 40px;">Market Price: ${condition[1].marketPriceByOrder( condition[1].historicSalesData.daysAgo[daysAgo].totalPrice, condition[1].historicSalesData.daysAgo[daysAgo].totalOrders ) }</span><br />`
                 );
             }
