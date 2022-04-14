@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.17
+// @version      0.18
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -14,19 +14,19 @@
     createDataRequestButton();
 
     const addCondition = () => ({
-        totalPrice: 0,
+        totalSpend: 0,
         totalQtySold: 0,
         totalOrders:0,
         historicSalesData: {daysAgo:{}},
-        avgMarketPriceByQty: function(totalPrice,totalQtySold ) {
-            return (totalPrice / totalQtySold).toFixed(2);
+        avgQtyPerOrder: function(totalQtySold,totalOrders ) {
+            return (totalQtySold / totalOrders).toFixed(2);
         },
-        marketPriceByOrder: function(totalPrice, totalOrders) {
-            return (totalPrice / totalOrders).toFixed(2);
+        marketPriceByOrder: function(totalSpend, totalOrders) {
+            return (totalSpend / totalOrders).toFixed(2);
         }
     });
 
-    const cleanPriceValue = (price) => +(+(price.replace(',','').substring(1))).toFixed(2)
+    const cleanPriceValue = (price) => +price.replace(/[^0-9.]/g,'');
 
     const strToInt = (str) => +str;
 
@@ -35,24 +35,24 @@
 
     const checkSaleDate = (salesArray, saleDate, price) => {
         if (!salesArray.earliestSaleDateData || !salesArray.latestSaleDateData) { return {earliestSaleDateData: {date: saleDate, price: price}, latestSaleDateData: {date: saleDate, price: price}}; }
-        if (new Date(saleDate).getTime() < new Date(salesArray?.earliestSaleDateData?.date).getTime() || new Date(saleDate).getTime() === new Date(salesArray?.earliestSaleDateData?.date).getTime()) { return Object.assign(salesArray, {earliestSaleDateData: {date: saleDate,price: price}}); }
-        if (new Date(saleDate).getTime() > new Date(salesArray?.latestSaleDateData?.date).getTime() || new Date(saleDate).getTime() === new Date(salesArray?.latestSaleDateData?.date).getTime()) { return Object.assign(salesArray, {latestSaleDateData: {date: saleDate,price: price}}); }
+        const dateFromSaleDate = new Date(saleDate).getTime();
+        const dateFromEarliestSaleDate =  new Date(salesArray.earliestSaleDateData.date).getTime();
+        if (dateFromSaleDate < dateFromEarliestSaleDate || dateFromSaleDate === dateFromEarliestSaleDate) { return Object.assign(salesArray, {earliestSaleDateData: {date: saleDate, price: price}}); }
+        const dateFromLatestSaleDate = new Date(salesArray.latestSaleDateData.date).getTime();
+        if (dateFromSaleDate > dateFromLatestSaleDate || dateFromSaleDate === dateFromLatestSaleDate) { return Object.assign(salesArray, {latestSaleDateData: {date: saleDate, price: price}}); }
     }
 
     const checkOrderQty = (salesArray, date, qty, price) => { if ( !salesArray.largestQtySold || salesArray.largestQtySold.qty < qty) { return {largestQtySold: {date: date, qty: qty, price: price}}; } }
 
     const historicDataSetting = (salesArray, saleDate, dateDiff, price, qty) => {
-        if (!salesArray.historicSalesData.daysAgo || !salesArray.historicSalesData.daysAgo[dateDiff]) { return {totalPrice: price, totalQtySold: qty, totalOrders: 1, saleDate: saleDate}; }
+        if (!salesArray.historicSalesData.daysAgo || !salesArray.historicSalesData.daysAgo[dateDiff]) { return {totalSpend: price, totalQtySold: qty, totalOrders: 1, saleDate: saleDate}; }
         const historicSalesDataStatus = salesArray.historicSalesData.daysAgo[dateDiff];
-        return {totalPrice: historicSalesDataStatus.totalPrice += price, totalQtySold: historicSalesDataStatus.totalQtySold += qty, totalOrders: historicSalesDataStatus.totalOrders += 1, saleDate: saleDate};
+        return {totalSpend: historicSalesDataStatus.totalSpend += price, totalQtySold: historicSalesDataStatus.totalQtySold += qty, totalOrders: historicSalesDataStatus.totalOrders += 1, saleDate: saleDate};
     }
 
     const gatherSalesData = () => {
         const salesByCondition = {};
         const modalDisplayLength = Array.from(document.getElementsByClassName("is-modal")).length -= 1;
-        const daysToLookBack = 2;
-        const historicDateArr = getHistoricDates(daysToLookBack);
-        const todaysDate = formatDateToTCG(new Date());
         Array.from(document.getElementsByClassName("is-modal")[modalDisplayLength].children).forEach( (children, index) => {
             const listOfSales = Array.from(document.getElementsByClassName("is-modal")[modalDisplayLength].children);
             if (listOfSales[index]?.children[1]) {
@@ -60,7 +60,7 @@
                 const currentCondition = reshapedSalesData.condition;
                 if ( !Object.keys(salesByCondition).includes(currentCondition) ) { salesByCondition[currentCondition] = addCondition(); }
                 const cleanPrice = cleanPriceValue(reshapedSalesData.price);
-                salesByCondition[currentCondition].totalPrice += cleanPrice;
+                salesByCondition[currentCondition].totalSpend += cleanPrice;
                 salesByCondition[currentCondition].totalQtySold += strToInt(reshapedSalesData.quantity);
                 salesByCondition[currentCondition].totalOrders += 1;
                 Object.assign(salesByCondition[currentCondition],
@@ -97,26 +97,32 @@
 
     const displaySalesData = (salesByCondition) => {
         const div = document.getElementsByClassName('salesDataDisplay')[0];
-        salesByCondition.forEach(condition => {
-            let displayString = `<div class="displayContainer"><strong>${condition[0]}</strong><br />
-                <span id="totalSold" style="margin-left: 40px;">Total Sold: ${condition[1].totalQtySold} - Total Orders: ${condition[1].totalOrders} - Total Price: ${condition[1].totalPrice}</span><br />
-                <span id="avgQtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${(condition[1].totalQtySold / condition[1].totalOrders)}</span><br />
-                <span id="earliestSaleDate" style="margin-left: 40px;">Earliest Sale Date: ${condition[1]?.earliestSaleDateData?.date} - Sale Price ${condition[1]?.earliestSaleDateData?.price}</span><br />
-                <span id="latestSaleData" style="margin-left: 40px;">Latest Sale Date: ${condition[1]?.latestSaleDateData?.date} - Sale Price: ${condition[1]?.latestSaleDateData?.price}</span><br />
-                <span id="largestOrderInfo" style="margin-left: 40px;">Largest Order... Date: ${condition[1].largestQtySold.date} - Qty: ${condition[1].largestQtySold.qty} - Price Per: ${condition[1].largestQtySold.price}</span>`;
-            if ( Object.keys(condition[1].historicSalesData.daysAgo).length ) {
-                displayString += `<br /><span id="historicSalesHeader" style="margin-left: 20px;"><strong>Historic Sales Data</strong></span><br />`;
-                Object.keys(condition[1].historicSalesData.daysAgo).forEach( daysAgo =>
-                    displayString += `<span id="${daysAgo}-daysAgoMarker" style="margin-left: 30px;"><strong>Days Ago: ${daysAgo} - ${condition[1].historicSalesData.daysAgo[daysAgo].saleDate}</strong></span><br />
-                        <span id="${daysAgo}-dayAgo-TotalSold" style="margin-left: 40px;">Total Orders: ${condition[1].historicSalesData.daysAgo[daysAgo].totalOrders} - Total Price: ${condition[1].historicSalesData.daysAgo[daysAgo].totalPrice} - Total Qty Sold: ${condition[1].historicSalesData.daysAgo[daysAgo].totalQtySold}</span><br />
-                        <span id="${daysAgo}-dayAgo-AvgQtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${(condition[1].historicSalesData.daysAgo[daysAgo].totalQtySold / condition[1].historicSalesData.daysAgo[daysAgo].totalOrders)}</span><br />
-                        <span id="${daysAgo}-dayAgo-MarketPrice" style="margin-left: 40px;">Market Price: ${condition[1].marketPriceByOrder( condition[1].historicSalesData.daysAgo[daysAgo].totalPrice, condition[1].historicSalesData.daysAgo[daysAgo].totalOrders ) }</span><br />`
-                );
-            }
-            displayString += '</div><br />';
+        salesByCondition.forEach(cardConditionData => {
+            let displayString = buildSalesDataDisplay(cardConditionData[0], cardConditionData[1]);
             div.innerHTML += displayString;
             div.style.height = adjustHeight(div);
         });
+    }
+
+    const buildSalesDataDisplay = (cardCondition, cardConditionData) => {
+        let displayString = `<div class="displayContainer"><strong>${cardCondition}</strong><br />
+                <span id="totalSold" style="margin-left: 40px;">Total Sold: ${cardConditionData.totalQtySold} - Total Orders: ${cardConditionData.totalOrders} - Total Spend: ${cardConditionData.totalSpend.toFixed(2)}</span><br />
+                <span id="avgQtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${ cardConditionData.avgQtyPerOrder(cardConditionData.totalQtySold,cardConditionData.totalOrders)}</span><br />
+                <span id="earliestSaleDate" style="margin-left: 40px;">Earliest Sale Date: ${cardConditionData.earliestSaleDateData.date} - Sale Price ${cardConditionData.earliestSaleDateData?.price}</span><br />
+                <span id="latestSaleData" style="margin-left: 40px;">Latest Sale Date: ${cardConditionData.latestSaleDateData.date} - Sale Price: ${cardConditionData.latestSaleDateData?.price}</span><br />
+                <span id="largestOrderInfo" style="margin-left: 40px;">Largest Order... Date: ${cardConditionData.largestQtySold.date} - Qty: ${cardConditionData.largestQtySold.qty} - Price Per: ${cardConditionData.largestQtySold.price}</span>`;
+        if ( Object.keys(cardConditionData.historicSalesData.daysAgo).length ) {
+            displayString += `<br /><span id="historicSalesHeader" style="margin-left: 20px;"><strong>Historic Sales Data</strong></span><br />`;
+            const historicSalesData = cardConditionData.historicSalesData;
+            Object.keys(historicSalesData.daysAgo).forEach( daysAgo =>
+                displayString += `<span id="${daysAgo}-daysAgoMarker" style="margin-left: 30px;"><strong>Days Ago: ${daysAgo} - ${historicSalesData.daysAgo[daysAgo].saleDate}</strong></span><br />
+                        <span id="${daysAgo}-dayAgo-TotalSold" style="margin-left: 40px;">Total Orders: ${historicSalesData.daysAgo[daysAgo].totalOrders} - Total Spend: ${historicSalesData.daysAgo[daysAgo].totalSpend.toFixed(2)} - Total Qty Sold: ${historicSalesData.daysAgo[daysAgo].totalQtySold}</span><br />
+                        <span id="${daysAgo}-dayAgo-AvgQtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${cardConditionData.avgQtyPerOrder(historicSalesData.daysAgo[daysAgo].totalQtySold, historicSalesData.daysAgo[daysAgo].totalOrders)}</span><br />
+                        <span id="${daysAgo}-dayAgo-MarketPrice" style="margin-left: 40px;">Market Price: ${cardConditionData.marketPriceByOrder( historicSalesData.daysAgo[daysAgo].totalSpend, historicSalesData.daysAgo[daysAgo].totalOrders ) }</span><br />`
+            );
+        }
+        displayString += '</div><br />';
+        return displayString;
     }
 
     const clearHtmlElements = () => {
@@ -127,7 +133,7 @@
 
     const decorateSalesHistoryHeader = () => {
         const fontColor = '#fa7ad0';
-        const backgroundColor =  '#7afaa4';
+        const backgroundColor = '#7afaa4';
         document.getElementsByClassName('modal__title')[0].children[0].innerHTML = `<div style="color:${fontColor};background:${backgroundColor}">GATHERING SALES DATA</span>`;
     }
 
@@ -142,8 +148,7 @@
     const beginSalesDataDisplay = (salesByCondition) => {
         document.getElementsByClassName("modal__overlay")[0].click();
         writeSalesDataContainer();
-        displaySalesData(Object.entries(salesByCondition).sort((elementOne, elementTwo) => elementOne[1].totalQtySold - elementTwo[1].totalQtySold ).reverse());
-        createSalesToggle();
+        displaySalesData(Object.entries(salesByCondition).sort((conditionOne, conditionTwo) => conditionOne[1].totalQtySold - conditionTwo[1].totalQtySold ).reverse());
     }
 
     async function loadMoreSalesData() {
@@ -170,6 +175,7 @@
             toggleGatherDataButton();
             loadSalesDataSplash()
                 .then(result => beginSalesDataDisplay(result))
+                .then(() => createSalesToggle())
                 .finally(() => toggleGatherDataButton())
         }
         else { alert('Please wait for the "View Sales History" link to load then click the button again.'); }
@@ -179,28 +185,27 @@
         Re-inventing the wheel because we are not importing the moment library.
      */
     const getHistoricDates = ( daysToLookBack ) => {
-        const dayInMilliseconds = 1000 * 60 * 60 * 24;
         let historicDatesArr = [];
         for (let dayCount = 0; dayCount <= daysToLookBack; dayCount++) {
-            historicDatesArr.push( formatDateToTCG( new Date(Date.now() - (dayInMilliseconds * dayCount)) ) );
+            historicDatesArr.push( formatDateToTCG( new Date(Date.now() - (daysInMilliseconds(dayCount) ))) );
         }
-
         return historicDatesArr;
     }
 
-    const formatDateToTCG = (date) => {
-        let curMonth = date.getMonth();
-        return (curMonth + 1) + '/' + date.getDate() + '/' + date.getFullYear().toString().slice(2);
-    }
+    const formatDateToTCG = (date) => (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear().toString().slice(2);
 
     const parseStrDate = (stringDate) => {
         const dateArr = stringDate.split('/');
         return new Date(dateArr[2], dateArr[0] - 1, dateArr[1]);
     }
 
-    const getSaleDateDiff = (firstDate, secondDate) => {
-        const dayInMilliseconds = 1000 * 60 * 60 * 24;
-        return (parseStrDate(firstDate) - parseStrDate(secondDate)) / dayInMilliseconds;
-    }
+    const getSaleDateDiff = (firstDate, secondDate) => (parseStrDate(firstDate) - parseStrDate(secondDate)) / daysInMilliseconds(1);
 
+    const daysInMilliseconds = (days) => 1000 * 60 * 60 * (24 * days);
+
+    const daysToLookBack = 2;
+
+    const todaysDate = formatDateToTCG(new Date());
+
+    const historicDateArr = getHistoricDates(daysToLookBack);
 })();
