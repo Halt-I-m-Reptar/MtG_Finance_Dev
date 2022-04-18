@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.19
+// @version      0.20
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -11,7 +11,7 @@
 
 (function() {
     'use strict';
-    createDataRequestButton();
+    writeDataRequestButton();
 
     const addCondition = () => ({
         totalSpend: 0,
@@ -53,6 +53,7 @@
     const gatherSalesData = () => {
         const salesByCondition = {};
         const modalDisplayLength = Array.from(document.getElementsByClassName("is-modal")).length -= 1;
+        const historicDateArr = setHistoricDateArr(daysToLookBack());
         Array.from(document.getElementsByClassName("is-modal")[modalDisplayLength].children).forEach( (children, index) => {
             const listOfSales = Array.from(document.getElementsByClassName("is-modal")[modalDisplayLength].children);
             if (listOfSales[index]?.children[1]) {
@@ -72,18 +73,6 @@
             }
         });
         return salesByCondition;
-    }
-
-    const createSalesToggle = () => {
-        const div = document.createElement('div');
-        div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:20px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
-        document.body.prepend(div);
-    }
-
-    function createDataRequestButton() {
-        const div = document.createElement('div');
-        div.innerHTML = ('<button class="dataRequestButton" style="position:fixed;top:0;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#00b;color:#fff;font-weight:bold;" onclick="startDataRequest()">Gather Sales Data</button>');
-        document.body.prepend(div);
     }
 
     const adjustHeight = (div) => (parseInt(div.style.height.replace(/[a-zA-Z]/g,'')) + 115) + "px";
@@ -125,12 +114,6 @@
         return displayString;
     }
 
-    const clearHtmlElements = () => {
-        ['salesDataDisplay', 'salesDataToggle'].forEach( selector => {
-            if ( document.getElementsByClassName(selector)[0] ) { document.getElementsByClassName(selector)[0].remove(); }
-        });
-    }
-
     const decorateSalesHistoryHeader = () => {
         const fontColor = '#fa7ad0';
         const backgroundColor = '#7afaa4';
@@ -164,27 +147,62 @@
 
     const sleep = (milliseconds) => { return new Promise(resolve => setTimeout(resolve, milliseconds)); }
 
+    window.startDataRequest = function() {
+        clearHtmlElements();
+        if (!document.getElementsByClassName("price-guide__latest-sales__more")[0]?.children[0]) { alert('Please wait for the "View Sales History" link to load then click the button again.'); }
+        else {
+            toggleGatherDataButton();
+            loadSalesDataSplash()
+                .then(result => beginSalesDataDisplay(result))
+                .then(() => writeSalesToggle())
+                .finally(() => toggleGatherDataButton())
+        }
+    }
+
+    /********************
+     HTML element interaction
+     ********************/
+
+    const clearHtmlElements = () => {
+        ['salesDataDisplay', 'salesDataToggle'].forEach( selector => {
+            if ( document.getElementsByClassName(selector)[0] ) { document.getElementsByClassName(selector)[0].remove(); }
+        });
+    }
+
     window.toggleSalesData = function() {
         const display = document.getElementsByClassName('salesDataDisplay')[0].style.display;
         document.getElementsByClassName('salesDataDisplay')[0].style.display = display === 'none' ? 'inline' : 'none';
     }
 
-    window.startDataRequest = function() {
-        clearHtmlElements();
-        if (document.getElementsByClassName("price-guide__latest-sales__more")[0]?.children[0]) {
-            toggleGatherDataButton();
-            loadSalesDataSplash()
-                .then(result => beginSalesDataDisplay(result))
-                .then(() => createSalesToggle())
-                .finally(() => toggleGatherDataButton())
-        }
-        else { alert('Please wait for the "View Sales History" link to load then click the button again.'); }
+    /********************
+     Write interactive HTML elements
+     ********************/
+
+    const writeSalesToggle = () => {
+        const div = document.createElement('div');
+        div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:45px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
+        document.body.prepend(div);
     }
 
-    /*
-        Re-inventing the wheel because we are not importing the moment library.
-     */
-    const getHistoricDates = ( daysToLookBack ) => {
+    function writeDaysToLookBackSpinner() {
+        const div = document.createElement('div');
+        div.style = "position:fixed;top:0;left:0;z-index:9999;width:auto;height:27px;padding:0 5px 0 0;background:#a00;color:#fff;font-size:10pt;font-weight:bold;"
+        div.innerHTML = ('Days to Look Back <input type="number" class="daysToLookBack" id="daysToLookBack" min="2" max="7" step="1" value="2" />');
+        document.body.prepend(div);
+    }
+
+    function writeDataRequestButton() {
+        writeDaysToLookBackSpinner();
+        const div = document.createElement('div');
+        div.innerHTML = ('<button class="dataRequestButton" style="position:fixed;top:25px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#00b;color:#fff;font-weight:bold;" onclick="startDataRequest()">Gather Sales Data</button>');
+        document.body.prepend(div);
+    }
+
+    /********************
+     Re-inventing the wheel of time because we are not importing the moment library.
+     ********************/
+
+    const setHistoricDateArr = (daysToLookBack) => {
         let historicDatesArr = [];
         for (let dayCount = 0; dayCount <= daysToLookBack; dayCount++) {
             historicDatesArr.push( formatDateToTCG( new Date(Date.now() - (daysInMilliseconds(dayCount) ))) );
@@ -203,9 +221,7 @@
 
     const daysInMilliseconds = (days = 1) => 1000 * 60 * 60 * (24 * days);
 
-    const daysToLookBack = 2;
+    const daysToLookBack = () => +document.getElementsByClassName('daysToLookBack')[0].value || 2;
 
     const todaysDate = formatDateToTCG(new Date());
-
-    const historicDateArr = getHistoricDates(daysToLookBack);
 })();
