@@ -180,21 +180,21 @@
 
     const writeSalesToggle = () => {
         const div = document.createElement('div');
-        div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:45px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
+        div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:40px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
         document.body.prepend(div);
     }
 
     function writeDaysToLookBackSpinner() {
         const div = document.createElement('div');
-        div.style = "position:fixed;top:0;left:0;z-index:9999;width:auto;height:27px;padding:0 5px 0 0;background:#a00;color:#fff;font-size:10pt;font-weight:bold;"
-        div.innerHTML = ('Days to Look Back <input type="number" class="daysToLookBack" id="daysToLookBack" min="2" max="7" step="1" value="2" />');
+        div.style = 'position:fixed;top:0;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#a00;color:#fff;font-size:10pt;font-weight:bold;appearance:inherit;';
+        div.innerHTML = ('Days to Look Back <input type="number" class="daysToLookBack" id="daysToLookBack" min="0" max="7" step="1" value="2" style="height:20px;font-size:10pt!important"/>');
         document.body.prepend(div);
     }
 
     function writeDataRequestButton() {
         writeDaysToLookBackSpinner();
         const div = document.createElement('div');
-        div.innerHTML = ('<button class="dataRequestButton" style="position:fixed;top:25px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#00b;color:#fff;font-weight:bold;" onclick="startDataRequest()">Gather Sales Data</button>');
+        div.innerHTML = ('<button class="dataRequestButton" style="position:fixed;top:20px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#00b;color:#fff;font-weight:bold;" onclick="startDataRequest()">Gather Sales Data</button>');
         document.body.prepend(div);
     }
 
@@ -221,7 +221,7 @@
 
     const daysInMilliseconds = (days = 1) => 1000 * 60 * 60 * (24 * days);
 
-    const daysToLookBack = () => +document.getElementsByClassName('daysToLookBack')[0].value || 2;
+    const daysToLookBack = () => +document.getElementsByClassName('daysToLookBack')[0].value >= 0 ? +document.getElementsByClassName('daysToLookBack')[0].value : 2;
 
     const todaysDate = formatDateToTCG(new Date());
 })();
