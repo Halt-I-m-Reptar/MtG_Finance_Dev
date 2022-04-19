@@ -48,7 +48,12 @@
         tableHeaderArray.insertCell(6).innerHTML = '<span style="font-weight:bold; color: #212529;">CK BL</span>';
     }
 
-    window.createCells = () => { addNewCellsToPriceTables(); }
+    window.createCells = () => {
+        if (window.location.pathname.match('interests')) {
+            addNewCellsToPriceTables();
+        }
+        alert('Please visit the Interests page to utilize this functionality.');
+    }
 
     function writeDataRequestButton() {
         const div = document.createElement('div');
