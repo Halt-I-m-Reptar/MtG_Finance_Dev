@@ -33,7 +33,7 @@
         const oldCardPrice = +(cardDataInRow.getElementsByTagName('td')[3].innerText).replace(/\$/g,'');
         const cardPriceDiff = (newCardPrice - oldCardPrice).toFixed(2);
         const cellToInsert = cardDataInRow.insertCell(5);
-        cellToInsert.innerHTML = `<span style="color: #212529;">$${cardPriceDiff}</span>`
+        cellToInsert.innerHTML = `<span style="color: #212529;">$${cardPriceDiff}</span>`;
         cellToInsert.className = cardPriceDiff > 0 ? "table-success" : "table-danger";
     }
 
