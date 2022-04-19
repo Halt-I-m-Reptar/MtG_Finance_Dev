@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         MtG Stocks Currency Difference
-// @version      0.4
+// @version      0.5
 // @description  Added currency difference to interest list
-// @author       Halt_I_m_Reptar (MtG Cabal Cast)
+// @author       Peter Creutzberger
 // @match        *://*.mtgstocks.com/*
 // @match        *://*.pikastocks.com/*
 // @grant        none
@@ -11,59 +11,54 @@
 
 (function() {
     'use strict';
-    Array.from(document.getElementsByClassName("nav-item")).forEach( link => link.addEventListener("click", createCells) );
-    createCells();
-})();
+    writeDataRequestButton();
 
-async function createCells() {
-    await sleep(1000);
-    addButtonListener();
-    addNewCells();
-}
-
-
-function addButtonListener() {
-    Array.from(document.getElementsByClassName("btn btn-outline-primary float-right mr-1")).forEach( btn => btn.addEventListener("click", createCells) );
-}
-
-function addNewCells(){
-    Array.from(document.getElementsByTagName("tr")).forEach( row => {
-        if ( Array.from(row.cells).length > 5 ) { return; }
-        var newPrice = parseFloat(Array.from(row.cells)[2].innerText.substr(1));
-        var oldPrice = parseFloat(Array.from(row.cells)[3].innerText.substr(1));
-        if ( newPrice && oldPrice ) {
-            addDollaryDoos(row, newPrice, oldPrice);
-            if (window.location.host.includes('mtgstocks')) { addCKBLLink(row); }
-        } else {
-            addTableHeader(row);
-        }
-    });
-}
-
-function addDollaryDoos(row, newPrice, oldPrice) {
-    row.insertCell(5).innerHTML = "<span style=\"font-family: Open Sans; color: #212529;\">$"+(newPrice-oldPrice).toFixed(2)+"</span>";
-    Array.from(row.cells)[5].className = (newPrice-oldPrice).toFixed(2) > 0 ? "text-right alert-success" : "text-right alert-danger";
-}
-
-function addCKBLLink(row) {
-    //https://cardkingdom.com/purchasing/mtg_singles?filter%5Bsearch%5D=mtg_advanced&filter%5Bname%5D=Will-o%27-the-Wisp
-    var url = "https://cardkingdom.com/purchasing/mtg_singles?filter%5Bsearch%5D=mtg_advanced&filter%5Bname%5D=";
-    row.insertCell(6).innerHTML = "<span style=\"font-family: Open Sans; color: #007bff;\"><a href=\""+url+Array.from(row.cells)[0].innerText.replace(/ /g,'+')+"\" target=\"_blank\">"+Array.from(row.cells)[0].innerText+"</a></span>";
-}
-
-function addTableHeader(row) {
-    //$ Diff
-    row.insertCell(5).innerHTML = "<span style=\"font-weight:bold; font-family: Open Sans; color: #212529;\">$</span>";
-    Array.from(row.cells)[5].className = "clickable";
-    Array.from(row.cells)[5].scope = "col";
-    //CK BL Link
-    if (window.location.host.includes('mtgstocks')) {
-        row.insertCell(6).innerHTML = "<span style=\"font-weight:bold; font-family: Open Sans; color: #212529;\">CK BL</span>";
-        Array.from(row.cells)[6].className = "clickable";
-        Array.from(row.cells)[6].scope = "col";
+    const addNewCellsToPriceTables = () => {
+        Array.from(document.getElementsByTagName("table")).forEach( priceTableOnPage => {
+            addHeaderToTable( priceTableOnPage.getElementsByTagName('thead')[0].getElementsByTagName('tr')[0] );
+            const tableBodyArray = Array.from(priceTableOnPage.getElementsByTagName('tbody'));
+            tableBodyArray.forEach( rawTableRow => addCellsToRows( Array.from(rawTableRow.getElementsByTagName('tr')) ));
+        });
     }
-}
 
-function sleep (milliseconds) {
-    return new Promise(resolve => setTimeout(resolve, milliseconds))
-}
+    const addCellsToRows = (tableRowArray) => {
+        tableRowArray.forEach( cardDataInRow => {
+            addPriceDifference(cardDataInRow);
+            addCKBLLink(cardDataInRow);
+        });
+    }
+
+    const addPriceDifference = (cardDataInRow) => {
+        const newCardPrice = +(cardDataInRow.getElementsByTagName('td')[2].innerText).replace(/\$/g,'');
+        const oldCardPrice = +(cardDataInRow.getElementsByTagName('td')[3].innerText).replace(/\$/g,'');
+        const cardPriceDiff = (newCardPrice - oldCardPrice).toFixed(2);
+        const cellToInsert = cardDataInRow.insertCell(5);
+        cellToInsert.innerHTML = `<span style="color: #212529;">$${cardPriceDiff}</span>`
+        cellToInsert.className = cardPriceDiff > 0 ? "table-success" : "table-danger";
+    }
+
+    const addCKBLLink = (cardsInRow) => {
+        const buylistURLBase = "https://cardkingdom.com/purchasing/mtg_singles?filter%5Bsearch%5D=mtg_advanced&filter%5Bname%5D=";
+        const cardName = cardsInRow.getElementsByTagName('td')[0].innerText;
+        cardsInRow.insertCell(6).innerHTML = `<span style=\"color: #007bff;\"><a href=\"${buylistURLBase + cardName.replace(/ /g,'+')}" target=\"_blank\">${cardName}</a></span>`;
+    }
+
+    const addHeaderToTable = (tableHeaderArray) => {
+        tableHeaderArray.insertCell(5).innerHTML = '<span style="font-weight:bold; color: #212529;">$ Diff</span>';
+        tableHeaderArray.insertCell(6).innerHTML = '<span style="font-weight:bold; color: #212529;">CK BL</span>';
+    }
+
+    window.createCells = () => {
+        if (window.location.pathname.match('interests')) {
+            addNewCellsToPriceTables();
+        }
+        alert('Please visit the Interests page to utilize this functionality.');
+    }
+
+    function writeDataRequestButton() {
+        const div = document.createElement('div');
+        div.innerHTML = ('<button class="dataRequestButton" style="position:fixed;top:0;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#00b;color:#fff;" onclick="createCells()">Enhance Price Display</button>');
+        document.body.prepend(div);
+    }
+
+})();
