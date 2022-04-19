@@ -51,8 +51,7 @@
     window.createCells = () => {
         if (window.location.pathname.match('interests')) {
             addNewCellsToPriceTables();
-        }
-        alert('Please visit the Interests page to utilize this functionality.');
+        } else { alert('Please visit the Interests page to utilize this functionality.'); }
     }
 
     function writeDataRequestButton() {
