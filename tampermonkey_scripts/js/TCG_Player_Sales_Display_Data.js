@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.20
+// @version      0.21
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -75,7 +75,7 @@
         return salesByCondition;
     }
 
-    const adjustHeight = (div) => (parseInt(div.style.height.replace(/[a-zA-Z]/g,'')) + 115) + "px";
+    const adjustSalesDataDivHeight = (div, timesToAdjustHeight) => (parseInt(div.style.height.replace(/[^0-9]/g,'')) + 115 * timesToAdjustHeight) + "px";
 
     const writeSalesDataContainer = () => {
         const div = document.createElement('div');
@@ -87,31 +87,33 @@
     const displaySalesData = (salesByCondition) => {
         const div = document.getElementsByClassName('salesDataDisplay')[0];
         salesByCondition.forEach(cardConditionData => {
-            let displayString = buildSalesDataDisplay(cardConditionData[0], cardConditionData[1]);
-            div.innerHTML += displayString;
-            div.style.height = adjustHeight(div);
+            const cardDisplayData = buildSalesDataDisplay(cardConditionData[0], cardConditionData[1]);
+            div.innerHTML += cardDisplayData.cardDisplayData;
+            div.style.height = adjustSalesDataDivHeight(div, cardDisplayData.timesToAdjustHeight);
         });
     }
 
     const buildSalesDataDisplay = (cardCondition, cardConditionData) => {
-        let displayString = `<div class="displayContainer"><strong>${cardCondition}</strong><br />
+        let heightAdjustmentCount = 1;
+        let cardDisplayString = `<div class="displayContainer"><strong>${cardCondition}</strong><br />
                 <span id="totalSold" style="margin-left: 40px;">Total Sold: ${cardConditionData.totalQtySold} - Total Orders: ${cardConditionData.totalOrders} - Total Spend: ${cardConditionData.totalSpend.toFixed(2)}</span><br />
                 <span id="avgQtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${ cardConditionData.avgQtyPerOrder(cardConditionData.totalQtySold,cardConditionData.totalOrders)}</span><br />
                 <span id="earliestSaleDate" style="margin-left: 40px;">Earliest Sale Date: ${cardConditionData.earliestSaleDateData.date} - Sale Price ${cardConditionData.earliestSaleDateData?.price}</span><br />
                 <span id="latestSaleData" style="margin-left: 40px;">Latest Sale Date: ${cardConditionData.latestSaleDateData.date} - Sale Price: ${cardConditionData.latestSaleDateData?.price}</span><br />
                 <span id="largestOrderInfo" style="margin-left: 40px;">Largest Order... Date: ${cardConditionData.largestQtySold.date} - Qty: ${cardConditionData.largestQtySold.qty} - Price Per: ${cardConditionData.largestQtySold.price}</span>`;
         if ( Object.keys(cardConditionData.historicSalesData.daysAgo).length ) {
-            displayString += `<br /><span id="historicSalesHeader" style="margin-left: 20px;"><strong>Historic Sales Data</strong></span><br />`;
+            heightAdjustmentCount++;
+            cardDisplayString += `<br /><span id="historicSalesHeader" style="margin-left: 20px;"><strong>Historic Sales Data</strong></span><br />`;
             const historicSalesData = cardConditionData.historicSalesData;
             Object.keys(historicSalesData.daysAgo).forEach( daysAgo =>
-                displayString += `<span id="${daysAgo}-daysAgoMarker" style="margin-left: 30px;"><strong>Days Ago: ${daysAgo} - ${historicSalesData.daysAgo[daysAgo].saleDate}</strong></span><br />
+                cardDisplayString += `<span id="${daysAgo}-daysAgoMarker" style="margin-left: 30px;"><strong>Days Ago: ${daysAgo} - ${historicSalesData.daysAgo[daysAgo].saleDate}</strong></span><br />
                         <span id="${daysAgo}-dayAgo-TotalSold" style="margin-left: 40px;">Total Orders: ${historicSalesData.daysAgo[daysAgo].totalOrders} - Total Spend: ${historicSalesData.daysAgo[daysAgo].totalSpend.toFixed(2)} - Total Qty Sold: ${historicSalesData.daysAgo[daysAgo].totalQtySold}</span><br />
                         <span id="${daysAgo}-dayAgo-AvgQtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${cardConditionData.avgQtyPerOrder(historicSalesData.daysAgo[daysAgo].totalQtySold, historicSalesData.daysAgo[daysAgo].totalOrders)}</span><br />
                         <span id="${daysAgo}-dayAgo-MarketPrice" style="margin-left: 40px;">Market Price: ${cardConditionData.marketPriceByOrder( historicSalesData.daysAgo[daysAgo].totalSpend, historicSalesData.daysAgo[daysAgo].totalOrders ) }</span><br />`
             );
         }
-        displayString += '</div><br />';
-        return displayString;
+        cardDisplayString += `</div><br />`;
+        return {cardDisplayData: cardDisplayString, timesToAdjustHeight: heightAdjustmentCount};
     }
 
     const decorateSalesHistoryHeader = () => {
