@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.22
+// @version      0.23
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -50,6 +50,12 @@
         return {totalSpend: historicSalesDataStatus.totalSpend += price, totalQtySold: historicSalesDataStatus.totalQtySold += qty, totalOrders: historicSalesDataStatus.totalOrders += 1, saleDate: saleDate};
     }
 
+    const updateSalesTotals = (salesArray, price, qty) => {
+        salesArray.totalSpend += price;
+        salesArray.totalQtySold += qty;
+        salesArray.totalOrders += 1;
+    }
+
     const gatherSalesData = () => {
         const salesByCondition = {};
         const modalDisplayLength = Array.from(document.getElementsByClassName("is-modal")).length -= 1;
@@ -60,16 +66,19 @@
                 const reshapedSalesData = shapeSalesData( Array.from(listOfSales[index].children) );
                 const currentCondition = reshapedSalesData.condition;
                 if ( !Object.keys(salesByCondition).includes(currentCondition) ) { salesByCondition[currentCondition] = addCondition(); }
+
                 const cleanPrice = cleanPriceValue(reshapedSalesData.price);
-                salesByCondition[currentCondition].totalSpend += cleanPrice;
-                salesByCondition[currentCondition].totalQtySold += strToInt(reshapedSalesData.quantity);
-                salesByCondition[currentCondition].totalOrders += 1;
+
                 Object.assign(salesByCondition[currentCondition],
                     checkOrderQty(salesByCondition[currentCondition], reshapedSalesData.date, strToInt(reshapedSalesData.quantity), cleanPrice),
                     checkSaleDate(salesByCondition[currentCondition], reshapedSalesData.date, cleanPrice)
                 );
+
                 const saleDateDiff = historicDateArr.includes(reshapedSalesData.date) ? getSaleDateDiff(todaysDate, reshapedSalesData.date) : -1;
-                if ( saleDateDiff > -1 ) { salesByCondition[currentCondition].historicSalesData.daysAgo[saleDateDiff] = historicDataSetting(salesByCondition[currentCondition], reshapedSalesData.date, saleDateDiff, cleanPrice, strToInt(reshapedSalesData.quantity)); }
+                if ( saleDateDiff > -1 ) {
+                    updateSalesTotals(salesByCondition[currentCondition], cleanPrice, strToInt(reshapedSalesData.quantity));
+                    salesByCondition[currentCondition].historicSalesData.daysAgo[saleDateDiff] = historicDataSetting(salesByCondition[currentCondition], reshapedSalesData.date, saleDateDiff, cleanPrice, strToInt(reshapedSalesData.quantity));
+                }
             }
         });
         return salesByCondition;
