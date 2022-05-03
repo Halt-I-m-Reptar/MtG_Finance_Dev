@@ -81,7 +81,6 @@
                 }
             }
         });
-        console.log(salesByCondition);
         return salesByCondition;
     }
 
