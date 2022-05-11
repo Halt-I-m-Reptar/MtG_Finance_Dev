@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.23
+// @version      0.24
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -150,9 +150,9 @@
         await sleep(500);
         decorateSalesHistoryHeader();
         for (let i = 0; i < max; i++) {
-            await sleep(300);
-            if (!document.getElementsByClassName('price-guide-modal__load-more')[0]) { i = max; }
-            else { document.getElementsByClassName('price-guide-modal__load-more')[0].click(); }
+            await sleep(500);
+            if (document.getElementsByClassName('price-guide-modal__load-more')[0]) { document.getElementsByClassName('price-guide-modal__load-more')[0].click();}
+            else {i = max; }
         }
     }
 
