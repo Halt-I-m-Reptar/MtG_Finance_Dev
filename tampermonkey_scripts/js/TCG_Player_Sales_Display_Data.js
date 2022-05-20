@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.25
+// @version      0.26
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -51,7 +51,7 @@
     }
 
     const updateSalesTotals = (salesArray, price, qty) => {
-        salesArray.totalSpend += price;
+        salesArray.totalSpend += (price * qty);
         salesArray.totalQtySold += qty;
         salesArray.totalOrders += 1;
     }
