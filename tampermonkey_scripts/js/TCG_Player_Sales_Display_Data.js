@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.24
+// @version      0.25
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -19,7 +19,7 @@
         totalOrders:0,
         historicSalesData: {daysAgo:{}},
         avgQtyPerOrder: function(totalQtySold,totalOrders ) {
-            return (totalQtySold / totalOrders).toFixed(2);
+            return (totalQtySold / totalOrders) > 0 ? (totalQtySold / totalOrders).toFixed(2) : 0;
         },
         marketPriceByOrder: function(totalSpend, totalOrders) {
             return (totalSpend / totalOrders).toFixed(2);
@@ -66,17 +66,15 @@
                 const reshapedSalesData = shapeSalesData( Array.from(listOfSales[index].children) );
                 const currentCondition = reshapedSalesData.condition;
                 if ( !Object.keys(salesByCondition).includes(currentCondition) ) { salesByCondition[currentCondition] = addCondition(); }
-
                 const cleanPrice = cleanPriceValue(reshapedSalesData.price);
-
                 Object.assign(salesByCondition[currentCondition],
                     checkOrderQty(salesByCondition[currentCondition], reshapedSalesData.date, strToInt(reshapedSalesData.quantity), cleanPrice),
                     checkSaleDate(salesByCondition[currentCondition], reshapedSalesData.date, cleanPrice)
                 );
-
+                updateSalesTotals(salesByCondition[currentCondition], cleanPrice, strToInt(reshapedSalesData.quantity));
                 const saleDateDiff = historicDateArr.includes(reshapedSalesData.date) ? getSaleDateDiff(todaysDate, reshapedSalesData.date) : -1;
                 if ( saleDateDiff > -1 ) {
-                    updateSalesTotals(salesByCondition[currentCondition], cleanPrice, strToInt(reshapedSalesData.quantity));
+                    //updateSalesTotals(salesByCondition[currentCondition], cleanPrice, strToInt(reshapedSalesData.quantity));
                     salesByCondition[currentCondition].historicSalesData.daysAgo[saleDateDiff] = historicDataSetting(salesByCondition[currentCondition], reshapedSalesData.date, saleDateDiff, cleanPrice, strToInt(reshapedSalesData.quantity));
                 }
             }
@@ -105,8 +103,9 @@
     const buildSalesDataDisplay = (cardCondition, cardConditionData) => {
         let heightAdjustmentCount = 1;
         let cardDisplayString = `<div class="displayContainer"><strong>${cardCondition}</strong><br />
+                <span id="salesHeader" style="margin-left: 20px;"><strong>Overall Sales Data</strong></span><br />
                 <span id="totalSold" style="margin-left: 40px;">Total Sold: ${cardConditionData.totalQtySold} - Total Orders: ${cardConditionData.totalOrders} - Total Spend: ${cardConditionData.totalSpend.toFixed(2)}</span><br />
-                <span id="avgQtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${ cardConditionData.avgQtyPerOrder(cardConditionData.totalQtySold,cardConditionData.totalOrders)}</span><br />
+                <span id="avgQtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${cardConditionData.avgQtyPerOrder(cardConditionData.totalQtySold, cardConditionData.totalOrders)}</span><br />
                 <span id="earliestSaleDate" style="margin-left: 40px;">Earliest Sale Date: ${cardConditionData.earliestSaleDateData.date} - Sale Price ${cardConditionData.earliestSaleDateData?.price}</span><br />
                 <span id="latestSaleData" style="margin-left: 40px;">Latest Sale Date: ${cardConditionData.latestSaleDateData.date} - Sale Price: ${cardConditionData.latestSaleDateData?.price}</span><br />
                 <span id="largestOrderInfo" style="margin-left: 40px;">Largest Order... Date: ${cardConditionData.largestQtySold.date} - Qty: ${cardConditionData.largestQtySold.qty} - Price Per: ${cardConditionData.largestQtySold.price}</span>`;
