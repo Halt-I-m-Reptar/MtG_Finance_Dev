@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.26
+// @version      0.27
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -124,10 +124,10 @@
         return {cardDisplayData: cardDisplayString, timesToAdjustHeight: heightAdjustmentCount};
     }
 
-    const decorateSalesHistoryHeader = () => {
+    const decorateSalesHistoryHeader = (clickCount = 0) => {
         const fontColor = '#fa7ad0';
         const backgroundColor = '#7afaa4';
-        document.getElementsByClassName('modal__title')[0].children[0].innerHTML = `<div style="color:${fontColor};background:${backgroundColor}">GATHERING SALES DATA</span>`;
+        document.getElementsByClassName('modal__title')[0].children[0].innerHTML = `<div style="color:${fontColor};background:${backgroundColor}">GATHERING SALES DATA - Click Count: ${clickCount}</span>`;
     }
 
     const toggleGatherDataButton = () => { document.getElementsByClassName('dataRequestButton')[0].disabled = !document.getElementsByClassName('dataRequestButton')[0].disabled; }
@@ -145,13 +145,13 @@
     }
 
     async function loadMoreSalesData() {
-        const max = 50;
+        const maxClicks = 50;
         await sleep(500);
-        decorateSalesHistoryHeader();
-        for (let i = 0; i < max; i++) {
+        for (let clickCount = 0; clickCount < maxClicks; clickCount++) {
             await sleep(500);
+            decorateSalesHistoryHeader(clickCount);
             if (document.getElementsByClassName('price-guide-modal__load-more')[0]) { document.getElementsByClassName('price-guide-modal__load-more')[0].click();}
-            else {i = max; }
+            else {clickCount = maxClicks; }
         }
     }
 
