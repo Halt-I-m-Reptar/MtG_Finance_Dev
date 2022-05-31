@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.27
+// @version      0.28
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -12,6 +12,8 @@
 (function() {
     'use strict';
     writeDataRequestButton();
+
+    const totalCopiesAvailable = () => Array.from(document.getElementsByClassName('add-to-cart__available')).map( value => +value.innerText.split(' ')[1] ).reduce( (prev, curr) => prev + curr, 0);
 
     const addCondition = () => ({
         totalSpend: 0,
@@ -36,7 +38,7 @@
     const checkSaleDate = (salesArray, saleDate, price) => {
         if (!salesArray.earliestSaleDateData || !salesArray.latestSaleDateData) { return {earliestSaleDateData: {date: saleDate, price: price}, latestSaleDateData: {date: saleDate, price: price}}; }
         const dateFromSaleDate = new Date(saleDate).getTime();
-        const dateFromEarliestSaleDate =  new Date(salesArray.earliestSaleDateData.date).getTime();
+        const dateFromEarliestSaleDate = new Date(salesArray.earliestSaleDateData.date).getTime();
         if (dateFromSaleDate < dateFromEarliestSaleDate || dateFromSaleDate === dateFromEarliestSaleDate) { return Object.assign(salesArray, {earliestSaleDateData: {date: saleDate, price: price}}); }
         const dateFromLatestSaleDate = new Date(salesArray.latestSaleDateData.date).getTime();
         if (dateFromSaleDate > dateFromLatestSaleDate || dateFromSaleDate === dateFromLatestSaleDate) { return Object.assign(salesArray, {latestSaleDateData: {date: saleDate, price: price}}); }
@@ -74,7 +76,6 @@
                 updateSalesTotals(salesByCondition[currentCondition], cleanPrice, strToInt(reshapedSalesData.quantity));
                 const saleDateDiff = historicDateArr.includes(reshapedSalesData.date) ? getSaleDateDiff(todaysDate, reshapedSalesData.date) : -1;
                 if ( saleDateDiff > -1 ) {
-                    //updateSalesTotals(salesByCondition[currentCondition], cleanPrice, strToInt(reshapedSalesData.quantity));
                     salesByCondition[currentCondition].historicSalesData.daysAgo[saleDateDiff] = historicDataSetting(salesByCondition[currentCondition], reshapedSalesData.date, saleDateDiff, cleanPrice, strToInt(reshapedSalesData.quantity));
                 }
             }
@@ -93,6 +94,7 @@
 
     const displaySalesData = (salesByCondition) => {
         const div = document.getElementsByClassName('salesDataDisplay')[0];
+        div.innerHTML += `<strong>Total copies in view:</strong> ${totalCopiesAvailable()}<br />`;
         salesByCondition.forEach(cardConditionData => {
             const cardDisplayData = buildSalesDataDisplay(cardConditionData[0], cardConditionData[1]);
             div.innerHTML += cardDisplayData.cardDisplayData;
