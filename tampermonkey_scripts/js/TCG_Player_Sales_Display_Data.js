@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.28
+// @version      0.29
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -12,8 +12,6 @@
 (function() {
     'use strict';
     writeDataRequestButton();
-
-    const totalCopiesAvailable = () => Array.from(document.getElementsByClassName('add-to-cart__available')).map( value => +value.innerText.split(' ')[1] ).reduce( (prev, curr) => prev + curr, 0);
 
     const addCondition = () => ({
         totalSpend: 0,
@@ -94,7 +92,7 @@
 
     const displaySalesData = (salesByCondition) => {
         const div = document.getElementsByClassName('salesDataDisplay')[0];
-        div.innerHTML += `<strong>Total copies in view:</strong> ${totalCopiesAvailable()}<br />`;
+        div.innerHTML += `<strong>Total copies in view:</strong><br />${buildQtyInViewDisplay(setQtyInView())}<br />`;
         salesByCondition.forEach(cardConditionData => {
             const cardDisplayData = buildSalesDataDisplay(cardConditionData[0], cardConditionData[1]);
             div.innerHTML += cardDisplayData.cardDisplayData;
@@ -170,6 +168,38 @@
                 .finally(() => toggleGatherDataButton())
         }
     }
+
+    /********************
+    Pull in current quantity for sale on screen
+     ********************/
+    const setQtyInViewByCondition = (condition, qty, qtyInView) => {
+        const shorthandCondition = mapCondition(condition);
+        if (Object.keys(qtyInView).includes(shorthandCondition)) {
+            qtyInView[shorthandCondition].quantity += qty;
+            qtyInView[shorthandCondition].vendorCount += 1;
+        }
+        else { qtyInView[shorthandCondition] = {quantity: qty, vendorCount: 1}; }
+    }
+
+    const mapCondition = (condition) => {
+        const hasFoil = condition.includes('Foil') ? ' Foil' : '';
+        const conditionMap = {
+            'Near Mint': 'NM',
+            'Lightly Played': 'LP',
+            'Moderately Played': 'MP',
+            'Heavily Played': 'HP',
+            'Damaged': 'DMG'
+        };
+        return conditionMap[condition.replace(' Foil', '')] + hasFoil;
+    }
+
+    const setQtyInView = () => {
+        const qtyInView = {};
+        Array.from(document.getElementsByClassName('listing-item product-details__listings-results')).forEach( listingItem => setQtyInViewByCondition(listingItem.children[0].innerText, +listingItem.children[3].getElementsByClassName('add-to-cart__available')[0].innerText.split(' ')[1], qtyInView ));
+        return qtyInView;
+    }
+
+    const buildQtyInViewDisplay = (qtyInView) => Object.entries(qtyInView).reduce( (prevQtyData, currQty) => prevQtyData.concat(`<span style="margin-left: 20px;">${currQty[0]} Copies: ${currQty[1].quantity} - Vendor Count: ${currQty[1].vendorCount}</span><br />`), '');
 
     /********************
      HTML element interaction
