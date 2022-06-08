@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Card_Kingdom_Hotlist_Display
 // @namespace    https://*cardkingdom.com/
-// @version      0.9
+// @version      0.10
 // @description  Security through obfuscation is bad, m'kay.
 // @author       Halt_I_m_Reptar (MtG Cabal Cast)
 // @match        https://*.cardkingdom.com/
@@ -53,11 +53,11 @@
         document.getElementsByClassName('hotlistContainer')[0].style.display = display === 'none' ? 'inline' : 'none';
     }
 
-    const fetchHotlistData = () => Array.from(document.getElementsByClassName("slick-slide"));
+    const fetchHotlistData = () => Array.from(document.getElementsByClassName("slider-item-info"));
 
     const mapHotlistData = (slideArr) => {
         return slideArr.map( (elem) => {
-            if (elem.innerText.match(/:/g).length > 1) {
+            if (elem.innerText.match(/:/g)) {
                 return elem.innerText.replace(/[\n\r]+/g,'--').replace(/:([^:]*):\s/g,'$1--');
             }
             return elem.innerText.replace(/[\n\r]+/g,'--').replace(": ","--")
