@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.29
+// @version      0.30
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -171,7 +171,8 @@
 
     /********************
     Pull in current quantity for sale on screen
-     ********************/
+    ********************/
+
     const setQtyInViewByCondition = (condition, qty, qtyInView) => {
         const shorthandCondition = mapCondition(condition);
         if (Object.keys(qtyInView).includes(shorthandCondition)) {
@@ -188,9 +189,10 @@
             'Lightly Played': 'LP',
             'Moderately Played': 'MP',
             'Heavily Played': 'HP',
-            'Damaged': 'DMG'
+            'Damaged': 'DMG',
+            'Unopened': 'Sealed'
         };
-        return conditionMap[condition.replace(' Foil', '')] + hasFoil;
+        return (conditionMap[condition.replace(' Foil', '')] || 'Unlisted') + hasFoil;
     }
 
     const setQtyInView = () => {
@@ -199,11 +201,11 @@
         return qtyInView;
     }
 
-    const buildQtyInViewDisplay = (qtyInView) => Object.entries(qtyInView).reduce( (prevQtyData, currQty) => prevQtyData.concat(`<span style="margin-left: 20px;">${currQty[0]} Copies: ${currQty[1].quantity} - Vendor Count: ${currQty[1].vendorCount}</span><br />`), '');
+    const buildQtyInViewDisplay = (qtyInView) => Object.entries(qtyInView).reduce( (prevQtyData, currQty) => prevQtyData.concat(`<span style="margin-left: 20px;">${currQty[0]}: ${currQty[1].quantity} - Vendor Count: ${currQty[1].vendorCount}</span><br />`), '');
 
     /********************
      HTML element interaction
-     ********************/
+    ********************/
 
     const clearHtmlElements = () => {
         ['salesDataDisplay', 'salesDataToggle'].forEach( selector => {
@@ -218,7 +220,7 @@
 
     /********************
      Write interactive HTML elements
-     ********************/
+    ********************/
 
     const writeSalesToggle = () => {
         const div = document.createElement('div');
@@ -228,7 +230,7 @@
 
     function writeDaysToLookBackSpinner() {
         const div = document.createElement('div');
-        div.style = 'position:fixed;top:0;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#a00;color:#fff;font-size:10pt;font-weight:bold;appearance:inherit;';
+        div.style.cssText = 'position:fixed;top:0;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#a00;color:#fff;font-size:10pt;font-weight:bold;appearance:inherit;';
         div.innerHTML = ('Days to Look Back <input type="number" class="daysToLookBack" id="daysToLookBack" min="0" max="7" step="1" value="2" style="height:20px;font-size:10pt!important"/>');
         document.body.prepend(div);
     }
@@ -242,7 +244,7 @@
 
     /********************
      Re-inventing the wheel of time because we are not importing the moment library.
-     ********************/
+    ********************/
 
     const setHistoricDateArr = (daysToLookBack) => {
         let historicDatesArr = [];
