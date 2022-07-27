@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.30
+// @version      0.31
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -133,13 +133,15 @@
     const toggleGatherDataButton = () => { document.getElementsByClassName('dataRequestButton')[0].disabled = !document.getElementsByClassName('dataRequestButton')[0].disabled; }
 
     async function loadSalesDataSplash() {
-        document.getElementsByClassName("price-guide__latest-sales__more")[0].children[0].click();
+        //open sales modal
+        document.getElementsByClassName("modal__activator")[0].click();
         await loadMoreSalesData();
         return gatherSalesData();
     }
 
     const beginSalesDataDisplay = (salesByCondition) => {
-        document.getElementsByClassName("modal__overlay")[0].click();
+        //close sales modal
+        document.getElementsByClassName('modal__close')[0].click()
         writeSalesDataContainer();
         displaySalesData(Object.entries(salesByCondition).sort((conditionOne, conditionTwo) => conditionOne[1].totalQtySold - conditionTwo[1].totalQtySold ).reverse());
     }
@@ -150,16 +152,24 @@
         for (let clickCount = 0; clickCount < maxClicks; clickCount++) {
             await sleep(500);
             decorateSalesHistoryHeader(clickCount);
-            if (document.getElementsByClassName('price-guide-modal__load-more')[0]) { document.getElementsByClassName('price-guide-modal__load-more')[0].click();}
+            if ( document.getElementsByClassName("sales-history-snapshot__load-more")[0] ) { document.getElementsByClassName("sales-history-snapshot__load-more")[0].click(); }
             else {clickCount = maxClicks; }
         }
     }
 
     const sleep = (milliseconds) => { return new Promise(resolve => setTimeout(resolve, milliseconds)); }
 
+    const missingDomElements = () => {
+        let missingElements = 0;
+        const domElementsToCheck = [document.getElementsByClassName("modal__activator")[0]];
+        domElementsToCheck.forEach( domElement => missingElements += domElement ? 0 : 1 );
+        return missingElements > 0 ? true : false;
+    }
+
     window.startDataRequest = function() {
         clearHtmlElements();
-        if (!document.getElementsByClassName("price-guide__latest-sales__more")[0]?.children[0]) { alert('Please wait for the "View Sales History" link to load then click the button again.'); }
+        if ( !document.getElementsByClassName("price-guide__latest-sales__more")[0]?.children[0]) { alert('Please wait for the "View Sales History" link to load then click the button again.'); }
+        else if ( missingDomElements() ) { alert('TCGPlayer DOM Elments are out of alignment. This script must be updated to function properly.'); }
         else {
             toggleGatherDataButton();
             loadSalesDataSplash()
@@ -170,8 +180,8 @@
     }
 
     /********************
-    Pull in current quantity for sale on screen
-    ********************/
+     Pull in current quantity for sale on screen
+     ********************/
 
     const setQtyInViewByCondition = (condition, qty, qtyInView) => {
         const shorthandCondition = mapCondition(condition);
@@ -205,7 +215,7 @@
 
     /********************
      HTML element interaction
-    ********************/
+     ********************/
 
     const clearHtmlElements = () => {
         ['salesDataDisplay', 'salesDataToggle'].forEach( selector => {
@@ -220,7 +230,7 @@
 
     /********************
      Write interactive HTML elements
-    ********************/
+     ********************/
 
     const writeSalesToggle = () => {
         const div = document.createElement('div');
@@ -244,7 +254,7 @@
 
     /********************
      Re-inventing the wheel of time because we are not importing the moment library.
-    ********************/
+     ********************/
 
     const setHistoricDateArr = (daysToLookBack) => {
         let historicDatesArr = [];
@@ -269,3 +279,4 @@
 
     const todaysDate = formatDateToTCG(new Date());
 })();
+
