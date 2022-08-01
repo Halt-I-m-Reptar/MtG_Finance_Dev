@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.31
+// @version      0.32
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -92,7 +92,10 @@
 
     const displaySalesData = (salesByCondition) => {
         const div = document.getElementsByClassName('salesDataDisplay')[0];
-        div.innerHTML += `<strong>Total copies in view:</strong><br />${buildQtyInViewDisplay(setQtyInView())}<br />`;
+        const qtyInViewByCondition = getQtyInView();
+        const totalQtyInView = getTotalQtyInView(qtyInViewByCondition);
+        div.innerHTML += `<strong>Total copies in view: </strong>${totalQtyInView}<br />\
+        <strong>Condition breakout:</strong><br />${buildQtyInViewDisplay(qtyInViewByCondition)}<br />`;
         salesByCondition.forEach(cardConditionData => {
             const cardDisplayData = buildSalesDataDisplay(cardConditionData[0], cardConditionData[1]);
             div.innerHTML += cardDisplayData.cardDisplayData;
@@ -163,13 +166,13 @@
         let missingElements = 0;
         const domElementsToCheck = [document.getElementsByClassName("modal__activator")[0]];
         domElementsToCheck.forEach( domElement => missingElements += domElement ? 0 : 1 );
-        return missingElements > 0 ? true : false;
+        return missingElements > 0;
     }
 
     window.startDataRequest = function() {
         clearHtmlElements();
         if ( !document.getElementsByClassName("price-guide__latest-sales__more")[0]?.children[0]) { alert('Please wait for the "View Sales History" link to load then click the button again.'); }
-        else if ( missingDomElements() ) { alert('TCGPlayer DOM Elments are out of alignment. This script must be updated to function properly.'); }
+        else if ( missingDomElements() ) { alert('TCGPlayer DOM Elements are out of alignment. This script must be updated to function properly.'); }
         else {
             toggleGatherDataButton();
             loadSalesDataSplash()
@@ -180,7 +183,7 @@
     }
 
     /********************
-     Pull in current quantity for sale on screen
+     Pull in current quantity for sale in view
      ********************/
 
     const setQtyInViewByCondition = (condition, qty, qtyInView) => {
@@ -205,7 +208,9 @@
         return (conditionMap[condition.replace(' Foil', '')] || 'Unlisted') + hasFoil;
     }
 
-    const setQtyInView = () => {
+    const getTotalQtyInView = (qtyInView) => Object.keys(qtyInView).reduce( (prevVal, conditionKey) => prevVal + qtyInView[conditionKey].quantity, 0);
+
+    const getQtyInView = () => {
         const qtyInView = {};
         Array.from(document.getElementsByClassName('listing-item product-details__listings-results')).forEach( listingItem => setQtyInViewByCondition(listingItem.children[0].innerText, +listingItem.children[3].getElementsByClassName('add-to-cart__available')[0].innerText.split(' ')[1], qtyInView ));
         return qtyInView;
