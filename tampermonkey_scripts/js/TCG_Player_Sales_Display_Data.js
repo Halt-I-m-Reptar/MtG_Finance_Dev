@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.32
+// @version      0.33
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -18,6 +18,7 @@
         totalQtySold: 0,
         totalOrders:0,
         historicSalesData: {daysAgo:{}},
+        orderQtyOverFour: 0,
         avgQtyPerOrder: function(totalQtySold,totalOrders ) {
             return (totalQtySold / totalOrders) > 0 ? (totalQtySold / totalOrders).toFixed(2) : 0;
         },
@@ -54,6 +55,7 @@
         salesArray.totalSpend += (price * qty);
         salesArray.totalQtySold += qty;
         salesArray.totalOrders += 1;
+        salesArray.orderQtyOverFour += qty < 4 ? 0 : 1
     }
 
     const gatherSalesData = () => {
@@ -109,9 +111,10 @@
                 <span id="salesHeader" style="margin-left: 20px;"><strong>Overall Sales Data</strong></span><br />
                 <span id="totalSold" style="margin-left: 40px;">Total Sold: ${cardConditionData.totalQtySold} - Total Orders: ${cardConditionData.totalOrders} - Total Spend: ${cardConditionData.totalSpend.toFixed(2)}</span><br />
                 <span id="avgQtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${cardConditionData.avgQtyPerOrder(cardConditionData.totalQtySold, cardConditionData.totalOrders)}</span><br />
+                <span id="orderQtyOverFour" style="margin-left: 40px;">Orders with Qty 4+... ${cardConditionData.orderQtyOverFour}</span><br />
                 <span id="earliestSaleDate" style="margin-left: 40px;">Earliest Sale Date: ${cardConditionData.earliestSaleDateData.date} - Sale Price ${cardConditionData.earliestSaleDateData?.price}</span><br />
                 <span id="latestSaleData" style="margin-left: 40px;">Latest Sale Date: ${cardConditionData.latestSaleDateData.date} - Sale Price: ${cardConditionData.latestSaleDateData?.price}</span><br />
-                <span id="largestOrderInfo" style="margin-left: 40px;">Largest Order... Date: ${cardConditionData.largestQtySold.date} - Qty: ${cardConditionData.largestQtySold.qty} - Price Per: ${cardConditionData.largestQtySold.price}</span>`;
+                <span id="largestOrderInfo" style="margin-left: 40px;">Largest Order... Date: ${cardConditionData.largestQtySold.date} - Qty: ${cardConditionData.largestQtySold.qty} - Price Per: ${cardConditionData.largestQtySold.price}</span><br />`;
         if ( Object.keys(cardConditionData.historicSalesData.daysAgo).length ) {
             heightAdjustmentCount++;
             cardDisplayString += `<br /><span id="historicSalesHeader" style="margin-left: 20px;"><strong>Historic Sales Data</strong></span><br />`;
