@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>CK BL Link Creation</title>
+        <title>Sports Cards SRP Link Creation</title>
         <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
     </head>
 <body>
@@ -9,12 +9,16 @@
         <button id="clearData" class="clearData" onclick="clearData()">Clear Data</button>
     </div>
     <br /><br />
-    <div id="dataDisplay" class="dataDisplay">
-        <textarea id="productNames" class="productNames"></textarea>
-        <div id="linkDisplay" class="linkDisplay"></div>
+    <div class="productWrapper">
+        <div id="dataFilter" class="dataFilter">
+            <textarea id="productNames" class="productNames"></textarea>
+        </div>
     </div>
     <br style="clear:both" />
+    <br />
+    <div id="listDisplay" class="listDisplay"></div>
     <script src="js/genericFunctions.js" ></script>
+    <script src="js/sportsCardsStoreList.js" ></script>
     <script src="modules/linkCreationModule.js" ></script>
 </body>
 </html>
