@@ -1,0 +1,21 @@
+#buttonWrapper {
+    position: fixed;
+}
+
+#dataDisplay {
+    width: 100%;
+}
+
+#productNames {
+    width: 50%;
+    height: 50%;
+    border: 1px solid #000;
+    resize: none;
+    position: fixed;
+}
+
+#linkDisplay {
+    width: 45%;
+    float: right;
+    position: relative;
+}
