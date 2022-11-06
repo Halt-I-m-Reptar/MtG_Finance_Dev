@@ -36,7 +36,7 @@
 
     const writeHotlistDataContainer = () => {
         const div = document.createElement('div');
-        div.innerHTML = ('<div class="hotlistContainer" style="position:fixed;bottom:0;left:0;z-index:8888;width:auto;height:300px;max-height:600px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#fff"></div>');
+        div.innerHTML = ('<div class="hotlistContainer" style="position:fixed;bottom:20px;left:0;z-index:8888;width:auto;height:300px;max-height:600px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#fff"></div>');
         document.body.prepend(div);
 
     }
