@@ -6,9 +6,12 @@ const getStoreList = () => (
         'Up North Games': {'url': 'upnorthgames.ca', 'binderPosId': '2e887231-cd56-4340-9088-2aa29922d324', 'retailPattern': 'mtg-{productName}-{set}'},
         'Nerdz Cafe': {'url': 'nerdzcafe.com', 'binderPosId': 'f3adc8ba-6ecf-4f27-811e-9f5980067d87', 'retailPattern': 'mtg-{productName}{set}'},
         'Skyfox Games': {'url': 'skyfoxgames.com', 'binderPosId': '327b7f34-46fe-4ec7-be58-ae41fb1ef741', 'retailPattern': '{productName}-{set}'},
-        'L.A. Mood': {'url': 'lamoodcomics.ca', 'binderPosId': 'b8ad864a-ba5a-479d-91f5-7d5edb5418d1', 'retailPattern': 'mtg-{productName}{set}'}
+        'L.A. Mood': {'url': 'lamoodcomics.ca', 'binderPosId': 'b8ad864a-ba5a-479d-91f5-7d5edb5418d1', 'retailPattern': 'mtg-{productName}{set}'},
+        'Le Baron Joue': {'url': 'lebaronjoue.com', 'binderPosId': 'b04530a5-6aab-45fc-94e3-0561ab027b11', 'retailPattern': 'mtg?keyword{productName}'}
     }
 )
+//Request URL: https://portal.binderpos.com/external/shopify/b04530a5-6aab-45fc-94e3-0561ab027b11/cards/mtg?keyword=underground%20sea&limit=20
+
 
 const getStoresListCors = () => (
     {
