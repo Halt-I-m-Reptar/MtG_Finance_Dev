@@ -37,7 +37,7 @@ function createRows(tmsData) {
                 row = table.insertRow();
                 cardDataKeys.forEach((keyName,index) => {
                     cell = row.insertCell(index);
-                    cell.innerHTML = cardData[cardDataKeys[index]];
+                    cell.innerHTML = cardData[cardDataKeys[index]] !== null ? cardData[cardDataKeys[index]] : 0;
                     switch (index) {
                         case 2:
                             cell.className = "cardName";
