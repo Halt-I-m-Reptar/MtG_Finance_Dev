@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MtG Stocks Currency Difference
-// @version      0.5
+// @version      0.6
 // @description  Added currency difference to interest list
 // @author       Peter Creutzberger
 // @match        *://*.mtgstocks.com/*
@@ -16,31 +16,31 @@
     const addNewCellsToPriceTables = () => {
         Array.from(document.getElementsByTagName("table")).forEach( priceTableOnPage => {
             addHeaderToTable( priceTableOnPage.getElementsByTagName('thead')[0].getElementsByTagName('tr')[0] );
-            const tableBodyArray = Array.from(priceTableOnPage.getElementsByTagName('tbody'));
-            tableBodyArray.forEach( rawTableRow => addCellsToRows( Array.from(rawTableRow.getElementsByTagName('tr')) ));
-        });
-    }
 
-    const addCellsToRows = (tableRowArray) => {
-        tableRowArray.forEach( cardDataInRow => {
-            addPriceDifference(cardDataInRow);
-            addCKBLLink(cardDataInRow);
+            Array.from(priceTableOnPage.getElementsByTagName('tbody'))
+                .forEach(tableBodyData => {
+                    Array.from(tableBodyData.getElementsByTagName('tr'))
+                        .forEach(cardDataInRow => {
+                            addPriceDifference(cardDataInRow);
+                            addCKBLLink(cardDataInRow);
+                        });
+                })
         });
     }
 
     const addPriceDifference = (cardDataInRow) => {
-        const newCardPrice = +(cardDataInRow.getElementsByTagName('td')[2].innerText).replace(/\$/g,'');
-        const oldCardPrice = +(cardDataInRow.getElementsByTagName('td')[3].innerText).replace(/\$/g,'');
-        const cardPriceDiff = (newCardPrice - oldCardPrice).toFixed(2);
+        const cardNewPrice = +(cardDataInRow.getElementsByTagName('td')[2].innerText).replace(/\$/g,'');
+        const cardOldPrice = +(cardDataInRow.getElementsByTagName('td')[3].innerText).replace(/\$/g,'');
+        const cardPriceDiff = (cardNewPrice - cardOldPrice).toFixed(2);
         const cellToInsert = cardDataInRow.insertCell(5);
-        cellToInsert.innerHTML = `<span style="color: #212529;">$${cardPriceDiff}</span>`;
+        cellToInsert.innerHTML = `<span style="color: #212529;">$${cardPriceDiff}</span>`
         cellToInsert.className = cardPriceDiff > 0 ? "table-success" : "table-danger";
     }
 
-    const addCKBLLink = (cardsInRow) => {
+    const addCKBLLink = (cardDataInRow) => {
         const buylistURLBase = "https://cardkingdom.com/purchasing/mtg_singles?filter%5Bsearch%5D=mtg_advanced&filter%5Bname%5D=";
-        const cardName = cardsInRow.getElementsByTagName('td')[0].innerText;
-        cardsInRow.insertCell(6).innerHTML = `<span style=\"color: #007bff;\"><a href=\"${buylistURLBase + cardName.replace(/ /g,'+')}" target=\"_blank\">${cardName}</a></span>`;
+        const cardName = cardDataInRow.getElementsByTagName('td')[0].innerText;
+        cardDataInRow.insertCell(6).innerHTML = `<span style=\"color: #007bff;\"><a href=\"${buylistURLBase + cardName.replace(/ /g,'+')}" target=\"_blank\">${cardName}</a></span>`;
     }
 
     const addHeaderToTable = (tableHeaderArray) => {

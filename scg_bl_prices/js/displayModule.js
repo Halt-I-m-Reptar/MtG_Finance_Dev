@@ -13,12 +13,13 @@ async function startPull(cardArr) {
 }
 
 function createDataPoints(json) {
-    const cardArr = json.map(cardsBySet => {
+    console.table(json);
+    /*const cardArr = json.map(cardsBySet => {
         return cardsBySet.map(cardsByCondition => {
             return {'name': cardsByCondition.name, 'set': cardsByCondition.category, 'language': cardsByCondition.language, 'buyPrice': cardsByCondition.price}
         })
     });
-    generateOutput(cardArr);
+    generateOutput(cardArr);*/
 }
 
 function  generateOutput(cardDetails) {
