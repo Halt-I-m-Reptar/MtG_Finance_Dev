@@ -1,9 +1,10 @@
 const curlRequest = () => {
     const url = "https://api.cardkingdom.com/api/pricelist";
+    //const url = "https://raw.githubusercontent.com/Halt-I-m-Reptar/MtG_Finance_Dev/20230219-ck-table-filtering/ck_api_data/ck_slug/pricelist.json";
 
     const requestOptions = {
         method: 'GET',
-        redirect: 'follow',
+        redirect: 'follow'
     };
 
     fetch(url, requestOptions)

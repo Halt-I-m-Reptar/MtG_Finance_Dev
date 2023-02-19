@@ -31,32 +31,31 @@ const writeToTable = (ckCardData) => {
     const table = document.getElementById("displayData");
     let cell;
     let row;
-    ckCardData.forEach( cardArray => {
-        cardArray.forEach( cardById => {
-            row = table.insertRow();
-            Object.keys(cardById).forEach( (cardDataKey, index) => {
-                cell = row.insertCell(index);
-                cell.innerHTML = cardById[cardDataKey];
-                switch (index) {
-                    case 3:
-                        cell.className = "cardName";
-                        break;
-                    case 6:
-                        cell.className = cardById[cardDataKey] === 'true' ? "isFoil" : "";
-                        break;
-                    case 7:
-                        cell.className = "retailPrice";
-                        break;
-                    case 9:
-                        cell.className = "buyPrice";
-                        break;
-                    case 10:
-                        cell.className = cardById[cardDataKey] === 0 ? "warning" : "";
-                        break;
-                    default:
-                        cell.className = "";
-                }
-            })
-        });
+    ckCardData.forEach( cardById => {
+        if (!showZeros() && cardById['qty_buying'] === 0) { return; }
+        row = table.insertRow();
+        Object.keys(cardById).forEach( (cardDataKey, cardDataIndex) => {
+            cell = row.insertCell(cardDataIndex);
+            cell.innerHTML = cardById[cardDataKey];
+            switch (cardDataIndex) {
+                case 3:
+                    cell.className = "cardName";
+                    break;
+                case 6:
+                    cell.className = cardById[cardDataKey] === 'true' ? "isFoil" : "";
+                    break;
+                case 7:
+                    cell.className = "retailPrice";
+                    break;
+                case 9:
+                    cell.className = "buyPrice";
+                    break;
+                case 10:
+                    cell.className = cardById[cardDataKey] === 0 ? "warning" : "";
+                    break;
+                default:
+                    cell.className = "";
+            }
+        })
     });
 }
