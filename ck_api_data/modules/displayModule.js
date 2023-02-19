@@ -25,42 +25,37 @@ const displayData = (ckData) => {
     writeToTable(ckData);
 }
 
-const createTable = () => document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>URL</th><th>Card Name</th><th>Variation</th><th>Set</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th><th>Display</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
+const createTable = () => document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>URL</th><th>Card Name</th><th>Variation</th><th>Set</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
 
 const writeToTable = (ckCardData) => {
     const table = document.getElementById("displayData");
     let cell;
     let row;
-    console.table(ckCardData);
-    console.table( Object.keys(ckCardData[0]) );
-    /*ckCardData.forEach( cardArray => {
-        cardArray.forEach( cardById => {
-            row = table.insertRow();
-            Object.keys(cardById).forEach( (cardDataKey, index) => {
-                cell = row.insertCell(index);
-                cell.innerHTML = cardById[cardDataKey];
-                //        cell = row.insertCell();
-                //         cell.innerHTML = "<button onclick='hideRow(tableRowIndex)'>Hide</button>";
-                switch (index) {
-                    case 3:
-                        cell.className = "cardName";
-                        break;
-                    case 6:
-                        cell.className = cardById[cardDataKey] === 'true' ? "isFoil" : "";
-                        break;
-                    case 7:
-                        cell.className = "retailPrice";
-                        break;
-                    case 9:
-                        cell.className = "buyPrice";
-                        break;
-                    case 10:
-                        cell.className = cardById[cardDataKey] === 0 ? "warning" : "";
-                        break;
-                    default:
-                        cell.className = "";
-                }
-            })
-        });
-    });*/
+    ckCardData.forEach( cardById => {
+        if (!showZeros() && cardById['qty_buying'] === 0) { return; }
+        row = table.insertRow();
+        Object.keys(cardById).forEach( (cardDataKey, cardDataIndex) => {
+            cell = row.insertCell(cardDataIndex);
+            cell.innerHTML = cardById[cardDataKey];
+            switch (cardDataIndex) {
+                case 3:
+                    cell.className = "cardName";
+                    break;
+                case 6:
+                    cell.className = cardById[cardDataKey] === 'true' ? "isFoil" : "";
+                    break;
+                case 7:
+                    cell.className = "retailPrice";
+                    break;
+                case 9:
+                    cell.className = "buyPrice";
+                    break;
+                case 10:
+                    cell.className = cardById[cardDataKey] === 0 ? "warning" : "";
+                    break;
+                default:
+                    cell.className = "";
+            }
+        })
+    });
 }

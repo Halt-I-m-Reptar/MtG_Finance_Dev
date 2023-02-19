@@ -11,6 +11,6 @@ const cleanFilter = (filterList) => filterList.map(cardName => cardName.replace(
 const cleanCkCardName = (card) => card.replace(/\W/g,'').toLowerCase();
 
 const filterTable = (filterList) => {
-    const filteredCardList = filterList.filter( currentCard => ckData[currentCard] ).map( currentCard => ckData[currentCard] );
+    const filteredCardList = filterList.filter( currentCard => ckData[currentCard] ).map( currentCard => ckData[currentCard] )[0];
     displayData(filteredCardList);
 }
