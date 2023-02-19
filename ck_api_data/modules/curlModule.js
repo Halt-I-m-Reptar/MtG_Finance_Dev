@@ -1,9 +1,10 @@
 const curlRequest = () => {
-    const url = "https://api.cardkingdom.com/api/pricelist";
+    //const url = "https://api.cardkingdom.com/api/pricelist";
+    const url = "./ck_slug/pricelist.json";
 
     const requestOptions = {
         method: 'GET',
-        redirect: 'follow',
+        redirect: 'follow'
     };
 
     fetch(url, requestOptions)
