@@ -9,3 +9,10 @@ const loaderDisplay = () => document.getElementById("loader").style.display = (d
 const clearDisplayData = () => document.getElementById("listDisplay").innerHTML = '';
 
 const showZeros = () => document.getElementById("showZeros").checked;
+
+const toggleGetPrices = () => document.getElementById("getPrices").disabled = !document.getElementById("getPrices").disabled;
+
+const enableCardDataDisplayButtons = () => {
+    document.getElementById("filterCards").disabled = !document.getElementById("filterCards").disabled
+    document.getElementById("clearFilters").disabled = !document.getElementById("clearFilters").disabled
+};

@@ -1,8 +1,9 @@
 const jsonWorker = () => {
-    document.getElementById("getPrices").disabled = true;
+    toggleGetPrices();
     writeToDisplay("Gathering and collating all inventory from CK.");
     loaderDisplay();
     curlRequest();
+    enableCardDataDisplayButtons();
 }
 
 const startDisplayOutput = (json) => {
@@ -25,7 +26,7 @@ const displayData = (ckData) => {
     writeToTable(ckData);
 }
 
-const createTable = () => document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>URL</th><th>Card Name</th><th>Variation</th><th>Set</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
+const createTable = () => document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>URL</th><th>Card Name</th><th>Variation</th><th>Set</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th><th>Buy %</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
 
 const writeToTable = (ckCardData) => {
     const table = document.getElementById("displayData");
@@ -37,25 +38,35 @@ const writeToTable = (ckCardData) => {
         Object.keys(cardById).forEach( (cardDataKey, cardDataIndex) => {
             cell = row.insertCell(cardDataIndex);
             cell.innerHTML = cardById[cardDataKey];
-            switch (cardDataIndex) {
-                case 3:
+            switch (cardDataKey) {
+                case 'name':
                     cell.className = "cardName";
                     break;
-                case 6:
+                case 'is_foil':
                     cell.className = cardById[cardDataKey] === 'true' ? "isFoil" : "";
                     break;
-                case 7:
+                case 'price_retail':
                     cell.className = "retailPrice";
                     break;
-                case 9:
+                case 'price_buy':
                     cell.className = "buyPrice";
                     break;
-                case 10:
+                case 'qty_buying':
                     cell.className = cardById[cardDataKey] === 0 ? "warning" : "";
                     break;
                 default:
                     cell.className = "";
             }
         })
+        const retailBuyPricePercent = ((cardById['price_buy'] / cardById['price_retail']) * 100).toFixed(2)
+        cell = row.insertCell();
+        cell.innerHTML = ` ${ retailBuyPricePercent } `;
+        cell.className = setBuyPercentBackgroundColor(retailBuyPricePercent);
     });
+}
+
+const setBuyPercentBackgroundColor = (retailBuyPricePercent) => {
+    if ( retailBuyPricePercent >= 65 ) { return "buyPrice"; }
+    if ( retailBuyPricePercent < 60 ) { return "warning"; }
+    return "retailPrice";
 }
