@@ -43,7 +43,8 @@ th {
     background-color: beige;
 }
 
-.buyPrice {
+.buyPrice,
+.decentBuyPrice{
     background-color: aquamarine;
 }
 
@@ -52,6 +53,12 @@ th {
     color: white;
 }
 
-.warning {
+.warning,
+.lowBuyPrice{
     background-color: #fdbac4;
+}
+
+.highBuyPrice {
+    background-color: blueviolet;
+    color: white;
 }
