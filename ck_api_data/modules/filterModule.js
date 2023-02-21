@@ -6,22 +6,16 @@ const filterWorker = () => {
 
 const getFilters = () => document.getElementById("cardNames").value.split("\n");
 
-const cleanFilter = (filterList) => filterList.map(cardName => cardName.replace(/\W/g,'').toLowerCase());
+const cleanFilter = (filterList) => filterList.map(cardName => cleanCkCardName(cardName));
 
 const filterTable = (filterList) => {
-    const filteredCardList = ckData.filter( currentCard => filterList.includes(currentCard.name.replace(/\W/g,'').toLowerCase()) );
-    displayData(sortFilteredDataByName(filteredCardList));
+    const filteredCardList = filterList.filter( currentCard => ckData[currentCard] ).map( currentCard => ckData[currentCard] );
+    displayData(filteredCardList);
 }
 
 const cleanCkCardName = (card) => card.replace(/\W/g,'').toLowerCase();
 
-const createAndShapeCKData = (json) => json.data.forEach (data => ckData[data.id] = data );
-
-const sortFilteredDataByName = (cardData) => cardData.sort( (a,b) => {
-    if ( a.name < b.name) { return -1; }
-    if ( a.name > b.name) { return 1; }
-    return 0;
-});
-
-//possibly unnecessary in the long run
-const sortFilteredDataById = (cardData) => cardData.sort( (a,b) => a.id - b.id )
+const createAndShapeCKData = (json) => json.data.forEach(data => {
+    ckData[cleanCkCardName(data.name)] = ckData[cleanCkCardName(data.name)] || [];
+    ckData[cleanCkCardName(data.name)][data.id] = data
+} );

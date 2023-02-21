@@ -36,44 +36,47 @@ const writeToTable = (ckCardData) => {
     let cell;
     let row;
     ckCardData.forEach( cardsReturned => {
-        row = table.insertRow();
-        Object.keys(cardsReturned).forEach( (cardById, cardDataIndex) => {
-            if (!showZeros() && cardsReturned['qty_buying'] === 0) { return; }
-            cell = row.insertCell(cardDataIndex);
-            switch (cardById) {
-                case 'url':
-                    cell.className = "";
-                    cell.innerHTML = createCardUrls(cardsReturned[cardById], cardsReturned['name']);
-                    break;
-                case 'name':
-                    cell.className = "cardName";
-                    cell.innerHTML = cardsReturned[cardById];
-                    break;
-                case 'is_foil':
-                    cell.className = cardsReturned[cardById] === 'true' ? "isFoil" : "";
-                    cell.innerHTML = cardsReturned[cardById];
-                    break;
-                case 'price_retail':
-                    cell.className = "retailPrice";
-                    cell.innerHTML = cardsReturned[cardById];
-                    break;
-                case 'price_buy':
-                    cell.className = "buyPrice";
-                    cell.innerHTML = cardsReturned[cardById];
-                    break;
-                case 'qty_buying':
-                    cell.className = cardsReturned[cardById] === 0 ? "warning" : "";
-                    cell.innerHTML = cardsReturned[cardById];
-                    break;
-                default:
-                    cell.className = "";
-                    cell.innerHTML = cardsReturned[cardById];
-            }
-       });
-        const retailBuyPricePercent = ((cardsReturned['price_buy'] / cardsReturned['price_retail']) * 100).toFixed(2)
-        cell = row.insertCell();
-        cell.innerHTML = ` ${ retailBuyPricePercent } `;
-        cell.className = setBuyPercentBackgroundColor(retailBuyPricePercent);
+        cardsReturned.forEach( individualCards => {
+            row = table.insertRow();
+            Object.keys(individualCards).forEach( (cardById, cardDataIndex) => {
+                console.log(cardById);
+                if (!showZeros() && individualCards['qty_buying'] === 0) { return; }
+                cell = row.insertCell(cardDataIndex);
+                switch (cardById) {
+                    case 'url':
+                        cell.className = "";
+                        cell.innerHTML = createCardUrls(individualCards[cardById], individualCards['name']);
+                        break;
+                    case 'name':
+                        cell.className = "cardName";
+                        cell.innerHTML = individualCards[cardById];
+                        break;
+                    case 'is_foil':
+                        cell.className = individualCards[cardById] === 'true' ? "isFoil" : "";
+                        cell.innerHTML = individualCards[cardById];
+                        break;
+                    case 'price_retail':
+                        cell.className = "retailPrice";
+                        cell.innerHTML = individualCards[cardById];
+                        break;
+                    case 'price_buy':
+                        cell.className = "buyPrice";
+                        cell.innerHTML = individualCards[cardById];
+                        break;
+                    case 'qty_buying':
+                        cell.className = individualCards[cardById] === 0 ? "warning" : "";
+                        cell.innerHTML = individualCards[cardById];
+                        break;
+                    default:
+                        cell.className = "";
+                        cell.innerHTML = individualCards[cardById];
+                }
+            });
+            const retailBuyPricePercent = ((individualCards['price_buy'] / individualCards['price_retail']) * 100).toFixed(2)
+            cell = row.insertCell();
+            cell.innerHTML = ` ${ retailBuyPricePercent } `;
+            cell.className = setBuyPercentBackgroundColor(retailBuyPricePercent);
+        })
     });
 }
 
