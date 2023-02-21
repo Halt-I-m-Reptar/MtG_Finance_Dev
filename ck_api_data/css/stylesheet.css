@@ -53,6 +53,11 @@ th {
     color: white;
 }
 
+.warningText {
+    color: red;
+    font-weight: bold;
+}
+
 .warning,
 .lowBuyPrice{
     background-color: #fdbac4;
