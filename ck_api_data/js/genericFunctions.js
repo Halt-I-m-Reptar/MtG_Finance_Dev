@@ -10,6 +10,8 @@ const clearDisplayData = () => document.getElementById("listDisplay").innerHTML 
 
 const showZeros = () => document.getElementById("showZeros").checked;
 
+const checkSlug = () => document.getElementById("backupSlug").checked;
+
 const toggleGetPrices = () => document.getElementById("getPrices").disabled = !document.getElementById("getPrices").disabled;
 
 const enableCardDataDisplayButtons = () => {
