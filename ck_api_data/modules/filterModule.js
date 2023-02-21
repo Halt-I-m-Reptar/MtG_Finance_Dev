@@ -1,4 +1,5 @@
 const filterCardInputListWorker = () => {
+    clearDisplayData();
     writeContentToDisplay("Filtering your data.");
     displayLoadIcon();
     displayCardDataWorker( filterCKData(cleanFilterCardsNames(getCardListToFilter())) );
