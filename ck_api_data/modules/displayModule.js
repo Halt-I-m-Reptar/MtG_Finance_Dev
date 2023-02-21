@@ -1,82 +1,54 @@
-const jsonWorker = () => {
-    toggleGetPrices();
-    writeToDisplay(`Gathering and collating all inventory from CK.`);
-    loaderDisplay();
-    curlRequest();
+const displayCardDataWorker = (filteredCardDataToDisplay) => {
+    displayLoadIcon();
+    createOutputTable();
+    writeCardsToTable(filteredCardDataToDisplay);
 }
 
-const setCKData = (json) => {
-    if (!json.data.length) {
-        writeToDisplay(`<div class="warningText">There was an issue gathering the data from CardKingom. <br />Try again or uncheck the "Use Live Slug" text box.</div>`);
-        loaderDisplay();
-        return;
-    }
-    enableCardDataDisplayButtons();
-    updateAPITimestamp(json.meta.created_at);
-    createAndShapeCKData(json);
-    loaderDisplay();
-    writeToDisplay(`CK inventory has been gathered, you can now filter your data.`);
-}
+const createOutputTable = () => document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>Buy/Sell URLs</th><th>Card Name</th><th>Variation</th><th>Set</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th><th>Buy %</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
 
-const updateAPITimestamp = (timestamp) => {
-    const slugStatus = checkSlug() ? 'CK API' : 'Backup Slug';
-    document.getElementById("repriceTimestamp").innerHTML = `<br /><strong> ${slugStatus} Last Updated:</strong> ${timestamp}`;
-}
-
-const displayData = (ckData) => {
-    loaderDisplay();
-    createTable();
-    writeToTable(ckData);
-}
-
-const createTable = () => document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>Buy/Sell URLs</th><th>Card Name</th><th>Variation</th><th>Set</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th><th>Buy %</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
-
-const writeToTable = (ckCardData) => {
+const writeCardsToTable = (filteredCardDataToDisplay) => {
     const table = document.getElementById("displayData");
     let cell;
     let row;
-    ckCardData.forEach( cardsReturned => {
-        cardsReturned.forEach( individualCards => {
+    filteredCardDataToDisplay.forEach( individualCardListings => {
+            if (!showZeros() && individualCardListings['qty_buying'] === 0) { return; }
             row = table.insertRow();
-            Object.keys(individualCards).forEach( (cardById, cardDataIndex) => {
-                console.log(cardById);
-                if (!showZeros() && individualCards['qty_buying'] === 0) { return; }
+            Object.keys(individualCardListings).forEach( (cardById, cardDataIndex) => {
                 cell = row.insertCell(cardDataIndex);
                 switch (cardById) {
                     case 'url':
                         cell.className = "";
-                        cell.innerHTML = createCardUrls(individualCards[cardById], individualCards['name']);
+                        cell.innerHTML = createCardUrls(individualCardListings[cardById], individualCardListings['name']);
                         break;
                     case 'name':
                         cell.className = "cardName";
-                        cell.innerHTML = individualCards[cardById];
+                        cell.innerHTML = individualCardListings[cardById];
                         break;
                     case 'is_foil':
-                        cell.className = individualCards[cardById] === 'true' ? "isFoil" : "";
-                        cell.innerHTML = individualCards[cardById];
+                        cell.className = individualCardListings[cardById] === 'true' ? "isFoil" : "";
+                        cell.innerHTML = individualCardListings[cardById];
                         break;
                     case 'price_retail':
                         cell.className = "retailPrice";
-                        cell.innerHTML = individualCards[cardById];
+                        cell.innerHTML = individualCardListings[cardById];
                         break;
                     case 'price_buy':
                         cell.className = "buyPrice";
-                        cell.innerHTML = individualCards[cardById];
+                        cell.innerHTML = individualCardListings[cardById];
                         break;
                     case 'qty_buying':
-                        cell.className = individualCards[cardById] === 0 ? "warning" : "";
-                        cell.innerHTML = individualCards[cardById];
+                        cell.className = individualCardListings[cardById] === 0 ? "warning" : "";
+                        cell.innerHTML = individualCardListings[cardById];
                         break;
                     default:
                         cell.className = "";
-                        cell.innerHTML = individualCards[cardById];
+                        cell.innerHTML = individualCardListings[cardById];
                 }
             });
-            const retailBuyPricePercent = ((individualCards['price_buy'] / individualCards['price_retail']) * 100).toFixed(2)
+            const retailBuyPricePercent = ((individualCardListings['price_buy'] / individualCardListings['price_retail']) * 100).toFixed(2)
             cell = row.insertCell();
             cell.innerHTML = ` ${ retailBuyPricePercent } `;
             cell.className = setBuyPercentBackgroundColor(retailBuyPricePercent);
-        })
     });
 }
 
