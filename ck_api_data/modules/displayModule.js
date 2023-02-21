@@ -13,7 +13,10 @@ const setCKData = (json) => {
     writeToDisplay("CK inventory has been gathered, you can now filter your data.");
 }
 
-const updateAPITimestamp = (timestamp) => document.getElementById("repriceTimestamp").innerHTML = "<br /><strong>CK API Last Updated:</strong> "+timestamp;
+const updateAPITimestamp = (timestamp) => {
+    const slugStatus = checkSlug() ? 'CK API' : 'Backup Slug';
+    document.getElementById("repriceTimestamp").innerHTML = `<br /><strong> ${slugStatus} Last Updated:</strong> ${timestamp}`;
+}
 
 const displayData = (ckData) => {
     loaderDisplay();
