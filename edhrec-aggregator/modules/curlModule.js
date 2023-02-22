@@ -1,10 +1,3 @@
-const jsonGetWorker = () => {
-    disableCKDataPull();
-    writeContentToDisplay(`Gathering and collating all inventory from CK.`);
-    displayLoadIcon();
-    curlRequest();
-}
-
 const curlRequest = (url, dataType) => {
     const requestOptions = {
         method: 'GET',
@@ -14,7 +7,8 @@ const curlRequest = (url, dataType) => {
     fetch(url, requestOptions)
         .then(response => response.json())
         .then(result => {
-            if(dataType === 'top') { createTopCardDataSet(result) };
+            if(dataType === 'type') { createTopCardByTypeDataSet(result) };
+            if(dataType === 'color') { createTopCardByClorDataSet(result) }
         })
         .catch(error => writeError(error));
 }

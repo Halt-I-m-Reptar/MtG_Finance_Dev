@@ -7,7 +7,7 @@
 </head>
 <body>
 
-    <div id="topCardSelectors">
+    <div id="topCardsSelectors">
         <label for="topCardsByType">Choose a card type:</label>
         <select name="topCardsByType" id="topCardsByType">
             <option value="creatures">Creatures</option>
@@ -21,7 +21,21 @@
         <button id="getTopCards" onclick="getTopCardsWorker()">Get Top Cards</button>
     </div>
     <br />
-    <button id="getPrices" class="getPrices" onclick="curlRequest()">Test curl</button>
+    <div id="topCardsByColorSelectors">
+        <label for="topCardsByColor">Choose a color:</label>
+        <!-- (w, u, b, r, g, colorless, multi) -->
+        <select name="topCardsByColor" id="topCardsByColor">
+            <option value="w">White</option>
+            <option value="u">Blue</option>
+            <option value="b">Black</option>
+            <option value="r">Red</option>
+            <option value="g">Green</option>
+            <option value="colorless">Colorless</option>
+            <option value="multi">Multicolor</option>
+        </select>
+        <button id="getTopCardsByColor" onclick="getTopCardsByColorWorker()">Get Top Cards by Color</button>
+    </div>
+    <br id="clear"/>
     <div id="displayStatus"></div>
     <br id="clear"/>
     <br />
@@ -33,4 +47,5 @@
 <script src="modules/curlModule.js"></script>
 <script src="modules/inputWorkersModule.js"></script>
 <script src="modules/topCardsByTypeModule.js"></script>
+<script src="modules/topCardsByColorModule.js"></script>
 </html>

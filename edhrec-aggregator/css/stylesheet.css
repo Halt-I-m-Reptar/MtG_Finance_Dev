@@ -2,11 +2,8 @@
     clear: both;
 }
 
-#displayStatus {
-    float: left;
-}
-
-#topCardsByType {
+#topCardsByType,
+#topCardsByColor {
     margin-left: 5px;
 }
 

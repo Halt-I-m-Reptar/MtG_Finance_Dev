@@ -1,25 +1,22 @@
 const getTopCardsWorker = () => {
     resetDisplay();
-    writeContentToDisplay(`Gathering the top ${getCartTypeValue()}.`);
+    const cardType = getCardTypeValue()
+    writeContentToDisplay(`Gathering the top ${cardType}.`);
     displayLoadIcon();
-    curlRequest( shapeCurlURL(), 'top' );
+    curlRequest( shapeCurlURL(cardType, 'top'), 'type' );
 }
 
-const shapeCurlURL = () => `https://json.edhrec.com/pages/top/${ getCartTypeValue() }.json`;
-
-const createTopCardDataSet = (json) => {
+const createTopCardByTypeDataSet = (json) => {
     displayLoadIcon();
     createOutputTable();
     displayTopCardList( json.container['json_dict']['cardlists']);
 }
 
-const createOutputTable = () => document.getElementById("displayTopCards").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>Name</th><th>Sanitized</th><th>Sanitized WO</th><th>URL</th><th>Inclusion</th><th>Label</th><th>Num Decks</th><th>Potential Decks</th><th>Percentage Usage</th><th>Time Period</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
-
-const displayTopCardList = (topCardList) => {
+const displayTopCardList = (topCardsList) => {
     const table = document.getElementById("displayData");
     let cell;
     let row;
-    topCardList.forEach( (cardsByTime, timeIndex) => {
+    topCardsList.forEach( (cardsByTime, timeIndex) => {
         row = table.insertRow();
         cardsByTime['cardviews'].forEach( cardsInList => {
             row = table.insertRow();
@@ -36,5 +33,3 @@ const displayTopCardList = (topCardList) => {
         })
     })
 }
-
-const percentDecks = (numerator, demonimator) => ((numerator / demonimator) * 100).toFixed(2)
