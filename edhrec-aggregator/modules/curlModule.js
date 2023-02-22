@@ -5,14 +5,7 @@ const jsonGetWorker = () => {
     curlRequest();
 }
 
-const curlRequest = () => {
-    //const url = slugChoice() ? "https://api.cardkingdom.com/api/pricelist" : "https://raw.githubusercontent.com/Halt-I-m-Reptar/MtG_Finance_Dev/master/ck_api_data/ck_slug/pricelist.json";
-    //card results
-    const url = "https://json.edhrec.com/pages/commanders/sliver-queen.json";
-    //top cards per year
-    //https://json.edhrec.com/pages/top/year.json
-    // top commanders per year
-    // https://json.edhrec.com/pages/commanders/year.json
+const curlRequest = (url, dataType) => {
     const requestOptions = {
         method: 'GET',
         redirect: 'follow'
@@ -20,11 +13,11 @@ const curlRequest = () => {
 
     fetch(url, requestOptions)
         .then(response => response.json())
-        .then(result => createCKDataSet(result))
+        .then(result => {
+            if(dataType === 'top') { createTopCardDataSet(result) };
+        })
         .catch(error => writeError(error));
 }
-
-const createCKDataSet = (result) => console.table(result);
 
 /*
 URL Shapes

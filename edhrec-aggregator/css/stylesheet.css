@@ -1,0 +1,12 @@
+#clear {
+    clear: both;
+}
+
+#displayStatus {
+    float: left;
+}
+
+#topCardsByType {
+    margin-left: 5px;
+}
+

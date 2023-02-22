@@ -1,12 +1,13 @@
 <html lang="en">
 <head>
     <title>EDHRec Aggregator</title>
-    <link rel="stylesheet" href="css/table.css">
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+    <link rel="stylesheet" type="text/css" href="css/table.css">
     <link rel="stylesheet" type="text/css" href="css/loader.css">
 </head>
 <body>
 
-    <div id="cardSelectors">
+    <div id="topCardSelectors">
         <label for="topCardsByType">Choose a card type:</label>
         <select name="topCardsByType" id="topCardsByType">
             <option value="creatures">Creatures</option>
@@ -17,21 +18,18 @@
             <option value="planeswalkers">Planeswalkers</option>
             <option value="lands">Lands</option>
         </select>
+        <button id="getTopCards" onclick="getTopCardsWorker()">Get Top Cards</button>
     </div>
     <br />
-    <button id="getTopCards" onclick="getTopCardsWorker()">Get Top Cards</button>
     <button id="getPrices" class="getPrices" onclick="curlRequest()">Test curl</button>
     <div id="displayStatus"></div>
     <br id="clear"/>
     <br />
-    <div id="displayTopCards"></div>
+    <div id="displayTopCards" class="displayTopCards"></div>
     <div class="loader" id="loader"></div>
 </body>
 
 <script src="js/genericFunctions.js"></script>
-<script src="js/topUrls.js"></script>
-<script src="js/fetchTopCardJson.js"></script>
-<script src="js/outputTopCards.js"></script>
 <script src="modules/curlModule.js"></script>
 <script src="modules/inputWorkersModule.js"></script>
 <script src="modules/topCardsByTypeModule.js"></script>
