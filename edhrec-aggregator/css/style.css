@@ -19,3 +19,7 @@ h3 {
     float: left;
     margin-right: 15px;
 }
+
+#topCardsByType {
+    margin-left: 5px;
+}
