@@ -1,0 +1,9 @@
+#clear {
+    clear: both;
+}
+
+#topCardsByType,
+#topCardsByColor {
+    margin-left: 5px;
+}
+

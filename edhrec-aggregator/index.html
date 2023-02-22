@@ -1,31 +1,51 @@
-<html>
+<html lang="en">
 <head>
-<title>EDHRec Aggregator</title>
-<link rel="stylesheet" href="css/table.css">
-<link rel="stylesheet" href="css/style.css">
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <title>EDHRec Aggregator</title>
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+    <link rel="stylesheet" type="text/css" href="css/table.css">
+    <link rel="stylesheet" type="text/css" href="css/loader.css">
 </head>
+<body>
 
-<div id="radioContainer">
-    <input type="radio" class="recSelection" id="topCommanders" name="edhRecSelector" value="topCommanders" checked><label for="topCommanders">Top Commanders</label>
-    <input type="radio" class="recSelection" id="topCards" name="edhRecSelector" value="topCards"><label for="topCards">Top Cards Overall</label>
-    <input type="radio" class="recSelection" id="topCreatures" name="edhRecSelector" value="topCreatures"><label for="topCreatures">Top Creatures</label>
-    <input type="radio" class="recSelection" id="topInstants" name="edhRecSelector" value="topInstants"><label for="topInstants">Top Instants</label>
-    <input type="radio" class="recSelection" id="topSorceries" name="edhRecSelector" value="topSorceries"><label for="topSorceries">Top Sorceries</label>
-    <input type="radio" class="recSelection" id="topArtifacts" name="edhRecSelector" value="topArtifacts"><label for="topArtifacts">Top Artifcats</label>
-    <input type="radio" class="recSelection" id="topEnchantments" name="edhRecSelector" value="topEnchantments"><label for="topEnchantments">Top Enchantments</label>
-    <input type="radio" class="recSelection" id="topPlaneswalkers" name="edhRecSelector" value="topPlaneswalkers"><label for="topPlaneswalkers">Top Planeswalkers</label>
-    <input type="radio" class="recSelection" id="topLands" name="edhRecSelector" value="topLands"><label for="topLands">Top Lands</label>
-</div>
-<button id="getTopCards" onclick="getTopCards()">Get Top Cards</button>
-<div id="displayStatus"></div>
-<br id="clear"/>
-<br />
-<div id="displayTopCards"></div>
+    <div id="topCardsSelectors">
+        <label for="topCardsByType">Choose a card type:</label>
+        <select name="topCardsByType" id="topCardsByType">
+            <option value="creatures">Creatures</option>
+            <option value="instants">Instants</option>
+            <option value="sorceries">Sorceries</option>
+            <option value="artifacts">Artifacts</option>
+            <option value="enchantments">Enchantments</option>
+            <option value="planeswalkers">Planeswalkers</option>
+            <option value="lands">Lands</option>
+        </select>
+        <button id="getTopCards" onclick="getTopCardsWorker()">Get Top Cards</button>
+    </div>
+    <br />
+    <div id="topCardsByColorSelectors">
+        <label for="topCardsByColor">Choose a color:</label>
+        <!-- (w, u, b, r, g, colorless, multi) -->
+        <select name="topCardsByColor" id="topCardsByColor">
+            <option value="w">White</option>
+            <option value="u">Blue</option>
+            <option value="b">Black</option>
+            <option value="r">Red</option>
+            <option value="g">Green</option>
+            <option value="colorless">Colorless</option>
+            <option value="multi">Multicolor</option>
+        </select>
+        <button id="getTopCardsByColor" onclick="getTopCardsByColorWorker()">Get Top Cards by Color</button>
+    </div>
+    <br id="clear"/>
+    <div id="displayStatus"></div>
+    <br id="clear"/>
+    <br />
+    <div id="displayTopCards" class="displayTopCards"></div>
+    <div class="loader" id="loader"></div>
+</body>
 
 <script src="js/genericFunctions.js"></script>
-<script src="js/topUrls.js"></script>
-<script src="js/fetchTopCardJson.js"></script>
-<script src="js/outputTopCards.js"></script>
+<script src="modules/curlModule.js"></script>
+<script src="modules/inputWorkersModule.js"></script>
+<script src="modules/topCardsByTypeModule.js"></script>
+<script src="modules/topCardsByColorModule.js"></script>
 </html>
