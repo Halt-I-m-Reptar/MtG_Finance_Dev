@@ -20,3 +20,5 @@ function toggleVisibility() {
 }
 
 const resetDisplay = () => document.getElementById("displayTopCards").innerHTML = '';
+
+const writeError = (err) => console.log("There was an error: "+err);
