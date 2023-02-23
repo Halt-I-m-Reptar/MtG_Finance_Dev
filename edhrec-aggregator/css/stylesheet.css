@@ -1,10 +1,11 @@
-#topCardsSelectors,
-#topCardsByMonthSelector{
+#topCardsSelector,
+#topCommandersByColorSelector,
+#topCardsByMonthSelector {
     float: left;
     margin-right: 15px;
 }
 
-#clear {
+.clear {
     clear: both;
 }
 

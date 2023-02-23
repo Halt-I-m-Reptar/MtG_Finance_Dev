@@ -1,7 +1,5 @@
 const getTopCardsWorker = () => {
-    resetDisplay();
-    const cardType = getCardTypeValue()
-    writeContentToDisplay(`Gathering the top ${cardType}.`);
-    displayLoadIcon();
-    curlRequest( shapeCurlURL('top', cardType), 'type' );
+    const cardType = getCardTypeValue();
+    prepDisplayDuringLoad(cardType);
+    prepCurlRequest('top', cardType, 'topCardsByType' );
 }
