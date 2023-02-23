@@ -7,34 +7,26 @@
 </head>
 <body>
     <div id="topCardsBlock">
-        <div id="topCardsSelectors">
+        <div id="topCardsSelector">
             <label for="topCardsByType">Choose a card type:</label>
-            <select name="topCardsByType" id="topCardsByType">
-                <option value="creatures">Creatures</option>
-                <option value="instants">Instants</option>
-                <option value="sorceries">Sorceries</option>
-                <option value="artifacts">Artifacts</option>
-                <option value="enchantments">Enchantments</option>
-                <option value="planeswalkers">Planeswalkers</option>
-                <option value="lands">Lands</option>
-            </select>
+            <select name="topCardsByType" id="topCardsByType"></select>
             <button id="getTopCards" onclick="getTopCardsWorker()">Get Top Cards</button>
         </div>
-        <div id="topCardsByColorSelectors">
-            <label for="topCardsByColor">Choose a color:</label>
-            <!-- (w, u, b, r, g, colorless, multi) -->
-            <select name="topCardsByColor" id="topCardsByColor">
-                <option value="w">White</option>
-                <option value="u">Blue</option>
-                <option value="b">Black</option>
-                <option value="r">Red</option>
-                <option value="g">Green</option>
-                <option value="colorless">Colorless</option>
-                <option value="multi">Multicolor</option>
-            </select>
+        <div id="topCardsByColorSelector">
+            <label for="topCardsByColor">Choose a card color:</label>
+            <select name="topCardsByColor" id="topCardsByColor"></select>
             <button id="getTopCardsByColor" onclick="getTopCardsByColorWorker()">Get Top Cards by Color</button>
         </div>
     </div>
+    <br id="clear"/>
+    <div id="topCommandersByColorBlock">
+        <div id="topCommandersByColorSelector">
+            <label for="topCommandersByColor">Choose a Commaner color pairing:</label>
+            <select name="topCommandersByColor" id="topCommandersByColor"></select>
+            <button id="getTopCommandersByColor" onclick="getTopCommandersByColorWorker()">Get Top Commanders by Color</button>
+        </div>
+    </div>
+    <br id="clear"/>
     <br id="clear"/>
     <div id="topCardsByTimeBlock">
         <div id="topCardsByMonthSelector"><button onclick="getTopCardsByMonthWorker()">Get Top Cards</button></div>
@@ -49,6 +41,7 @@
 </body>
 
 <script src="js/genericFunctions.js"></script>
+<script src="modules/createDropDownsModule.js"></script>
 <script src="modules/curlModule.js"></script>
 <script src="modules/inputWorkersModule.js"></script>
 <script src="modules/displayModule.js"></script>
