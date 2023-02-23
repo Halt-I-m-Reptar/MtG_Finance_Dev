@@ -2,7 +2,7 @@ const createTopsCardDataSet = (json, topCardType) => {
     displayLoadIcon();
     writeContentToDisplay( json.header );
     if (topCardType === 'cards') { createCardOutputTable(); }
-    if (topCardType === 'commander') { createCommanderOutputTable(); }
+    if (topCardType === 'commanders') { createCommanderOutputTable(); }
     displayTopCardList( json.container['json_dict']['cardlists'], topCardType);
 }
 
