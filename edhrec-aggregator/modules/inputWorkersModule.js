@@ -4,6 +4,8 @@ const getCardColorValue = () => document.getElementById("topCardsByColor").value
 
 const getCommanderColorValue = () => document.getElementById("topCommandersByColor").value;
 
+const getTopCardValue = () => document.getElementById("topCardSearch").value;
+
 const getCardColorText = () => {
     const selector = document.getElementById("topCardsByColor");
     return selector.options[selector.selectedIndex].text;
