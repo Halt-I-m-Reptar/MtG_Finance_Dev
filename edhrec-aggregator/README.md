@@ -11,9 +11,3 @@ A stripped down view of the EDH Top Card data
 * Open index.html
 * Select what type of card you want to see
 * Click "Get Top Cards" button
-
-## TODO
-* Setup display for individual cards
-  * Oko, Thief of Crowns -> https://json.edhrec.com/pages/cards/oko-thief-of-crowns.json
-  * Niv-Mizzet Reborn -> https://json.edhrec.com/pages/commanders/niv-mizzet-reborn.json
-  * Jace's Ingenuity -> https://json.edhrec.com/pages/cards/jaces-ingenuity.json
