@@ -26,6 +26,13 @@
             <button id="getTopCommandersByColor" onclick="getTopCommandersByColorWorker()">Get Top Commanders by Color</button>
         </div>
     </div>
+    <div id="individualCardSearchBlock">
+        <div id="individualCardSearchSelector">
+            <label for="topCardSearch">Enter Card Name:</label>
+            <input name="topCardSearch" id="topCardSearch" />
+            <button id="getTopCard" onclick="getTopCardWorker()">Get Card Data</button>
+        </div>
+    </div>
     <br class="clear"/>
     <br class="clear"/>
     <div id="topCardsByTimeBlock">
@@ -48,4 +55,5 @@
 <script src="modules/topCardsByTypeModule.js"></script>
 <script src="modules/topCardsByColorModule.js"></script>
 <script src="modules/topCardsByTime.js"></script>
+<script src="modules/topCard.js"></script>
 </html>

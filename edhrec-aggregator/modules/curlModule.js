@@ -13,8 +13,7 @@ const curlRequest = (url, identifier) => {
     fetch(url, requestOptions)
         .then(response => response.json())
         .then(result => {
-            if(['topCardsByType','topCardsByColor', 'topCards'].includes(identifier)) { createTopsCardDataSet(result, 'cards'); }
-            if(['topCommanders'].includes(identifier)) { createTopsCardDataSet(result,'commanders'); }
+            if(['topCardsByType','topCardsByColor', 'topCards', 'topCommanders', 'topIndividualCards'].includes(identifier)) { createTopCardsDataSet(result, 'cards'); }
             if(['topCommandersByColor'].includes(identifier)) { createTopCommanderByColorDataSet(result); }
         })
         .catch(error => writeError(error));

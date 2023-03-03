@@ -1,4 +1,4 @@
-const createTopsCardDataSet = (json, topCardType) => {
+const createTopCardsDataSet = (json, topCardType) => {
     displayLoadIcon();
     writeContentToDisplay( json.header );
     if (topCardType === 'cards') { createCardOutputTable(); }
@@ -19,9 +19,9 @@ const createCommanderOutputTable = () => document.getElementById("displayTopCard
 
 const createCommanderByColorOutputTable = () => document.getElementById("displayTopCards").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>Name</th><th>Sanitized</th><th>Sanitized WO</th><th>URL</th><th>Label</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
 
-const percentOfDecks = (numerator, demonimator) => ((numerator / demonimator) * 100).toFixed(2)
+const percentOfDecks = (numerator, denominator) => ((numerator / denominator) * 100).toFixed(2)
 
-const displayTopCardList = (topCardsList, checkType) => {
+const displayTopCardList = (topCardsList) => {
     const table = document.getElementById("displayData");
     let cell;
     let row;
@@ -29,17 +29,15 @@ const displayTopCardList = (topCardsList, checkType) => {
         cardsByTime['cardviews'].forEach( cardsInList => {
             row = table.insertRow();
             Object.keys(cardsInList).forEach( (cardElements) => {
-                if(['cards','names','is_partner'].includes(cardElements)) { return; }
+                if(['cards','names','is_partner', 'synergy'].includes(cardElements)) { return; }
                 cell = row.insertCell( );
                 cell.innerHTML = cardsInList[cardElements];
             });
-            if (checkType !== 'commander') {
-                cell = row.insertCell();
-                cell.innerHTML = `${percentOfDecks(cardsInList['num_decks'], cardsInList['potential_decks'])}%`;
-            }
+            cell = row.insertCell();
+            cell.innerHTML = `${percentOfDecks(cardsInList['num_decks'], cardsInList['potential_decks'])}%`;
             cell = row.insertCell();
             cell.innerHTML = cardsByTime.header;
-            cell.id = `caption-${timeIndex}`;
+            cell.id = `caption-${timeIndex%3}`;
         })
     })
 }
@@ -58,7 +56,7 @@ const displayTopCommandersByColorList = (topCardsList) => {
             });
             cell = row.insertCell();
             cell.innerHTML = cardsByTime.header;
-            cell.id = `caption-${timeIndex}`;
+            cell.id = `caption-${timeIndex%3}`;
         })
     })
 }
