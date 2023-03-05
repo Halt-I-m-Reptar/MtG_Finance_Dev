@@ -1,61 +1,42 @@
-const createTopCardsDataSet = (json, topCardType) => {
-    displayLoadIcon();
-    writeContentToDisplay( json.header );
-    if (topCardType === 'cards') { createCardOutputTable(); }
-    if (topCardType === 'commanders') { createCommanderOutputTable(); }
-    displayTopCardList( json.container['json_dict']['cardlists'], topCardType);
+const createTopCardsDataSet = (json, cardStatus) => {
+    startDisplay(json['header'] );
+    buildTableTag(cardStatus);
+    displayTopCardList( json['container']['json_dict']['cardlists'], cardStatus);
 }
 
-const createTopCommanderByColorDataSet = (json) => {
+const startDisplay = (header) => {
     displayLoadIcon();
-    writeContentToDisplay( json.header );
-    createCommanderByColorOutputTable();
-    displayTopCommandersByColorList( json.container['json_dict']['cardlists']);
+    writeContentToDisplay( header );
 }
 
-const createCardOutputTable = () => document.getElementById("displayTopCards").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>Name</th><th>Sanitized</th><th>Sanitized WO</th><th>URL</th><th>Inclusion</th><th>Label</th><th>Num Decks</th><th>Potential Decks</th><th>Percentage Usage</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
-
-const createCommanderOutputTable = () => document.getElementById("displayTopCards").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>Name</th><th>Sanitized</th><th>Sanitized WO</th><th>URL</th><th>Inclusion</th><th>Label</th><th>Num Decks</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
-
-const createCommanderByColorOutputTable = () => document.getElementById("displayTopCards").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>Name</th><th>Sanitized</th><th>Sanitized WO</th><th>URL</th><th>Label</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
+const buildTableTag = (cardStatus) => {
+    const tableHead = '<table id="displayCardData" class="displayCardData"><thead><tr><th>Name</th><th>Sanitized</th><th>Sanitized WO</th><th>URL</th>';
+    const tableTail = '</tr></thead><tbody id="cardDisplayTable"></tbody></table>';
+    if ( cardStatus === 'asCard' ) setDataDisplay( `${tableHead}<th>Inclusion</th><th>Label</th><th>Num Decks</th><th>Potential Decks</th><th>Percentage Usage</th>${tableTail}` );
+    if ( cardStatus === 'asCommander' ) setDataDisplay( `${tableHead}<th>Label</th>${tableTail}` );
+}
 
 const percentOfDecks = (numerator, denominator) => ((numerator / denominator) * 100).toFixed(2)
 
-const displayTopCardList = (topCardsList) => {
-    const table = document.getElementById("displayData");
+const displayTopCardList = (topCardsList, cardStatus) => {
+    const table = getElementById("displayCardData");
     let cell;
     let row;
     topCardsList.forEach( (cardsByTime, timeIndex) => {
         cardsByTime['cardviews'].forEach( cardsInList => {
             row = table.insertRow();
             Object.keys(cardsInList).forEach( (cardElements) => {
-                if(['cards','names','is_partner', 'synergy'].includes(cardElements)) { return; }
+                if( ['cards','names','is_partner', 'synergy'].includes(cardElements) ) { return; }
+                if( cardStatus === 'asCommander' && ['inclusion','num_decks','potential_decks'].includes(cardElements) ) { return; }
                 cell = row.insertCell( );
                 cell.innerHTML = cardsInList[cardElements];
             });
+            if ( cardStatus !== 'asCommander' ) {
+                cell = row.insertCell();
+                cell.innerHTML = `${percentOfDecks(cardsInList['num_decks'], cardsInList['potential_decks'])}%`;
+            }
             cell = row.insertCell();
-            cell.innerHTML = `${percentOfDecks(cardsInList['num_decks'], cardsInList['potential_decks'])}%`;
-            cell = row.insertCell();
-            cell.innerHTML = cardsByTime.header;
-            cell.id = `caption-${timeIndex%3}`;
-        })
-    })
-}
-
-const displayTopCommandersByColorList = (topCardsList) => {
-    const table = document.getElementById("displayData");
-    let cell;
-    let row;
-    topCardsList.forEach( (cardsByTime, timeIndex) => {
-        cardsByTime['cardviews'].forEach( cardsInList => {
-            row = table.insertRow();
-            Object.keys(cardsInList).forEach( (cardElements) => {
-                if(['cards','names','is_partner','inclusion','num_decks','potential_decks'].includes(cardElements)) { return; }
-                cell = row.insertCell( );
-                cell.innerHTML = cardsInList[cardElements];
-            });
-            cell = row.insertCell();
-            cell.innerHTML = cardsByTime.header;
+            cell.innerHTML = cardsByTime['header'];
             cell.id = `caption-${timeIndex%3}`;
         })
     })
