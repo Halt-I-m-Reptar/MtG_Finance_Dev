@@ -1,7 +1,6 @@
 (function(){
 
     const createCardTypeDropdown = () => {
-        const cardTypeSelect = document.getElementById("topCardsByType");
         const cardTypeMap = {
             creatures: 'Creatures',
             instants: 'Instants',
@@ -12,11 +11,10 @@
             lands: 'Lands',
         }
 
-        appendItemsToSelect(cardTypeSelect, cardTypeMap);
+        appendItemsToSelect(getElementById("topCardsByType"), cardTypeMap);
     }
 
     const createCardColorDropdown = () => {
-        const cardColorSelect = document.getElementById("topCardsByColor");
         const cardColorMap = {
             w: 'White',
             u: 'Blue',
@@ -27,11 +25,10 @@
             multi: 'Multicolor'
         };
 
-        appendItemsToSelect(cardColorSelect, cardColorMap);
+        appendItemsToSelect(getElementById("topCardsByColor"), cardColorMap);
     }
 
     const createCommanderColorDropdown = () => {
-        const cardColorSelect = document.getElementById("topCommandersByColor");
         const cardColorMap = {
             w: 'White',
             u: 'Blue',
@@ -67,7 +64,7 @@
             wubrg: '5 Color'
         };
 
-        appendItemsToSelect(cardColorSelect, cardColorMap);
+        appendItemsToSelect(getElementById("topCommandersByColor"), cardColorMap);
     }
 
     const appendItemsToSelect = (targetSelect, optionMap) => {

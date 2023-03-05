@@ -1,12 +1,12 @@
-const getCardTypeValue = () => document.getElementById("topCardsByType").value;
+const getCardTypeValue = () => getElementValueById("topCardsByType");
 
-const getCardColorValue = () => document.getElementById("topCardsByColor").value;
+const getCardColorValue = () => getElementValueById("topCardsByColor");
 
-const getCommanderColorValue = () => document.getElementById("topCommandersByColor").value;
+const getCommanderColorValue = () => getElementValueById("topCommandersByColor");
 
-const getTopCardValue = () => document.getElementById("topCardSearch").value;
+const getTopCardValue = () => getElementValueById("topCardSearch");
 
 const getCardColorText = () => {
-    const selector = document.getElementById("topCardsByColor");
+    const selector = getElementById("topCardsByColor");
     return selector.options[selector.selectedIndex].text;
 }
