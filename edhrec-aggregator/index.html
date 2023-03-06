@@ -21,16 +21,20 @@
     <br class="clear"/>
     <div id="topCommandersByColorBlock">
         <div id="topCommandersByColorSelector">
-            <label for="topCommandersByColor">Choose a Commaner color pairing:</label>
+            <label for="topCommandersByColor">Choose a Commander color pairing:</label>
             <select name="topCommandersByColor" id="topCommandersByColor"></select>
             <button id="getTopCommandersByColor" onclick="getTopCommandersByColorWorker()">Get Top Commanders by Color</button>
         </div>
     </div>
+    <br class="clear"/>
+    <br class="clear"/>
     <div id="individualCardSearchBlock">
         <div id="individualCardSearchSelector">
             <label for="topCardSearch">Enter Card Name:</label>
             <input name="topCardSearch" id="topCardSearch" placeholder="Oko, Thief of Crowns" />
             <button id="getTopCard" onclick="getTopCardWorker()">Get Card Data</button>
+            <input type="radio" id="asCard" name="typeOfCardSearch" value="asCard" checked /><label for="asCard">As Card</label>
+            <input type="radio" id="asCommander" name="typeOfCardSearch" value="asCommander" /><label for="asCommander">As Commander</label>
         </div>
     </div>
     <br class="clear"/>

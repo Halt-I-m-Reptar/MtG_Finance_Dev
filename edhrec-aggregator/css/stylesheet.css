@@ -1,7 +1,7 @@
 #topCardsSelector,
 #topCommandersByColorSelector,
-#topCardsByMonthSelector,
-#individualCardSearchBlock {
+#individualCardSearchSelector,
+#topCardsByMonthSelector {
     float: left;
     margin-right: 15px;
 }
