@@ -1,11 +1,10 @@
 const filterCardInputListWorker = () => {
-    clearDisplayData();
-    writeContentToDisplay("Filtering your data.");
+    setListDomInnerHTML('listDisplay',"<strong>Filtering your data.</strong>");
     displayLoadIcon();
     displayCardDataWorker( filterCKData(cleanFilterCardsNames(getCardListToFilter())) );
 }
 
-const getCardListToFilter = () => document.getElementById("cardNames").value.split("\n");
+const getCardListToFilter = () => Array.from( new Set( document.getElementById("cardNames").value.trim().split("\n") ));
 
 const cleanFilterCardsNames = (filterList) => filterList.map(cardName => cleanCkCardName(cardName));
 

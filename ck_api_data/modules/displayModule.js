@@ -4,14 +4,14 @@ const displayCardDataWorker = (filteredCardDataToDisplay) => {
     writeCardsToTable(filteredCardDataToDisplay);
 }
 
-const createOutputTable = () => document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>Buy/Sell URLs</th><th>Card Name</th><th>Variation</th><th>Set</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th><th>Buy %</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
+const createOutputTable = () => setListDomInnerHTML('listDisplay','<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>Buy/Sell URLs</th><th>Card Name</th><th>Variation</th><th>Set</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th><th>Buy %</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>');
 
 const writeCardsToTable = (filteredCardDataToDisplay) => {
-    const table = document.getElementById("displayData");
+    const table = getElementById("displayData");
     let cell;
     let row;
     filteredCardDataToDisplay.forEach( individualCardListings => {
-            if (!showZeros() && individualCardListings['qty_buying'] === 0) { return; }
+            if (!getCheckedValue('showZeros') && individualCardListings['qty_buying'] === 0) { return; }
             row = table.insertRow();
             Object.keys(individualCardListings).forEach( (cardById, cardDataIndex) => {
                 cell = row.insertCell(cardDataIndex);

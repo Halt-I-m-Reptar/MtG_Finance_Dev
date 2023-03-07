@@ -1,18 +1,16 @@
-const writeContentToDisplay = (msg) => document.getElementById("listDisplay").innerHTML = "<strong>"+msg+"</strong>";
+const writeError = (err) => console.warn("There was an error: "+err);
 
-const writeError = (err) => console.log("There was an error: "+err);
-
-const displayLoadIcon = () => document.getElementById("loader").style.display = (document.getElementById("loader").style.display === "none" || document.getElementById("loader").style.display === "") ? "inherit" : "none";
-
-const clearDisplayData = () => document.getElementById("listDisplay").innerHTML = '';
+const displayLoadIcon = (domId = 'loader') => document.getElementById(`${domId}`).style.display = (document.getElementById(`${domId}`).style.display === "none" || document.getElementById(`${domId}`).style.display === "") ? "inherit" : "none";
 
 const cleanCkCardName = (card) => card.replace(/\W/g,'').toLowerCase();
 
-const showZeros = () => document.getElementById("showZeros").checked;
+const disableCKDataPull = (domId) => document.getElementById(`${domId}`).disabled = !document.getElementById(`${domId}`).disabled;
 
-const slugChoice = () => document.getElementById("whichSlug").checked;
+const getElementById = (domId) => document.getElementById(`${domId}`);
 
-const disableCKDataPull = () => document.getElementById("getPrices").disabled = !document.getElementById("getPrices").disabled;
+const getCheckedValue = (domId) =>document.getElementById(`${domId}`).checked
+
+const setListDomInnerHTML = (domId = 'listDisplay', displayText = '') => document.getElementById(`${domId}`).innerHTML = displayText;
 
 const enableCardDataDisplayButtons = () => {
     document.getElementById("filterCards").disabled = !document.getElementById("filterCards").disabled
