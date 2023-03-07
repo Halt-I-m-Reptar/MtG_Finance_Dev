@@ -8,6 +8,8 @@ const getElementById = (domId) => document.getElementById(`${domId}`);
 
 const getElementValueById = (domId) => document.getElementById(`${domId}`).value;
 
+const getElementValueQuerySelector = (domId) => document.querySelector(`input[name=${domId}]:checked`).value;
+
 const setDataDisplay = (displayText = '') => document.getElementById("cardListDisplay").innerHTML = displayText;
 
 const writeContentToDisplay = (msg) => document.getElementById("displayStatus").innerHTML = "<strong>"+msg+"</strong>";
