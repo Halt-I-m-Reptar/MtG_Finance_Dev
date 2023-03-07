@@ -8,7 +8,7 @@
     <div id="buttonWrapper" class="buttonWrapper">
         <button id="getPrices" class="getPrices" onclick="jsonGetWorker()">Get Prices</button>
         <button id="filterCards" class="filterCards" disabled onclick="filterCardInputListWorker()">Filter Cards</button>
-        <button id="clearFilters" class="clearFilters" disabled onclick="clearDisplayData()">Clear Display Data</button>
+        <button id="clearFilters" class="clearFilters" disabled onclick="setListDomInnerHTML('listDisplay')">Clear Display Data</button>
         <input type="checkbox" class="showZeros" id="showZeros" checked/><label for="showZeros">Show Zeros</label>
         <input type="checkbox" class="whichSlug" id="whichSlug" checked/><label for="whichSlug">Use Live Slug</label>
     </div>
