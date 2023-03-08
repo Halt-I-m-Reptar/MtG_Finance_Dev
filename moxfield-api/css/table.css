@@ -8,12 +8,12 @@ th, td {
     text-align: left;
 }
 
-#displayDeckData {
+#displayCardData {
     border-collapse: collapse;
 }
 
-#displayDeckData td,
-#displayDeckData th{
+#displayCardData td,
+#displayCardData th{
     border: 1px solid black;
     border-collapse: collapse;
     text-align: left;
@@ -31,4 +31,22 @@ th {
     position: sticky;
     box-shadow: 0 2px 2px -1px black;
     top: 0; /* Don't forget this, required for the stickiness */
+}
+
+#caption-0 {
+    background: #3498db;
+    color: white;
+    font-weight: bold;
+}
+
+#caption-1 {
+    background: cadetblue;
+    color: white;
+    font-weight: bold;
+}
+
+#caption-2 {
+    background: cornflowerblue;
+    color: white;
+    font-weight: bold;
 }

@@ -28,7 +28,7 @@ const displayTopCardList = (topCardsList, cardStatus) => {
             Object.keys(cardsInList).forEach( (cardElements) => {
                 if( ['cards','names','is_partner', 'synergy'].includes(cardElements) ) { return; }
                 if( cardStatus === 'asCommander' && ['inclusion','num_decks','potential_decks'].includes(cardElements) ) { return; }
-                cell = row.insertCell( );
+                cell = row.insertCell();
                 cell.innerHTML = cardsInList[cardElements];
             });
             if ( cardStatus !== 'asCommander' ) {
