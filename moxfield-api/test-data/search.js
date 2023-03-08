@@ -1,6 +1,6 @@
 //api search return
 //mainCardId is the link to the individual cards and their URL
-{
+const searchResults = {
     "pageNumber": 1,
     "pageSize": 64,
     "totalResults": 100,
@@ -2395,4 +2395,4 @@
         "hubNames": []
     }
 ]
-}
+};

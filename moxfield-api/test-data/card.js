@@ -1,5 +1,5 @@
 // individual card data
-{
+const individualCardData = {
     "card": {
     "id": "k7xMp",
         "uniqueCardId": "Erz0n",
@@ -350,4 +350,4 @@
         }
     }
 ]
-}
+};
