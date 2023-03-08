@@ -3,37 +3,38 @@ const startDataFetch = () => {
     fetchPreDHDeckLists();
 }
 
-const buildOutput = (deckList) => {
-    buildTableTag();
-    builtDisplayTable(deckList['data']);
+const buildOutput = () => {
     displayLoadIcon();
+    writeContentToDisplay('PreDH Deck List Gathered:')
+    buildTableTag();
+    builtDisplayTable();
 }
 
 const buildTableTag = () => {
-    const tableHead = '<table id="displayDeckData" class="displayDeckData"><thead><tr><th>Commander</th><th>Deck Name</th><th>Deck URL</th><th>Main Card Id</th>';
+    const tableHead = '<table id="displayDeckData" class="displayDeckData"><thead><tr><th>Commander</th><th>Submitted Decks</th><th>Main Card Id</th>';
+    const tableMid = '<th>Deck Name</th>';
     const tableTail = '</tr></thead><tbody id="cardDisplayTable"></tbody></table>';
-    setDataDisplay( `${tableHead}${tableTail}` );
+    setDataDisplay( `${tableHead}${tableMid}${tableTail}` );
 }
 
-const builtDisplayTable = (deckData) => {
+const builtDisplayTable = () => {
     const table = getElementById("displayDeckData");
+    const localPreDHDataSet = window.preDHDataSet;
     let cell;
     let row;
 
-    deckData.forEach( (deckInList) => {
-        fetchCommanderData(deckInList['mainCardId'])
-            .then(commanderJson => commanderJson )
-            .then(commanderJson => {
-                row = table.insertRow();
-                cell = row.insertCell();
-                cell.innerHTML = `<a href="https://www.moxfield.com/cards/${deckInList['mainCardId']}" target="_blank">${commanderJson['card']['name']}</a>`;
-                cell = row.insertCell();
-                cell.innerHTML = deckInList['name'];
-                cell = row.insertCell();
-                cell.innerHTML = `<a href="${deckInList['publicUrl']}" target="_blank">${deckInList['publicUrl']}</a>`;
-                cell = row.insertCell();
-                cell.innerHTML = deckInList['mainCardId'];
-            });
+    Object.keys(localPreDHDataSet).forEach( commander => {
+        const submittedDecks = Object.keys(localPreDHDataSet[commander]);
+        submittedDecks.forEach( individualDecks => {
+            row = table.insertRow();
+            cell = row.insertCell();
+            cell.innerHTML = `<a href="https://www.moxfield.com/cards/${localPreDHDataSet[commander][individualDecks]['mainCardId']}" target="_blank">${commander}</a>`;
+            cell = row.insertCell();
+            cell.innerHTML = submittedDecks.length;
+            cell = row.insertCell();
+            cell.innerHTML = localPreDHDataSet[commander][individualDecks]['mainCardId'];
+            cell = row.insertCell();
+            cell.innerHTML = `<a href="${localPreDHDataSet[commander][individualDecks]['publicUrl']}" target="_blank">${localPreDHDataSet[commander][individualDecks]['deckName']}</a>`;
+        });
     })
-
 }
