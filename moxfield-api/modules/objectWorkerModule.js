@@ -1,13 +1,12 @@
-const createPreDHDataSet = (decksInList) => {
-    window.preDHDataSet = {};
+const createDataSet = (decksInList) => {
+    window.commanderVariantDataSet = {};
     let promises = [];
 
     decksInList['data'].forEach( deckInList => {
         promises.push( fetchCommanderData(deckInList['mainCardId'])
-            .then(commanderJson => commanderJson )
             .then(commanderJson => {
-                if( !Object.keys(window.preDHDataSet).includes(commanderJson['card']['name']) ) {
-                    window.preDHDataSet[commanderJson['card']['name']] = {
+                if( !Object.keys(window.commanderVariantDataSet).includes(commanderJson['card']['name']) ) {
+                    window.commanderVariantDataSet[commanderJson['card']['name']] = {
                         [deckInList['id']]: {
                             mainCardId: deckInList['mainCardId'],
                             publicUrl: deckInList['publicUrl'],
@@ -16,7 +15,7 @@ const createPreDHDataSet = (decksInList) => {
                         }
                     }
                 } else {
-                    window.preDHDataSet[commanderJson['card']['name']][deckInList['id']] = {
+                    window.commanderVariantDataSet[commanderJson['card']['name']][deckInList['id']] = {
                         mainCardId: deckInList['mainCardId'],
                         publicUrl: deckInList['publicUrl'],
                         deckName: deckInList['name'],

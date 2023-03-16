@@ -1,11 +1,11 @@
-const startDataFetch = () => {
+const startDataFetch = (format) => {
     prepDisplayDuringLoad();
-    fetchPreDHDeckLists();
+    fetchDeckLists(format);
 }
 
 const buildOutput = () => {
     displayLoadIcon();
-    writeContentToDisplay('PreDH Deck List Gathered:')
+    writeContentToDisplay('Deck Lists Gathered:')
     buildTableTag();
     builtDisplayTable();
 }
@@ -19,7 +19,7 @@ const buildTableTag = () => {
 
 const builtDisplayTable = () => {
     const table = getElementById("displayDeckData");
-    const localPreDHDataSet = window.preDHDataSet;
+    const localPreDHDataSet = window.commanderVariantDataSet;
     let cell;
     let row;
 
