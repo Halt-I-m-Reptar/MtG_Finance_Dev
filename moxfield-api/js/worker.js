@@ -1,55 +1,67 @@
 const startDataFetch = (format) => {
+    window.moxfieldFormat = format;
     prepDisplayDuringLoad();
-    fetchDeckLists(format);
+    fetchDeckLists();
 }
 
-const buildOutput = (format) => {
+const buildOutput = () => {
     displayLoadIcon();
-    writeContentToDisplay('Deck Lists Gathered:')
-    buildTableTag(format);
-    builtDisplayTable(format);
+    writeContentToDisplay('Deck Lists Gathered:');
+    buildTableTag();
+    builtDisplayTable();
 }
 
-const buildTableTag = (format) => {
+const buildTableTag = () => {
     const tableHead = '<table id="displayDeckData" class="displayDeckData"><thead><tr><th>Commander</th><th>Submitted Decks</th><th>Main Card Id</th>';
-    const tableMid = buildTableMid(format);
+    const tableMid = buildTableMid();
     const tableTail = '<th>Deck Name</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>';
     setDataDisplay( `${tableHead}${tableMid}${tableTail}` );
 }
 
-const builtDisplayTable = (format) => {
+const builtDisplayTable = () => {
     const table = getElementById("displayDeckData");
-    const localPreDHDataSet = window.commanderVariantDataSet;
+    const commanderVariantDataSet = Object.entries(window.commanderVariantDataSet).sort( (firstEntry,secondEntry) => Object.keys(secondEntry[1]).length - Object.keys(firstEntry[1]).length);
     let cell;
     let row;
 
-    Object.keys(localPreDHDataSet).forEach( commander => {
-        const submittedDecks = Object.keys(localPreDHDataSet[commander]);
+    commanderVariantDataSet.forEach( commanderData => {
+        const commanderCard = commanderData[0];
+        const submittedDeckList = commanderData[1];
+        const submittedDeckListKeys = Object.keys(submittedDeckList);
 
-        submittedDecks.forEach( individualDecks => {
+        submittedDeckListKeys.forEach( individualDecks => {
             row = table.insertRow();
             cell = row.insertCell();
-            cell.innerHTML = `<a href="https://www.moxfield.com/cards/${localPreDHDataSet[commander][individualDecks]['mainCardId']}" target="_blank">${commander}</a>`;
+            cell.innerHTML = `<a href="https://www.moxfield.com/cards/${submittedDeckList[individualDecks]['mainCardId']}" target="_blank">${commanderCard}</a>`;
             cell = row.insertCell();
-            cell.innerHTML = `${submittedDecks.length}`;
+            cell.innerHTML = `${submittedDeckListKeys.length}`;
             cell = row.insertCell();
-            cell.innerHTML = localPreDHDataSet[commander][individualDecks]['mainCardId'];
-            if ( format === 'oathbreaker' ) {
-                cell = row.insertCell();
-                cell.innerHTML = `<a href="https://www.moxfield.com/cards/${localPreDHDataSet[commander][individualDecks]['signatureSpellsId']}" target="_blank">${localPreDHDataSet[commander][individualDecks]['signatureSpells']}</a>`;
-                cell = row.insertCell();
-                cell.innerHTML = `${localPreDHDataSet[commander][individualDecks]['signatureSpellsId']}`;
-            }
+            cell.innerHTML = submittedDeckList[individualDecks]['mainCardId'];
+            customDisplayByFormat(cell, row, submittedDeckList[individualDecks]);
             cell = row.insertCell();
-            cell.innerHTML = `<a href="${localPreDHDataSet[commander][individualDecks]['publicUrl']}" target="_blank">${localPreDHDataSet[commander][individualDecks]['deckName']}</a>`;
+            cell.innerHTML = `<a href="${submittedDeckList[individualDecks]['publicUrl']}" target="_blank">${submittedDeckList[individualDecks]['deckName']}</a>`;
         });
     })
 }
 
-const buildTableMid = (format) => {
+const buildTableMid = () => {
     const formatToCellsMap = {
+        predh: '',
         oathbreaker: '<th>Signature Spell</th><th>Signature Spell Id</th>'
     }
 
-    return formatToCellsMap[format] || '';
+    return formatToCellsMap[window.moxfieldFormat] || '';
+}
+
+const customDisplayByFormat = (cell, row, individualDeckData) => {
+    const customDisplay = {
+        oathbreaker: function(cell, row, individualDeckData) {
+            cell = row.insertCell();
+            cell.innerHTML = `<a href="https://www.moxfield.com/cards/${individualDeckData['signatureSpellsId']}" target="_blank">${individualDeckData['signatureSpells']}</a>`;
+            cell = row.insertCell();
+            cell.innerHTML = `${individualDeckData['signatureSpellsId']}`;
+        }
+    }
+
+    if ( customDisplay.hasOwnProperty(window.moxfieldFormat) ) { customDisplay[window.moxfieldFormat](cell, row, individualDeckData); }
 }
