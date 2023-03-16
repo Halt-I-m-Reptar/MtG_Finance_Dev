@@ -1,5 +1,5 @@
-## Moxfield PreDH Data Pull
-Aggregating deck data with Commander cards for a better fiew.
+## Moxfield Data Pull
+Aggregating preDH and Oathbreaker deck data for a better view.
 
 ### Required:
 * Chrome
@@ -7,3 +7,4 @@ Aggregating deck data with Commander cards for a better fiew.
 
 ### TODO:
 - Sort by display count (not to high a prio)
+- Monitor Oathbreaker api to see if they add the "oathbreaker spell"

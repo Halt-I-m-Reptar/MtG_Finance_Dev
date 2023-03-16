@@ -16,6 +16,6 @@ const displayLoadIcon = () => document.getElementById("loader").style.display = 
 
 const prepDisplayDuringLoad = () => {
     setDataDisplay();
-    writeContentToDisplay(`Gathering PreDH Decklists.`);
+    writeContentToDisplay(`Gathering decklists.`);
     displayLoadIcon();
 }

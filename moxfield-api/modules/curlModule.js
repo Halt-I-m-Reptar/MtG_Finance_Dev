@@ -1,5 +1,5 @@
-const fetchPreDHDeckLists = () => {
-    const url= "https://api2.moxfield.com/v2/decks/search?pageNumber=1&pageSize=64&sortType=updated&sortDirection=Descending&fmt=predh&board=mainboard";
+const fetchDeckLists = (format) => {
+    const url= `https://api2.moxfield.com/v2/decks/search?pageNumber=1&pageSize=64&sortType=updated&sortDirection=Descending&fmt=${format}&board=mainboard`;
 
     const requestOptions = {
         method: 'GET',
@@ -8,7 +8,7 @@ const fetchPreDHDeckLists = () => {
 
     fetch(url, requestOptions)
         .then(response => response.json())
-        .then(result => createPreDHDataSet(result))
+        .then(result => createDataSet(result))
         .catch(error => writeError(error))
 }
 
