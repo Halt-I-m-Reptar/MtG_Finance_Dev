@@ -7,4 +7,4 @@ Aggregating preDH and Oathbreaker deck data for a better view.
 
 ### TODO:
 - Sort by display count (not to high a prio)
-- Monitor Oathbreaker api to see if they add the "oathbreaker spell"
+- Clean up signature spell branching logic

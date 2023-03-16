@@ -8,12 +8,26 @@ const fetchDeckLists = (format) => {
 
     fetch(url, requestOptions)
         .then(response => response.json())
-        .then(result => createDataSet(result))
+        .then(result => createDataSet(format, result))
         .catch(error => writeError(error))
 }
 
 const fetchCommanderData = (cardId) => {
     const url = `https://api2.moxfield.com/v2/cards/details/${cardId}`;
+
+    const requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    };
+
+    return fetch(url, requestOptions)
+        .then(response => response.json())
+        .then(result => result)
+        .catch(error => writeError(error));
+}
+
+const fetchOathbreakerData = (publicUrl) => {
+    const url = `https://api2.moxfield.com/v2/decks/all/${publicUrl}`;
 
     const requestOptions = {
         method: 'GET',
