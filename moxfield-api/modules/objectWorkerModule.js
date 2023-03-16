@@ -1,60 +1,45 @@
-const createDataSet = (format, decksInList) => {
+const createDataSet = (decksInList) => {
     window.commanderVariantDataSet = {};
     let promises = [];
 
-    if ( format === 'predh' ) {
-        decksInList['data'].forEach(deckInList => {
-            promises.push(fetchCommanderData(deckInList['mainCardId'])
+        decksInList['data'].forEach(currentDeck => {
+            promises.push(fetchDeckData( {cardId: currentDeck['mainCardId'], publicId: currentDeck['publicId']} )
                 .then(commanderJson => {
-                    if (!Object.keys(window.commanderVariantDataSet).includes(commanderJson['card']['name'])) {
-                        window.commanderVariantDataSet[commanderJson['card']['name']] = {
-                            [deckInList['id']]: {
-                                mainCardId: deckInList['mainCardId'],
-                                publicUrl: deckInList['publicUrl'],
-                                deckName: deckInList['name'],
-                                deckId: deckInList['id']
-                            }
-                        }
-                    } else {
-                        window.commanderVariantDataSet[commanderJson['card']['name']][deckInList['id']] = {
-                            mainCardId: deckInList['mainCardId'],
-                            publicUrl: deckInList['publicUrl'],
-                            deckName: deckInList['name'],
-                            deckId: deckInList['id']
-                        }
-                    }
+                    const commander = commanderLocationMap(commanderJson);
+                    buildDataObject(commanderJson, currentDeck, commander);
                 })
             );
         });
-    } else if (format === 'oathbreaker'){
-        decksInList['data'].forEach(deckInList => {
-            promises.push(fetchOathbreakerData(deckInList['publicId'])
-                .then(oathbreakerJson => {
-                    if (!Object.keys(window.commanderVariantDataSet).includes(Object.keys(oathbreakerJson['commanders'])[0])) {
-                        window.commanderVariantDataSet[Object.keys(oathbreakerJson['commanders'])[0]] = {
-                            [deckInList['id']]: {
-                                mainCardId: deckInList['mainCardId'],
-                                publicUrl: deckInList['publicUrl'],
-                                deckName: deckInList['name'],
-                                deckId: deckInList['id'],
-                                signatureSpells: Object.keys(oathbreakerJson['signatureSpells'])[0],
-                                signatureSpellsId: oathbreakerJson['signatureSpells'][Object.keys(oathbreakerJson['signatureSpells'])[0]]['card']['id']
-                            }
-                        }
-                    } else {
-                        window.commanderVariantDataSet[Object.keys(oathbreakerJson['commanders'])[0]][deckInList['id']] = {
-                            mainCardId: deckInList['mainCardId'],
-                            publicUrl: deckInList['publicUrl'],
-                            deckName: deckInList['name'],
-                            deckId: deckInList['id'],
-                            signatureSpells: Object.keys(oathbreakerJson['signatureSpells'])[0],
-                            signatureSpellsId: oathbreakerJson['signatureSpells'][Object.keys(oathbreakerJson['signatureSpells'])[0]]['card']['id']
-                        }
-                    }
-                })
-            );
-        });
+
+    Promise.all(promises).then(() => buildOutput());
+}
+
+const commanderLocationMap = (commanderJson) => {
+    const commanderMap = {
+        predh: function() { return commanderJson['card']['name']; },
+        oathbreaker: function() { return Object.keys(commanderJson['commanders'])[0]; }
     }
 
-    Promise.all(promises).then(() => buildOutput(format));
+    return commanderMap[window.moxfieldFormat]();
 }
+
+const buildDataObject = (commanderJson, currentDeck, commander) => {
+    if (!Object.keys(window.commanderVariantDataSet).includes(commander)) {
+        window.commanderVariantDataSet[commander] = {
+            [currentDeck['id']]: returnDeckObjectBody (commanderJson, currentDeck)
+        }
+    } else {
+        window.commanderVariantDataSet[commander][currentDeck['id']] = returnDeckObjectBody (commanderJson, currentDeck)
+    }
+}
+
+const returnDeckObjectBody = (commanderJson, currentDeck) => {
+    return {
+        mainCardId: currentDeck['mainCardId'],
+        publicUrl: currentDeck['publicUrl'],
+        deckName: currentDeck['name'],
+        deckId: currentDeck['id'],
+        signatureSpells: commanderJson?.signatureSpells ? Object.keys(commanderJson['signatureSpells'])[0] : null,
+        signatureSpellsId: commanderJson?.signatureSpells ? commanderJson['signatureSpells'][Object.keys(commanderJson['signatureSpells'])[0]]['card']['id'] : null
+    }
+};

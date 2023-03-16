@@ -6,5 +6,3 @@ Aggregating preDH and Oathbreaker deck data for a better view.
 * [Allow Cors](https://mybrowseraddon.com/access-control-allow-origin.html)
 
 ### TODO:
-- Sort by display count (not to high a prio)
-- Clean up signature spell branching logic
