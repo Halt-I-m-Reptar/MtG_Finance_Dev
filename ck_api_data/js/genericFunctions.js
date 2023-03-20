@@ -8,11 +8,14 @@ const disableCKDataPull = (domId) => document.getElementById(`${domId}`).disable
 
 const getElementById = (domId) => document.getElementById(`${domId}`);
 
+const getElementValueById = (domId) => document.getElementById(`${domId}`).value;
+
 const getCheckedValue = (domId) =>document.getElementById(`${domId}`).checked
 
 const setListDomInnerHTML = (domId = 'listDisplay', displayText = '') => document.getElementById(`${domId}`).innerHTML = displayText;
 
 const enableCardDataDisplayButtons = () => {
     document.getElementById("filterCards").disabled = !document.getElementById("filterCards").disabled
+    document.getElementById("showPercentDiff").disabled = !document.getElementById("showPercentDiff").disabled
     document.getElementById("clearFilters").disabled = !document.getElementById("clearFilters").disabled
 };
