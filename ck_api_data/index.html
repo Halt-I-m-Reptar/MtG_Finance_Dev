@@ -8,11 +8,14 @@
     <div id="buttonWrapper" class="buttonWrapper">
         <button id="getPrices" class="getPrices" onclick="jsonGetWorker()">Get Prices</button>
         <button id="filterCards" class="filterCards" disabled onclick="filterCardInputListWorker()">Filter Cards</button>
-        <button id="clearFilters" class="clearFilters" disabled onclick="setListDomInnerHTML('listDisplay')">Clear Display Data</button>
         <button id="showPercentDiff" class="showPercentDiff" disabled onclick="showHighPercentCards()">Show High Percent Cards</button>
+        <label for="buylistPercentDiff">Set Buylist Diff Percent:</label>
+        <select name="buylistPercentDiff" id="buylistPercentDiff"></select>
         <input type="checkbox" class="showZeros" id="showZeros" checked/><label for="showZeros">Show Zeros</label>
         <input type="checkbox" class="whichSlug" id="whichSlug" /><label for="whichSlug">Use Live Slug</label>
     </div>
+    <br />
+    <button id="clearFilters" class="clearFilters" disabled onclick="setListDomInnerHTML('listDisplay')">Clear Display Data</button>
     <div id="repriceTimestamp" class="repriceTimestamp">&nbsp;</div>
     <br />
     <div id="dataFilter" class="dataFilter">
@@ -24,11 +27,11 @@
     <div class="loader" id="loader"></div>
     <br style="clear:both" />
     <script src="js/genericFunctions.js" ></script>
+    <script src="modules/createDropDownModule.js"></script>
     <script src="modules/displayModule.js" ></script>
     <script src="modules/curlModule.js" ></script>
-    <script src="modules/filterModule.js" ></script>
+    <script src="modules/cardFilterModule.js" ></script>
     <script src="modules/formatCKSlugData.js" ></script>
-<!-- testing -->
-<script src="ck_slug/pricelist2.js"></script>
+    <script src="modules/pricePercentFilter.js"></script>
 </body>
 </html>

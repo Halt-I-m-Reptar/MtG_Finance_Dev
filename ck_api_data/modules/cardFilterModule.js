@@ -1,7 +1,12 @@
 const filterCardInputListWorker = () => {
     setListDomInnerHTML('listDisplay',"<strong>Filtering your data.</strong>");
     displayLoadIcon();
-    displayCardDataWorker( filterCKData(cleanFilterCardsNames(getCardListToFilter())) );
+    const filteredCardList = filterCKData(cleanFilterCardsNames(getCardListToFilter()));
+    if ( filteredCardList.length ) { displayCardDataWorker( filteredCardList ); }
+    else {
+        displayLoadIcon();
+        setListDomInnerHTML('listDisplay',"<strong>Please enter cards to filter.</strong>");
+    }
 }
 
 const getCardListToFilter = () => Array.from( new Set( document.getElementById("cardNames").value.trim().split("\n") ));

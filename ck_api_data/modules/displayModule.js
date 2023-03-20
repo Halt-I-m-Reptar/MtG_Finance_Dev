@@ -13,42 +13,42 @@ const writeCardsToTable = (filteredCardDataToDisplay) => {
     filteredCardDataToDisplay.forEach( individualCardListings => {
             if (!getCheckedValue('showZeros') && individualCardListings['qty_buying'] === 0) { return; }
             row = table.insertRow();
-            Object.keys(individualCardListings).forEach( (cardById, cardDataIndex) => {
-                cell = row.insertCell(cardDataIndex);
-                switch (cardById) {
+            Object.keys(individualCardListings).forEach( (cardAttribute, cardAttributeIndex) => {
+                cell = row.insertCell(cardAttributeIndex);
+                switch (cardAttribute) {
                     case 'url':
                         cell.className = "";
-                        cell.innerHTML = createCardUrls(individualCardListings[cardById], individualCardListings['name']);
+                        cell.innerHTML = createCardUrls(individualCardListings[cardAttribute], individualCardListings['name']);
                         break;
                     case 'name':
                         cell.className = "cardName";
-                        cell.innerHTML = individualCardListings[cardById];
+                        cell.innerHTML = individualCardListings[cardAttribute];
                         break;
                     case 'is_foil':
-                        cell.className = individualCardListings[cardById] === 'true' ? "isFoil" : "";
-                        cell.innerHTML = individualCardListings[cardById];
+                        cell.className = individualCardListings[cardAttribute] === 'true' ? "isFoil" : "";
+                        cell.innerHTML = individualCardListings[cardAttribute];
                         break;
                     case 'price_retail':
                         cell.className = "retailPrice";
-                        cell.innerHTML = individualCardListings[cardById];
+                        cell.innerHTML = individualCardListings[cardAttribute];
                         break;
                     case 'price_buy':
                         cell.className = "buyPrice";
-                        cell.innerHTML = individualCardListings[cardById];
+                        cell.innerHTML = individualCardListings[cardAttribute];
                         break;
                     case 'qty_buying':
-                        cell.className = individualCardListings[cardById] === 0 ? "warning" : "";
-                        cell.innerHTML = individualCardListings[cardById];
+                        cell.className = individualCardListings[cardAttribute] === 0 ? "warning" : "";
+                        cell.innerHTML = individualCardListings[cardAttribute];
+                        break;
+                    case 'retailBuyPricePercent':
+                        cell.className = setBuyPercentBackgroundColor(individualCardListings[cardAttribute]);
+                        cell.innerHTML = individualCardListings[cardAttribute];
                         break;
                     default:
                         cell.className = "";
-                        cell.innerHTML = individualCardListings[cardById];
+                        cell.innerHTML = individualCardListings[cardAttribute];
                 }
             });
-            const retailBuyPricePercent = ((individualCardListings['price_buy'] / individualCardListings['price_retail']) * 100).toFixed(2)
-            cell = row.insertCell();
-            cell.innerHTML = ` ${ retailBuyPricePercent } `;
-            cell.className = setBuyPercentBackgroundColor(retailBuyPricePercent);
     });
 }
 
