@@ -15,9 +15,7 @@ const cleanFilterCardsNames = (filterList) => filterList.map(cardName => cleanCk
 
 const filterCKData = (filterList) => {
     return filterList.filter( currentCard => ckCardDataFromSlug[currentCard] ).map( currentCard => ckCardDataFromSlug[currentCard] ).reduce( (acc, currentCard) => {
-        currentCard.forEach( card => {
-            acc.push(card);
-        });
+        currentCard.map( cardData => acc.push(cardData) )
         return acc;
     },[]);
 }
