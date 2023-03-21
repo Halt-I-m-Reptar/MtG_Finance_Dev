@@ -16,6 +16,5 @@ const setListDomInnerHTML = (domId = 'listDisplay', displayText = '') => documen
 
 const enableCardDataDisplayButtons = () => {
     document.getElementById("filterCards").disabled = !document.getElementById("filterCards").disabled
-    document.getElementById("showPercentDiff").disabled = !document.getElementById("showPercentDiff").disabled
     document.getElementById("clearFilters").disabled = !document.getElementById("clearFilters").disabled
 };
