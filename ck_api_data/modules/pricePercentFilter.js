@@ -9,11 +9,11 @@ const showHighPercentCards = async () => {
 
 const filterCardsByPercent = async () => {
     return await Object.values(ckCardDataFromSlug).map( currentCardById => currentCardById ).reduce( (acc, currentCard) => {
-       Object.values(currentCard).filter( individualCard => {
-           if (individualCard['retailBuyPricePercent'] > +getElementValueById('buylistPercentDiff') && individualCard['qty_buying'] > 0) {
-               acc.push( individualCard );
-           }
-       });
-       return acc;
+        Object.values(currentCard).filter( individualCard => {
+            if (individualCard['retailBuyPricePercent'] > +getElementValueById('buylistPercentDiff') && Boolean(individualCard['variation']) === getCheckedValue('showVariations') && individualCard['qty_buying'] > 0) {
+                acc.push( individualCard );
+            }
+        });
+        return acc;
     }, []);
 }
