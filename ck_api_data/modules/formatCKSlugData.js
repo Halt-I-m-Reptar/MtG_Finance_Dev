@@ -3,13 +3,12 @@ let ckCardDataFromSlug = [];
 const createAndShapeCKData = (jsonReturn) => jsonReturn.data.forEach(data => {
     ckCardDataFromSlug[cleanCkCardName(data.name)] = ckCardDataFromSlug[cleanCkCardName(data.name)] || [];
     ckCardDataFromSlug[cleanCkCardName(data.name)][data.id] = data;
-    ckCardDataFromSlug[cleanCkCardName(data.name)][data.id] = data;
     ckCardDataFromSlug[cleanCkCardName(data.name)][data.id]['retailBuyPricePercent'] = ((data['price_buy'] / data['price_retail']) * 100).toFixed(2);
 } );
 
 const verifyAndShapeCKDataSet = (json) => {
     if (!json.data.length) {
-        setListDomInnerHTML('listDisplay',`<div class="warningText">There was an issue gathering the data from CardKingom.<br />Try again or uncheck the "Use Live Slug" text box.</div>`);
+        setListDomInnerHTML('listDisplay',`<div class="warningText">There was an issue gathering the data from Card Kingdom.<br />Try again or uncheck "Use Live Slug".</div>`);
         displayLoadIcon();
         return;
     }
