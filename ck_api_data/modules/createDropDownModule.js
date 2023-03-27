@@ -1,6 +1,6 @@
 (function() {
 
-    const createbuyPricePercentDropDown = () => {
+    const createBuyPricePercentDropDown = () => {
         const cardTypeMap = {
             50: '50',
             55: '55',
@@ -13,6 +13,16 @@
         appendItemsToSelect(getElementById("buylistPercentDiff"), cardTypeMap);
     }
 
+    const createBuyPricePercentSortOptions = () => {
+        const sortOptionsMap = {
+            'retailBuyPricePercent': 'Buy Price Percent',
+            'price_retail': 'Retail Price',
+            'price_buy': 'Buy Price'
+        }
+
+        appendItemsToSelect(getElementById("buylistPercentDiffSort"), sortOptionsMap);
+    }
+
     const appendItemsToSelect = (targetSelect, optionMap) => {
         Object.keys(optionMap).forEach( selector => {
             const createOption = document.createElement('option');
@@ -22,5 +32,6 @@
         }) ;
     }
 
-    createbuyPricePercentDropDown();
+    createBuyPricePercentDropDown();
+    createBuyPricePercentSortOptions();
 })();

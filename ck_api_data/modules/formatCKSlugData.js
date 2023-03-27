@@ -17,7 +17,7 @@ const verifyAndShapeCKDataSet = (json) => {
     updateAPITimestamp(json.meta['created_at']);
     createAndShapeCKData(json);
     displayLoadIcon();
-    setListDomInnerHTML('listDisplay',`CK inventory has been gathered, you can now filter your data.`);
+    setListDomInnerHTML('listDisplay',`CK inventory has been gathered, you can now process the data.`);
 }
 
 const updateAPITimestamp = (timestamp) => {
