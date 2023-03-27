@@ -8,12 +8,19 @@ const showHighPercentCards = async () => {
 }
 
 const filterCardsByPercent = async () => {
+    const sortOption = getElementValueById('buylistPercentDiffSort');
     return await Object.values(ckCardDataFromSlug).map( currentCardById => currentCardById ).reduce( (acc, currentCard) => {
         Object.values(currentCard).filter( individualCard => {
-            if (individualCard['retailBuyPricePercent'] > +getElementValueById('buylistPercentDiff') && Boolean(individualCard['variation']) === getCheckedValue('showVariations') && individualCard['qty_buying'] > 0) {
-                acc.push( individualCard );
+            if ( individualCard['retailBuyPricePercent'] > +getElementValueById('buylistPercentDiff') && individualCard['qty_buying'] > 0 ) {
+                if ( getCheckedValue('showVariations') ) {
+                    acc.push( individualCard );
+                } else {
+                    if ( !Boolean(individualCard['variation']) ) {
+                        acc.push( individualCard );
+                    }
+                }
             }
         });
         return acc;
-    }, []);
+    }, []).sort( (firstCard, secondCard) => secondCard[sortOption] - firstCard[sortOption] );
 }

@@ -13,3 +13,5 @@ Allows you to pull the entire CK MtG inventory and filter for specific cards you
 * Add each card you wish to filter for into the text box with, each on a new line
 * Click "Filter Cards" to filter the CK inventory to display the desired cards
 * Click "Clear Filters" to reset the card display
+
+## TODO

@@ -13,10 +13,10 @@
     </div>
     <br />
     <div id="showPercentWrapped" class="showPercentWrapped">
-        <button id="showPercentDiff" class="showPercentDiff" onclick="showHighPercentCards()">Show High Percent Cards</button>
-        <label for="buylistPercentDiff">Set Buylist Diff Percent:</label>
-        <select name="buylistPercentDiff" id="buylistPercentDiff"></select>
-        <input type="checkbox" class="showVariations" id="showVariations" checked/><label for="showVariations">Show Variations</label>
+        <button id="showPercentDiff" class="showPercentDiff" disabled onclick="showHighPercentCards()">Show High Percent Cards</button>
+        <label for="buylistPercentDiff">Set Buylist Diff Percent:</label><select name="buylistPercentDiff" id="buylistPercentDiff"></select>
+        <label for="buylistPercentDiff">Sort Buylist Diff Percent:</label><select name="buylistPercentDiffSort" id="buylistPercentDiffSort"></select>
+        <input type="checkbox" class="showVariations" id="showVariations" title="Enabling this will add all variation types to the output."/><label for="showVariations" title="Enabling this will add all variation types to the output.">Show Variations</label>
     </div>
     <br />
     <button id="clearFilters" class="clearFilters" disabled onclick="setListDomInnerHTML('listDisplay')">Clear Display Data</button>
