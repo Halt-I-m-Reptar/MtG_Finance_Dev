@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.34
+// @version      0.35
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -186,7 +186,7 @@
     }
 
     /********************
-    Pull in current quantity for sale in view
+     Pull in current quantity for sale in view
      ********************/
 
     const setQtyInViewByCondition = (condition, qty, qtyInView) => {
@@ -196,7 +196,7 @@
             qtyInView[shorthandCondition].vendorCount += 1;
             if( !qtyInView[shorthandCondition].largestQuantity || qtyInView[shorthandCondition].largestQuantity < qty) { qtyInView[shorthandCondition].largestQuantity = qty; }
         }
-        else { qtyInView[shorthandCondition] = {quantity: qty, vendorCount: 1}; }
+        else { qtyInView[shorthandCondition] = {quantity: qty, vendorCount: 1, largestQuantity: 0}; }
     }
 
     const mapCondition = (condition) => {
@@ -223,7 +223,7 @@
     const buildQtyInViewDisplay = (qtyInView) => Object.entries(qtyInView).reduce( (prevQtyData, currQty) => prevQtyData.concat(`<span style="margin-left: 20px;">${currQty[0]}: ${currQty[1].quantity} - Vendor Count: ${currQty[1].vendorCount} - Largest Qty: ${currQty[1].largestQuantity}</span><br />`), '');
 
     /********************
-    HTML element interaction
+     HTML element interaction
      ********************/
 
     const clearHtmlElements = () => {
@@ -238,7 +238,7 @@
     }
 
     /********************
-    Write interactive HTML elements
+     Write interactive HTML elements
      ********************/
 
     const writeSalesToggle = () => {
@@ -262,7 +262,7 @@
     }
 
     /********************
-    Re-inventing the wheel of time because we are not importing the moment library.
+     Re-inventing the wheel of time because we are not importing the moment library.
      ********************/
 
     const setHistoricDateArr = (daysToLookBack) => {
