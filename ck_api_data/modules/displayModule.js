@@ -14,6 +14,7 @@ const writeCardsToTable = (filteredCardDataToDisplay) => {
             if (!getCheckedValue('showZeros') && individualCardListings['qty_buying'] === 0) { return; }
             row = table.insertRow();
             Object.keys(individualCardListings).forEach( (cardAttribute, cardAttributeIndex) => {
+                if ( ['scryfall_id'].includes(cardAttribute) ) { return; }
                 cell = row.insertCell(cardAttributeIndex);
                 switch (cardAttribute) {
                     case 'url':

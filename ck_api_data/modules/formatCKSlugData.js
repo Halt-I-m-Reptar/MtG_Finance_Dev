@@ -1,6 +1,7 @@
 let ckCardDataFromSlug = [];
 
 const createAndShapeCKData = (jsonReturn) => jsonReturn.data.forEach(data => {
+    console.log(data.name);
     ckCardDataFromSlug[cleanCkCardName(data.name)] = ckCardDataFromSlug[cleanCkCardName(data.name)] || [];
     ckCardDataFromSlug[cleanCkCardName(data.name)][data.id] = data;
     ckCardDataFromSlug[cleanCkCardName(data.name)][data.id]['retailBuyPricePercent'] = ((data['price_buy'] / data['price_retail']) * 100).toFixed(2);
