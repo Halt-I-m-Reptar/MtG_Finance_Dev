@@ -1,9 +1,13 @@
 let ckCardDataFromSlug = [];
 
-const createAndShapeCKData = (jsonReturn) => jsonReturn.data.forEach(data => {
-    ckCardDataFromSlug[cleanCkCardName(data.name)] = ckCardDataFromSlug[cleanCkCardName(data.name)] || [];
-    ckCardDataFromSlug[cleanCkCardName(data.name)][data.id] = data;
-    ckCardDataFromSlug[cleanCkCardName(data.name)][data.id]['retailBuyPricePercent'] = ((data['price_buy'] / data['price_retail']) * 100).toFixed(2);
+const createAndShapeCKData = (jsonReturn) => jsonReturn.data.forEach(cardData => {
+    ckCardDataFromSlug[cleanCkCardName(cardData.name)] = ckCardDataFromSlug[cleanCkCardName(cardData.name)] || [];
+    ckCardDataFromSlug[cleanCkCardName(cardData.name)][cardData.id] = {};
+    Object.keys(cardData).forEach( cardDataPoint => {
+        if ( dataElementsToSkip(cardDataPoint) ) { return; }
+        ckCardDataFromSlug[cleanCkCardName(cardData.name)][cardData.id][cardDataPoint] = cardData[cardDataPoint];
+    });
+    ckCardDataFromSlug[cleanCkCardName(cardData.name)][cardData.id]['retailBuyPricePercent'] = ((cardData['price_buy'] / cardData['price_retail']) * 100).toFixed(2);
 } );
 
 const verifyAndShapeCKDataSet = (json) => {
@@ -23,3 +27,5 @@ const updateAPITimestamp = (timestamp) => {
     const slugInUse = getCheckedValue('whichSlug') ? 'CK API' : 'Backup Slug';
     document.getElementById("repriceTimestamp").innerHTML = `<br /><strong> ${slugInUse} Last Updated:</strong> ${timestamp}`;
 }
+
+const dataElementsToSkip = (keyToCheck) => ['scryfall_id'].includes(keyToCheck);
