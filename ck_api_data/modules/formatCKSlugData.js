@@ -1,10 +1,13 @@
 let ckCardDataFromSlug = [];
 
-const createAndShapeCKData = (jsonReturn) => jsonReturn.data.forEach(data => {
-    console.log(data.name);
-    ckCardDataFromSlug[cleanCkCardName(data.name)] = ckCardDataFromSlug[cleanCkCardName(data.name)] || [];
-    ckCardDataFromSlug[cleanCkCardName(data.name)][data.id] = data;
-    ckCardDataFromSlug[cleanCkCardName(data.name)][data.id]['retailBuyPricePercent'] = ((data['price_buy'] / data['price_retail']) * 100).toFixed(2);
+const createAndShapeCKData = (jsonReturn) => jsonReturn.data.forEach(cardData => {;
+    ckCardDataFromSlug[cleanCkCardName(cardData.name)] = ckCardDataFromSlug[cleanCkCardName(cardData.name)] || [];
+    ckCardDataFromSlug[cleanCkCardName(cardData.name)][cardData.id] = {};
+    Object.keys(cardData).forEach( key => {
+        if ( ['scryfall_id'].includes(key) ) { return; }
+        ckCardDataFromSlug[cleanCkCardName(cardData.name)][cardData.id][key] = cardData[key];
+    });
+    ckCardDataFromSlug[cleanCkCardName(cardData.name)][cardData.id]['retailBuyPricePercent'] = ((cardData['price_buy'] / cardData['price_retail']) * 100).toFixed(2);
 } );
 
 const verifyAndShapeCKDataSet = (json) => {
