@@ -14,16 +14,20 @@ const showHighPercentCards = async () => {
 
 const filterCardsByPercent = async () => {
     const sortOption = getElementValueById('buylistPercentDiffSort');
+    const showVariation = getCheckedValue('showVariations');
+    const showFoils = getCheckedValue('showFoils');
 
     return await Object.values(ckCardDataFromSlug).map( currentCardById => currentCardById ).reduce( (acc, currentCard) => {
         Object.values(currentCard).filter( individualCard => {
             if ( individualCard['retailBuyPricePercent'] > +getElementValueById('buylistPercentDiff') && individualCard['qty_buying'] > 0 ) {
-                if ( getCheckedValue('showVariations') ) {
+                if ( showVariation === false && individualCard['variation'].length > 0 ) { return; }
+                // when user elects to show variants, adds foil variants to the array
+                if ( showVariation === true && individualCard['variation'].length > 0 && individualCard['is_foil'] === 'true') {
                     acc.push( individualCard );
+                    return;
                 }
-                if ( !getCheckedValue('showVariations') && !Boolean(individualCard['variation']) ) {
-                    acc.push( individualCard );
-                }
+                if ( showFoils === false && individualCard['is_foil'] === 'true' ) { return; }
+                acc.push( individualCard );
             }
         });
         return acc;
