@@ -10,7 +10,7 @@ const getElementById = (domId) => document.getElementById(`${domId}`);
 
 const getElementValueById = (domId) => document.getElementById(`${domId}`).value;
 
-const getCheckedValue = (domId) => document.getElementById(`${domId}`).checked
+const getCheckedValue = (domId) => document.getElementById(`${domId}`).checked;
 
 const setListDomInnerHTML = (domId = 'listDisplay', displayText = '') => document.getElementById(`${domId}`).innerHTML = displayText;
 
