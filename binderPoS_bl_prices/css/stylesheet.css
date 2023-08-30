@@ -43,16 +43,20 @@
     width: fit-content;
 }
 
-td {
-    white-space: nowrap;
-}
-
 th {
     width: fit-content;
     background: white;
     position: sticky;
     box-shadow: 0 2px 2px -1px black;
     top: 0; /* Don't forget this, required for the stickiness */
+}
+
+tr:hover {
+    background-color: bisque;
+}
+
+td {
+    white-space: nowrap;
 }
 
 .retailPrice {
