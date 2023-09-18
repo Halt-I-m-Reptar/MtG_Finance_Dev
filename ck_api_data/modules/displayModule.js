@@ -13,6 +13,7 @@ const writeCardsToTable = (filteredCardDataToDisplay) => {
     filteredCardDataToDisplay.forEach( individualCardListings => {
             if (!getCheckedValue('showZeros') && individualCardListings['qty_buying'] === 0) { return; }
             row = table.insertRow();
+            row.addEventListener('click', (elem) => setBackgroundColor( Array.from(elem.target.parentNode.getElementsByTagName('td')) ) );
             Object.keys(individualCardListings).forEach( (cardAttribute, cardAttributeIndex) => {
                 cell = row.insertCell(cardAttributeIndex);
                 switch (cardAttribute) {
