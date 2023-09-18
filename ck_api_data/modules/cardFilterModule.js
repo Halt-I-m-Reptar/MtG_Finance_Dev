@@ -5,7 +5,7 @@ const filterCardInputListWorker = () => {
     if ( filteredCardList.length ) { displayCardDataWorker( filteredCardList ); }
     else {
         displayLoadIcon();
-        setListDomInnerHTML('listDisplay',"<strong>Please enter cards to filter.</strong>");
+        setListDomInnerHTML('listDisplay',"<span id='warningText'><strong>No resuls returned, please enter cards to filter and checking your spelling.</strong></span>");
     }
 }
 
