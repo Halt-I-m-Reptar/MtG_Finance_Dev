@@ -9,7 +9,8 @@
         <button id="getPrices" class="getPrices" onclick="jsonGetWorker()">Get Prices</button>
         <button id="filterCards" class="filterCards" disabled onclick="filterCardInputListWorker()">Filter Cards</button>
         <input type="checkbox" class="showZeros" id="showZeros" checked/><label for="showZeros">Show Zeros</label>
-        <input type="checkbox" class="whichSlug" id="whichSlug" checked/><label for="whichSlug">Use Live Slug</label>
+        <!--<input type="checkbox" class="whichSlug" id="whichSlug" checked/><label for="whichSlug">Use Live Slug</label>-->
+        <input type="checkbox" class="whichSlug" id="whichSlug" /><label for="whichSlug">Use Live Slug</label>
     </div>
     <br />
     <div id="showPercentWrapped" class="showPercentWrapped">
@@ -20,6 +21,7 @@
         <input type="checkbox" class="showFoils" id="showFoils" title="Enabling this will add foils to the output."/><label for="showFoils" title="Enabling this will add foils to the output.">Add Foils</label>
     </div>
     <br />
+    <button id="displayHotlist" class="displayHotlist" onclick="fetchHotlist()">Display Hotlist</button><br /><br />
     <button id="clearFilters" class="clearFilters" disabled onclick="setListDomInnerHTML('listDisplay')">Clear Display Data</button>
     <div id="repriceTimestamp" class="repriceTimestamp">&nbsp;</div>
     <br />

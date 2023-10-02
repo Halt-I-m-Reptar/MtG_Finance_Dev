@@ -10,15 +10,25 @@ const createAndShapeCKData = (jsonReturn) => jsonReturn.data.forEach(cardData =>
     ckCardDataFromSlug[cleanCkCardName(cardData.name)][cardData.id]['retailBuyPricePercent'] = ((cardData['price_buy'] / cardData['price_retail']) * 100).toFixed(2);
 } );
 
-const verifyAndShapeCKDataSet = (json) => {
-    if (!json.data.length) {
-        setListDomInnerHTML('listDisplay',`<div class="warningText">There was an issue gathering the data from Card Kingdom.<br />Try again or uncheck "Use Live Slug".</div>`);
-        displayLoadIcon();
-        return;
+const verifyAndShapeCKDataSet = (ckListJson) => {
+    console.log(ckListJson);
+    if ( ckListJson.data ) {
+        updateAPITimestamp(ckListJson.meta['created_at']);
+        if (!ckListJson.data.length) {
+            setListDomInnerHTML('listDisplay', `<div class="warningText">There was an issue gathering the data from Card Kingdom.<br />Try again or uncheck "Use Live Slug".</div>`);
+            displayLoadIcon();
+            return;
+        }
+    }
+    if ( ckListJson.list ) {
+        if (!ckListJson.list.length) {
+            setListDomInnerHTML('listDisplay', `<div class="warningText">There was an issue gathering the data from Card Kingdom.<br />Try again or uncheck "Use Live Slug".</div>`);
+            displayLoadIcon();
+            return;
+        }
     }
     enableCardDataDisplayButtons();
-    updateAPITimestamp(json.meta['created_at']);
-    createAndShapeCKData(json);
+    createAndShapeCKData(ckListJson);
     displayLoadIcon();
     setListDomInnerHTML('listDisplay',`CK inventory has been gathered, you can now process the data.`);
 }
