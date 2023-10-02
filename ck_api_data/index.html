@@ -6,10 +6,9 @@
     </head>
 <body>
     <div id="buttonWrapper" class="buttonWrapper">
-        <button id="getPrices" class="getPrices" onclick="jsonGetWorker()">Get Prices</button>
-        <button id="filterCards" class="filterCards" disabled onclick="filterCardInputListWorker()">Filter Cards</button>
+        <button id="getPrices" class="getPrices" onclick="jsonGetWorker(fetchBuylist)">Get Prices</button>
+        <button id="filterCards" class="filterCards" disabled onclick="filterCardInputListWorker('buylist')">Filter Cards</button>
         <input type="checkbox" class="showZeros" id="showZeros" checked/><label for="showZeros">Show Zeros</label>
-        <!--<input type="checkbox" class="whichSlug" id="whichSlug" checked/><label for="whichSlug">Use Live Slug</label>-->
         <input type="checkbox" class="whichSlug" id="whichSlug" /><label for="whichSlug">Use Live Slug</label>
     </div>
     <br />
@@ -21,7 +20,8 @@
         <input type="checkbox" class="showFoils" id="showFoils" title="Enabling this will add foils to the output."/><label for="showFoils" title="Enabling this will add foils to the output.">Add Foils</label>
     </div>
     <br />
-    <button id="displayHotlist" class="displayHotlist" onclick="fetchHotlist()">Display Hotlist</button><br /><br />
+    <button id="displayHotlist" class="displayHotlist" onclick="jsonGetWorker(fetchHotlist)">Display Hotlist</button>
+    <span class="updateWarning" id="hostlistUpdate">You can regenerate the hotlist but might hit an IP block.</span><br /><br />
     <button id="clearFilters" class="clearFilters" disabled onclick="setListDomInnerHTML('listDisplay')">Clear Display Data</button>
     <div id="repriceTimestamp" class="repriceTimestamp">&nbsp;</div>
     <br />
@@ -37,6 +37,7 @@
     <script src="modules/createDropDownModule.js"></script>
     <script src="modules/displayModule.js" ></script>
     <script src="modules/curlModule.js" ></script>
+    <script src="modules/hostlistDisplayModule.js"></script>
     <script src="modules/cardFilterModule.js" ></script>
     <script src="modules/formatCKSlugData.js" ></script>
     <script src="modules/pricePercentFilter.js"></script>

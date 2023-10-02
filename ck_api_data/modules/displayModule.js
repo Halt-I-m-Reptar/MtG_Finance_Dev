@@ -1,10 +1,8 @@
 const displayCardDataWorker = (filteredCardDataToDisplay) => {
     displayLoadIcon();
-    createOutputTable();
+    setListDomInnerHTML('listDisplay',`<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>Buy/Sell URLs</th><th>Card Name</th><th>Variation</th><th>Set</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th><th>Buy %</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>`);
     writeCardsToTable(filteredCardDataToDisplay);
 }
-
-const createOutputTable = () => setListDomInnerHTML('listDisplay','<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>Buy/Sell URLs</th><th>Card Name</th><th>Variation</th><th>Set</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th><th>Buy %</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>');
 
 const writeCardsToTable = (filteredCardDataToDisplay) => {
     const table = getElementById("displayData");

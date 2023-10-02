@@ -18,5 +18,4 @@ const enableCardDataDisplayButtons = () => {
     document.getElementById("filterCards").disabled = !document.getElementById("filterCards").disabled;
     document.getElementById("clearFilters").disabled = !document.getElementById("clearFilters").disabled;
     document.getElementById("showPercentDiff").disabled = !document.getElementById("showPercentDiff").disabled;
-    document.getElementById("displayHotlist").disabled = !document.getElementById("displayHotlist").disabled;
 };
