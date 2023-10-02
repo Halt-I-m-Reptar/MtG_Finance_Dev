@@ -18,6 +18,7 @@ const fetchBuylist = () => {
         .then(response => response.json())
         .then(result => verifyAndShapeCKDataSet(result.data, result.meta, 'buylist'))
         .catch(error => {
+                disableCKDataPull('getPrices');
                 writeError(error);
                 setListDomInnerHTML('listDisplay', `<div class="warningText">There was an error:<br />${error}</div>`);
             }
