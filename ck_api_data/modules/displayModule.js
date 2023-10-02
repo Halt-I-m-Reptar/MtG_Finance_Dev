@@ -12,8 +12,8 @@ const writeCardsToTable = (filteredCardDataToDisplay) => {
             if (!getCheckedValue('showZeros') && individualCardListings['qty_buying'] === 0) { return; }
             row = table.insertRow();
             row.addEventListener('click', (elem) => setBackgroundColor( Array.from(elem.target.parentNode.getElementsByTagName('td')) ) );
-            Object.keys(individualCardListings).forEach( (cardAttribute, cardAttributeIndex) => {
-                cell = row.insertCell(cardAttributeIndex);
+            Object.keys(individualCardListings).forEach( (cardAttribute) => {
+                cell = row.insertCell();
                 switch (cardAttribute) {
                     case 'url':
                         cell.className = "";

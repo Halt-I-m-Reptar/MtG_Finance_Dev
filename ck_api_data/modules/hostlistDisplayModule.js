@@ -1,10 +1,11 @@
 const hotlistDisplayWorker = (filteredCardDataToDisplay) => {
-    setListDomInnerHTML('listDisplay', `<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>Image URI</th><th>Set</th><th>Retail Price</th><th>Buy Price</th><th>Sale Price</th><th>Primary Category Id</th><th>Border Colors</th><th>Display Style</th><th>Buy/Sell URLs</th><th>Edition</th><th>Edition Slug</th><th>model</th><th>retailBuyPricePrecent</th>
+    setListDomInnerHTML('listDisplay', `<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>Card Name</th><th>Retail Price</th><th>Buy Price</th><th>Buy/Sell URLs</th><th>Set</th><<th>retailBuyPricePrecent</th>
 </tr></thead><tbody id="cardDisplayTable"></tbody></table>`);
     writeHotlistToTable(filteredCardDataToDisplay);
 }
 
 const writeHotlistToTable = (filteredCardDataToDisplay) => {
+    const attributesToSkip = ['border_color','display_style','edition_slug','image_uri','model','price_sale','primary_category_id'];
     const table = getElementById("displayData");
     let cell;
     let row;
@@ -12,46 +13,35 @@ const writeHotlistToTable = (filteredCardDataToDisplay) => {
         row = table.insertRow();
         row.addEventListener('click', (elem) => setBackgroundColor( Array.from(elem.target.parentNode.getElementsByTagName('td')) ) );
         const itemNumber = Object.keys( filteredCardDataToDisplay[individualCardName] );
-        Object.keys(filteredCardDataToDisplay[individualCardName][itemNumber]).forEach( (cardAttribute, cardAttributeIndex) => {
-            cell = row.insertCell(cardAttributeIndex);
+        Object.keys(filteredCardDataToDisplay[individualCardName][itemNumber]).forEach( (cardAttribute) => {
+            if ( attributesToSkip.includes(cardAttribute) ) { return; }
+            cell = row.insertCell();
             cell.innerHTML = filteredCardDataToDisplay[individualCardName][itemNumber][cardAttribute];
-            /*switch (cardAttribute) {
-                case 'url':
+            switch (cardAttribute) {
+                case 'uri':
                     cell.className = "";
-                    cell.innerHTML = createCardUrls(individualCardListings[cardAttribute], individualCardListings['name']);
+                    cell.innerHTML = createCardUrls( filteredCardDataToDisplay[individualCardName][itemNumber][cardAttribute], filteredCardDataToDisplay[individualCardName][itemNumber]['name'] );
                     break;
                 case 'name':
                     cell.className = "cardName";
-                    cell.innerHTML = individualCardListings[cardAttribute];
+                    cell.innerHTML = filteredCardDataToDisplay[individualCardName][itemNumber][cardAttribute];
                     break;
-                case 'is_foil':
-                    cell.className = individualCardListings[cardAttribute] === 'true' ? "isFoil" : "";
-                    cell.innerHTML = individualCardListings[cardAttribute];
-                    break;
-                case 'price_retail':
+                case 'price':
                     cell.className = "retailPrice";
-                    cell.innerHTML = individualCardListings[cardAttribute];
+                    cell.innerHTML = filteredCardDataToDisplay[individualCardName][itemNumber][cardAttribute];
                     break;
                 case 'price_buy':
                     cell.className = "buyPrice";
-                    cell.innerHTML = individualCardListings[cardAttribute];
-                    break;
-                case 'qty_buying':
-                    cell.className = individualCardListings[cardAttribute] === 0 ? "warning" : "";
-                    cell.innerHTML = individualCardListings[cardAttribute];
+                    cell.innerHTML = filteredCardDataToDisplay[individualCardName][itemNumber][cardAttribute];
                     break;
                 case 'retailBuyPricePercent':
-                    cell.className = setBuyPercentBackgroundColor(individualCardListings[cardAttribute]);
-                    cell.innerHTML = individualCardListings[cardAttribute];
+                    cell.className = setBuyPercentBackgroundColor( filteredCardDataToDisplay[individualCardName][itemNumber][cardAttribute] );
+                    cell.innerHTML = filteredCardDataToDisplay[individualCardName][itemNumber][cardAttribute];
                     break;
                 default:
                     cell.className = "";
-                    cell.innerHTML = individualCardListings[cardAttribute];
-            }*/
+                    cell.innerHTML = filteredCardDataToDisplay[individualCardName][itemNumber][cardAttribute];
+            }
         });
     });
 }
-
-/*
-    TODO: Update the display output
- */
