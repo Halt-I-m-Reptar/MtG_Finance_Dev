@@ -19,3 +19,8 @@ const enableCardDataDisplayButtons = () => {
     document.getElementById("clearFilters").disabled = !document.getElementById("clearFilters").disabled;
     document.getElementById("showPercentDiff").disabled = !document.getElementById("showPercentDiff").disabled;
 };
+
+const showDataError = (displayText) => {
+    displayLoadIcon();
+    setListDomInnerHTML('listDisplay', displayText);
+}

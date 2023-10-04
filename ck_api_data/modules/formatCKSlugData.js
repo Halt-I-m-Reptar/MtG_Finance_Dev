@@ -10,6 +10,7 @@ const createAndShapeCKData = (ckListJson, itemList) => {
                 ckCardDataFromSlug[itemList][cleanCkCardName(cardData.name)][cardData.id][cardDataPoint] = cardData[cardDataPoint];
             });
         ckCardDataFromSlug[itemList][cleanCkCardName(cardData.name)][cardData.id]['retailBuyPricePercent'] = createBuyPercentage( cardData['price_buy'] , cardData['price_retail'] || cardData['price'] );
+        ckCardDataFromSlug[itemList][cleanCkCardName(cardData.name)][cardData.id]['buy_price_credit'] = createCreditBuyPrice( cardData['price_buy']  );
     })
 };
 
@@ -37,10 +38,3 @@ const updateAPITimestamp = (timestamp) => {
 }
 
 const dataElementsToSkip = (keyToCheck) => ['scryfall_id'].includes(keyToCheck);
-
-function showDataError(displayText) {
-    displayLoadIcon();
-    setListDomInnerHTML('listDisplay', displayText);
-}
-
-const createBuyPercentage = (buyPrice, sellPrice) => ((buyPrice / sellPrice) * 100).toFixed(2);

@@ -1,6 +1,6 @@
 const displayCardDataWorker = (filteredCardDataToDisplay) => {
     displayLoadIcon();
-    setListDomInnerHTML('listDisplay',`<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>Buy/Sell URLs</th><th>Card Name</th><th>Variation</th><th>Set</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th><th>Buy %</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>`);
+    setListDomInnerHTML('listDisplay',`<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>Buy/Sell URLs</th><th>Card Name</th><th>Variation</th><th>Set</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th><th>Buy %</th><th>Buy Price Credit</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>`);
     writeCardsToTable(filteredCardDataToDisplay);
 }
 
@@ -50,8 +50,6 @@ const writeCardsToTable = (filteredCardDataToDisplay) => {
             });
     });
 }
-
-const createCardUrls = (retailURL, name) => `<a href="https://www.cardkingdom.com/${retailURL}" target="_blank">Buy ${name}</a> | <a href="https://www.cardkingdom.com/purchasing/mtg_singles?search=header&filter%5Bname%5D=${name}" target="_blank">Sell ${name}</a>`;
 
 const setBuyPercentBackgroundColor = (retailBuyPricePercent) => {
     if ( retailBuyPricePercent >= 70 ) { return "highBuyPrice";}

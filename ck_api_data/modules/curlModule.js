@@ -10,7 +10,7 @@ const requestOptions = {
 
 const fetchBuylist = () => {
     disableCKDataPull('getPrices');
-    setListDomInnerHTML('listDisplay',"<strong>Gathering and collating all inventory from CK.</strong>");
+    setListDomInnerHTML('listDisplay',`<strong>Gathering and collating all inventory from CK.</strong>`);
 
     const buylistUrl = getCheckedValue('whichSlug') ? "https://api.cardkingdom.com/api/pricelist" : "https://raw.githubusercontent.com/Halt-I-m-Reptar/MtG_Finance_Dev/master/ck_api_data/ck_slug/pricelist.json";
 
@@ -26,6 +26,8 @@ const fetchBuylist = () => {
 }
 
 const fetchHotlist = () => {
+    setListDomInnerHTML('listDisplay',`<strong>Gathering and collating the CK Hostlist.</strong>`);
+
     const hostListUrl = "https://api.cardkingdom.com/api/product/list/hotbuy";
 
     fetch(hostListUrl, requestOptions)
