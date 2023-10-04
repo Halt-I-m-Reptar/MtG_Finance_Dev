@@ -2,8 +2,6 @@ const hotlistDisplayWorker = (filteredCardDataToDisplay) => {
     setListDomInnerHTML('listDisplay', `<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>Card Name</th><th>Retail Price</th><th>Buy Price</th><th>Buy/Sell URLs</th><th>Set</th><th>Model</th><th>Buy %</th><th>Buy Price Credit</th>
 </tr></thead><tbody id="cardDisplayTable"></tbody></table>`);
     writeHotlistToTable( sortedHostList(filteredCardDataToDisplay) );
-    //writeHotlistToTable( (sortedHostList(dummyData) );
-
 }
 
 const sortedHostList = (filteredCardDataToDisplay) => {
