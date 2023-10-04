@@ -1,12 +1,10 @@
 const displayCardDataWorker = (filteredCardDataToDisplay) => {
     displayLoadIcon();
-    createOutputTable();
-    writeCardsToTable(filteredCardDataToDisplay);
+    setListDomInnerHTML('listDisplay',`<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>Buy/Sell URLs</th><th>Card Name</th><th>Variation</th><th>Set</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th><th>Buy %</th><th>Buy Price Credit</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>`);
+    writeFilteredCardsToTable(filteredCardDataToDisplay);
 }
 
-const createOutputTable = () => setListDomInnerHTML('listDisplay','<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>Buy/Sell URLs</th><th>Card Name</th><th>Variation</th><th>Set</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th><th>Buy %</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>');
-
-const writeCardsToTable = (filteredCardDataToDisplay) => {
+const writeFilteredCardsToTable = (filteredCardDataToDisplay) => {
     const table = getElementById("displayData");
     let cell;
     let row;
@@ -14,8 +12,8 @@ const writeCardsToTable = (filteredCardDataToDisplay) => {
             if (!getCheckedValue('showZeros') && individualCardListings['qty_buying'] === 0) { return; }
             row = table.insertRow();
             row.addEventListener('click', (elem) => setBackgroundColor( Array.from(elem.target.parentNode.getElementsByTagName('td')) ) );
-            Object.keys(individualCardListings).forEach( (cardAttribute, cardAttributeIndex) => {
-                cell = row.insertCell(cardAttributeIndex);
+            Object.keys(individualCardListings).forEach( (cardAttribute) => {
+                cell = row.insertCell();
                 switch (cardAttribute) {
                     case 'url':
                         cell.className = "";
@@ -51,13 +49,4 @@ const writeCardsToTable = (filteredCardDataToDisplay) => {
                 }
             });
     });
-}
-
-const createCardUrls = (retailURL, name) => `<a href="https://www.cardkingdom.com/${retailURL}" target="_blank">Buy ${name}</a> | <a href="https://www.cardkingdom.com/purchasing/mtg_singles?search=header&filter%5Bname%5D=${name}" target="_blank">Sell ${name}</a>`;
-
-const setBuyPercentBackgroundColor = (retailBuyPricePercent) => {
-    if ( retailBuyPricePercent >= 70 ) { return "highBuyPrice";}
-    if ( retailBuyPricePercent >= 65 ) { return "decentBuyPrice"; }
-    if ( retailBuyPricePercent < 60 ) { return "lowBuyPrice"; }
-    return "retailPrice";
 }

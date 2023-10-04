@@ -75,3 +75,10 @@ td {
 #warningText {
     background: lightpink;
 }
+
+#hostlistUpdate {
+    font-style: italic;
+    font-weight: bold;
+    font-size: 10pt;
+    color: palevioletred;
+}

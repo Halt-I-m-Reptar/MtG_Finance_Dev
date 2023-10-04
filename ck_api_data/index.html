@@ -6,20 +6,22 @@
     </head>
 <body>
     <div id="buttonWrapper" class="buttonWrapper">
-        <button id="getPrices" class="getPrices" onclick="jsonGetWorker()">Get Prices</button>
-        <button id="filterCards" class="filterCards" disabled onclick="filterCardInputListWorker()">Filter Cards</button>
+        <button id="getPrices" class="getPrices" onclick="jsonGetWorker(fetchBuylist)">Get Prices</button>
+        <button id="filterCards" class="filterCards" disabled onclick="filterCardInputListWorker('buylist')">Filter Cards</button>
         <input type="checkbox" class="showZeros" id="showZeros" checked/><label for="showZeros">Show Zeros</label>
-        <input type="checkbox" class="whichSlug" id="whichSlug" checked/><label for="whichSlug">Use Live Slug</label>
+        <input type="checkbox" class="whichSlug" id="whichSlug" /><label for="whichSlug">Use Live Slug</label>
     </div>
     <br />
     <div id="showPercentWrapped" class="showPercentWrapped">
-        <button id="showPercentDiff" class="showPercentDiff" disabled onclick="showHighPercentCards()">Show High Percent Cards</button>
+        <button id="showPercentDiff" class="showPercentDiff" disabled onclick="showHighPercentCards('buylist')">Show High Percent Cards</button>
         <label for="buylistPercentDiff">Set Buylist Diff Percent:</label><select name="buylistPercentDiff" id="buylistPercentDiff"></select>
-        <label for="buylistPercentDiff">Sort Buylist Diff Percent:</label><select name="buylistPercentDiffSort" id="buylistPercentDiffSort"></select>
+        <label for="buylistPercentDiffSort">Sort Buylist Diff Percent By:</label><select name="buylistPercentDiffSort" id="buylistPercentDiffSort"></select>
         <input type="checkbox" class="showVariations" id="showVariations" title="Enabling this will add all variation types to the output."/><label for="showVariations" title="Enabling this will add all variation types to the output.">Add Variations</label>
         <input type="checkbox" class="showFoils" id="showFoils" title="Enabling this will add foils to the output."/><label for="showFoils" title="Enabling this will add foils to the output.">Add Foils</label>
     </div>
     <br />
+    <button id="displayHotlist" class="displayHotlist" onclick="jsonGetWorker(fetchHotlist)">Display Hotlist</button>
+    <span class="updateWarning" id="hostlistUpdate">You can regenerate the hotlist but might hit an IP block.</span><br /><br />
     <button id="clearFilters" class="clearFilters" disabled onclick="setListDomInnerHTML('listDisplay')">Clear Display Data</button>
     <div id="repriceTimestamp" class="repriceTimestamp">&nbsp;</div>
     <br />
@@ -32,12 +34,14 @@
     <div class="loader" id="loader"></div>
     <br style="clear:both" />
     <script src="js/genericFunctions.js" ></script>
-    <script src="modules/createDropDownModule.js"></script>
-    <script src="modules/displayModule.js" ></script>
+    <script src="js/pricePercentFilter.js"></script>
+    <script src="js/createDropDownMenus.js"></script>
+    <script src="modules/dataModifcationModule.js" ></script>
+    <script src="modules/filteredCardsDisplayModule.js" ></script>
     <script src="modules/curlModule.js" ></script>
+    <script src="modules/hostlistDisplayModule.js"></script>
     <script src="modules/cardFilterModule.js" ></script>
     <script src="modules/formatCKSlugData.js" ></script>
-    <script src="modules/pricePercentFilter.js"></script>
     <script src="modules/tableDisplayUpdates.js"></script>
 </body>
 </html>

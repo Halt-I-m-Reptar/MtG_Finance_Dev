@@ -1,26 +1,35 @@
-let ckCardDataFromSlug = [];
+let ckCardDataFromSlug = {};
 
-const createAndShapeCKData = (jsonReturn) => jsonReturn.data.forEach(cardData => {
-    ckCardDataFromSlug[cleanCkCardName(cardData.name)] = ckCardDataFromSlug[cleanCkCardName(cardData.name)] || [];
-    ckCardDataFromSlug[cleanCkCardName(cardData.name)][cardData.id] = {};
-    Object.keys(cardData).forEach( cardDataPoint => {
-        if ( dataElementsToSkip(cardDataPoint) ) { return; }
-        ckCardDataFromSlug[cleanCkCardName(cardData.name)][cardData.id][cardDataPoint] = cardData[cardDataPoint];
-    });
-    ckCardDataFromSlug[cleanCkCardName(cardData.name)][cardData.id]['retailBuyPricePercent'] = ((cardData['price_buy'] / cardData['price_retail']) * 100).toFixed(2);
-} );
+const createAndShapeCKData = (ckListJson, itemList) => {
+    ckCardDataFromSlug[itemList] = [];
+    ckListJson.forEach(cardData => {
+        ckCardDataFromSlug[itemList][cleanCkCardName(cardData.name)] = ckCardDataFromSlug[itemList][cleanCkCardName(cardData.name)] || [];
+        ckCardDataFromSlug[itemList][cleanCkCardName(cardData.name)][cardData.id] = {};
+            Object.keys(cardData).forEach( cardDataPoint => {
+                if ( dataElementsToSkip(cardDataPoint) ) { return; }
+                ckCardDataFromSlug[itemList][cleanCkCardName(cardData.name)][cardData.id][cardDataPoint] = cardData[cardDataPoint];
+            });
+        ckCardDataFromSlug[itemList][cleanCkCardName(cardData.name)][cardData.id]['retailBuyPricePercent'] = createBuyPercentage( cardData['price_buy'] , cardData['price_retail'] || cardData['price'] );
+        ckCardDataFromSlug[itemList][cleanCkCardName(cardData.name)][cardData.id]['buy_price_credit'] = createCreditBuyPrice( cardData['price_buy']  );
+    })
+};
 
-const verifyAndShapeCKDataSet = (json) => {
-    if (!json.data.length) {
-        setListDomInnerHTML('listDisplay',`<div class="warningText">There was an issue gathering the data from Card Kingdom.<br />Try again or uncheck "Use Live Slug".</div>`);
-        displayLoadIcon();
+const verifyAndShapeCKDataSet = (ckListJson, timestamp = null, itemList) => {
+    if ( timestamp ) {
+        updateAPITimestamp(timestamp['created_at']);
+    }
+    if ( !ckListJson.length ) {
+        showDataError(`<div class="warningText">There was an issue gathering the data from Card Kingdom.<br />Try again or uncheck "Use Live Slug".</div>`);
         return;
     }
-    enableCardDataDisplayButtons();
-    updateAPITimestamp(json.meta['created_at']);
-    createAndShapeCKData(json);
+    createAndShapeCKData(ckListJson, itemList);
     displayLoadIcon();
-    setListDomInnerHTML('listDisplay',`CK inventory has been gathered, you can now process the data.`);
+    if ( itemList === 'buylist') {
+        enableCardDataDisplayButtons();
+        setListDomInnerHTML('listDisplay',`CK inventory has been gathered, you can now process the data.`);
+    } else {
+        hotlistDisplayWorker( ckCardDataFromSlug[itemList] );
+    }
 }
 
 const updateAPITimestamp = (timestamp) => {
