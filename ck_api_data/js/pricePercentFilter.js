@@ -1,7 +1,7 @@
-const showHighPercentCards = async () => {
+const showHighPercentCards = async (listToFilter) => {
     displayLoadIcon();
     setListDomInnerHTML('listDisplay',"<strong>Gathering cards with a high buylist ratio. This may take some time.</strong>");
-    const cardArr = await filterCardsByPercent();
+    const cardArr = await filterCardsByPercent(ckCardDataFromSlug[listToFilter]);
     if ( cardArr.length ) {
         displayCardDataWorker(cardArr);
     } else {
@@ -10,12 +10,12 @@ const showHighPercentCards = async () => {
     }
 }
 
-const filterCardsByPercent = async () => {
+const filterCardsByPercent = async (buylist) => {
     const sortOption = getElementValueById('buylistPercentDiffSort');
     const showVariation = getCheckedValue('showVariations');
     const showFoils = getCheckedValue('showFoils');
 
-    return await Object.values(ckCardDataFromSlug.buylist).map( currentCardById => currentCardById ).reduce( (acc, currentCard) => {
+    return await Object.values(buylist).map( currentCardById => currentCardById ).reduce( (acc, currentCard) => {
         Object.values(currentCard).filter( individualCard => {
             if ( individualCard['retailBuyPricePercent'] > +getElementValueById('buylistPercentDiff') && individualCard['qty_buying'] > 0 ) {
                 if ( showVariation === false && individualCard['variation'].length > 0 ) { return; }
