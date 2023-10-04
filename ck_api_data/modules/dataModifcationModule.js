@@ -9,3 +9,10 @@ function createBuyPercentage(buyPrice, sellPrice) {
 function createCreditBuyPrice(buyPrice) {
     return (buyPrice * 1.3).toFixed(2);
 }
+
+function setBuyPercentBackgroundColor(retailBuyPricePercent) {
+    if ( retailBuyPricePercent >= 70 ) { return "highBuyPrice";}
+    if ( retailBuyPricePercent >= 65 ) { return "decentBuyPrice"; }
+    if ( retailBuyPricePercent < 60 ) { return "lowBuyPrice"; }
+    return "retailPrice";
+}

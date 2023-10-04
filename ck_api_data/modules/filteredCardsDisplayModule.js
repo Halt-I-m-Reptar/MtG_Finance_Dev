@@ -1,10 +1,10 @@
 const displayCardDataWorker = (filteredCardDataToDisplay) => {
     displayLoadIcon();
     setListDomInnerHTML('listDisplay',`<table id="displayData" class="displayData"><thead><tr><th>CK Id</th><th>SKU</th><th>Buy/Sell URLs</th><th>Card Name</th><th>Variation</th><th>Set</th><th>Foil</th><th>Retail Price</th><th>Retail Quantity</th><th>Buy Price</th><th>Buy Quantity</th><th>Buy %</th><th>Buy Price Credit</th></tr></thead><tbody id="cardDisplayTable"></tbody></table>`);
-    writeCardsToTable(filteredCardDataToDisplay);
+    writeFilteredCardsToTable(filteredCardDataToDisplay);
 }
 
-const writeCardsToTable = (filteredCardDataToDisplay) => {
+const writeFilteredCardsToTable = (filteredCardDataToDisplay) => {
     const table = getElementById("displayData");
     let cell;
     let row;
@@ -49,11 +49,4 @@ const writeCardsToTable = (filteredCardDataToDisplay) => {
                 }
             });
     });
-}
-
-const setBuyPercentBackgroundColor = (retailBuyPricePercent) => {
-    if ( retailBuyPricePercent >= 70 ) { return "highBuyPrice";}
-    if ( retailBuyPricePercent >= 65 ) { return "decentBuyPrice"; }
-    if ( retailBuyPricePercent < 60 ) { return "lowBuyPrice"; }
-    return "retailPrice";
 }
