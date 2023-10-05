@@ -17,7 +17,9 @@
         const sortOptionsMap = {
             'retailBuyPricePercent': 'Buy Price Percent',
             'price_retail': 'Retail Price',
-            'price_buy': 'Buy Price'
+            'price_buy': 'Buy Price',
+            'qty_buying': 'Buy Quantity',
+            'qty_retail': 'Retail Quantity'
         }
 
         appendItemsToSelect(getElementById("buylistPercentDiffSort"), sortOptionsMap);
