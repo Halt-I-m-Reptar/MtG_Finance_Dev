@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.35
+// @version      0.36
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -58,9 +58,15 @@
         salesArray.orderQtyOverFour += qty < 4 ? 0 : 1
     }
 
+    // moved this to its own function as it appears the TCGP ui is updating and this conditional check will cover the check
+    const getModalDisplayLength = () => {
+        const modalLength = Array.from(document.getElementsByClassName("is-modal")).length;
+        return modalLength > 2 ? modalLength - 2 : modalLength - 1;
+    }
+
     const gatherSalesData = () => {
         const salesByCondition = {};
-        const modalDisplayLength = Array.from(document.getElementsByClassName("is-modal")).length -= 1;
+        const modalDisplayLength = getModalDisplayLength(); //Array.from(document.getElementsByClassName("is-modal")).length -= 2; //1;
         const historicDateArr = setHistoricDateArr(daysToLookBack());
         Array.from(document.getElementsByClassName("is-modal")[modalDisplayLength].children).forEach( (children, index) => {
             const listOfSales = Array.from(document.getElementsByClassName("is-modal")[modalDisplayLength].children);
