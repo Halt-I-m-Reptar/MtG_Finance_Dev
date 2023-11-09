@@ -2,7 +2,7 @@ const writeError = (err) => console.warn("There was an error: "+err);
 
 const displayLoadIcon = (domId = 'loader') => document.getElementById(`${domId}`).style.display = (document.getElementById(`${domId}`).style.display === "none" || document.getElementById(`${domId}`).style.display === "") ? "inherit" : "none";
 
-const cleanCkCardName = (card) => card.replace(/\W/g,'').toLowerCase();
+const cleanCkCardName = (card) => card.split(' (')[0].replace(/\W/g,'').toLowerCase();
 
 const disableCKDataPull = (domId) => document.getElementById(`${domId}`).disabled = !document.getElementById(`${domId}`).disabled;
 

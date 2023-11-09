@@ -26,6 +26,7 @@ const fetchBuylist = () => {
 }
 
 const fetchHotlist = () => {
+    if ( !ckCardDataFromSlug.buylist) { fetchBuylist(); }
     setListDomInnerHTML('listDisplay',`<strong>Gathering and collating the CK Hostlist.</strong>`);
 
     const hostListUrl = "https://api.cardkingdom.com/api/product/list/hotbuy";
@@ -34,6 +35,7 @@ const fetchHotlist = () => {
         .then(response => response.json())
         .then(result => verifyAndShapeCKDataSet(result.list, null, 'hotlist'))
         .catch(error => {
+                displayLoadIcon();
                 writeError(error);
                 setListDomInnerHTML('listDisplay', `<div class="warningText">There was an error:<br />${error}</div>`);
             }
