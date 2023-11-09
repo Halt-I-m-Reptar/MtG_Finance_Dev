@@ -11,10 +11,11 @@ const createAndShapeCKData = (ckListJson, itemList) => {
             });
         ckCardDataFromSlug[itemList][cleanCkCardName(cardData.name)][cardData.id]['retailBuyPricePercent'] = createBuyPercentage( cardData['price_buy'] , cardData['price_retail'] || cardData['price'] );
         ckCardDataFromSlug[itemList][cleanCkCardName(cardData.name)][cardData.id]['buy_price_credit'] = createCreditBuyPrice( cardData['price_buy']  );
-    })
+    });
+    if ( itemList === 'hotlist') { addBuylistData(); }
 };
 
-const verifyAndShapeCKDataSet = (ckListJson, timestamp = null, itemList) => {
+const verifyAndShapeCKDataSet = (ckListJson, timestamp = null, itemList, buylistClick) => {
     if ( timestamp ) {
         updateAPITimestamp(timestamp['created_at']);
     }
@@ -23,13 +24,10 @@ const verifyAndShapeCKDataSet = (ckListJson, timestamp = null, itemList) => {
         return;
     }
     createAndShapeCKData(ckListJson, itemList);
-    displayLoadIcon();
-    if ( itemList === 'buylist') {
-        enableCardDataDisplayButtons();
-        setListDomInnerHTML('listDisplay',`CK inventory has been gathered, you can now process the data.`);
-    } else {
-        hotlistDisplayWorker( ckCardDataFromSlug[itemList] );
-    }
+    changeCardDataButtonDisplay(false);
+    setListDomInnerHTML('listDisplay',`CK inventory has been gathered, you can now process the data.`);
+    if ( buylistClick ) { displayLoadIcon(); } // necessary because of how the filter card section flows
+    if ( itemList === 'hotlist' ) { hotlistDisplayWorker( ckCardDataFromSlug[itemList] ); }
 }
 
 const updateAPITimestamp = (timestamp) => {
@@ -38,3 +36,27 @@ const updateAPITimestamp = (timestamp) => {
 }
 
 const dataElementsToSkip = (keyToCheck) => ['scryfall_id'].includes(keyToCheck);
+
+const addBuylistData = () => {
+    Object.keys( ckCardDataFromSlug.hotlist ).forEach( cardsInList => {
+        const cardIds = Object.keys(ckCardDataFromSlug.hotlist[cardsInList]);
+        cardIds.forEach( individualId => {
+            if ( !ckCardDataFromSlug.buylist[cardsInList] ) {
+                setZeroData({ cardsInList: cardsInList, individualId: individualId, qty_buying: 0, qty_retail: 0} );
+                return;
+            }
+            if ( !ckCardDataFromSlug.buylist[cardsInList][individualId] ) {
+                setZeroData({ cardsInList: cardsInList, individualId: individualId, qty_buying: 0, qty_retail: 0} );
+                return;
+            }
+            const buylistData = ckCardDataFromSlug.buylist[cardsInList][individualId];
+            setZeroData( { cardsInList:cardsInList, individualId: individualId, qty_buying: buylistData['qty_buying'], qty_retail: buylistData['qty_retail']} )
+        })
+    })
+}
+
+const setZeroData = (args) => {
+    const { cardsInList, individualId, qty_buying, qty_retail } = args;
+    ckCardDataFromSlug.hotlist[cardsInList][individualId]['qty_buying'] = qty_buying;
+    ckCardDataFromSlug.hotlist[cardsInList][individualId]['qty_retail'] = qty_retail;
+}
