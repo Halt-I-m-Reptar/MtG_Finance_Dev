@@ -8,17 +8,17 @@ const requestOptions = {
     redirect: 'follow'
 };
 
-const fetchBuylist = () => {
-    disableCKDataPull('getPrices');
+const fetchBuylist = ( buylistClick = true) => {
+    disableCKDataPull('getPrices', false);
     setListDomInnerHTML('listDisplay',`<strong>Gathering and collating all inventory from CK.</strong>`);
 
     const buylistUrl = getCheckedValue('whichSlug') ? "https://api.cardkingdom.com/api/pricelist" : "https://raw.githubusercontent.com/Halt-I-m-Reptar/MtG_Finance_Dev/master/ck_api_data/ck_slug/pricelist.json";
 
     fetch(buylistUrl, requestOptions)
         .then(response => response.json())
-        .then(result => verifyAndShapeCKDataSet(result.data, result.meta, 'buylist'))
+        .then(result => verifyAndShapeCKDataSet(result.data, result.meta, 'buylist', buylistClick))
         .catch(error => {
-                disableCKDataPull('getPrices');
+                disableCKDataPull('getPrices', false);
                 writeError(error);
                 setListDomInnerHTML('listDisplay', `<div class="warningText">There was an error:<br />${error}</div>`);
             }
@@ -26,7 +26,7 @@ const fetchBuylist = () => {
 }
 
 const fetchHotlist = () => {
-    if ( !ckCardDataFromSlug.buylist) { fetchBuylist(); }
+    if ( !ckCardDataFromSlug.buylist) { fetchBuylist(false); }
     setListDomInnerHTML('listDisplay',`<strong>Gathering and collating the CK Hostlist.</strong>`);
 
     const hostListUrl = "https://api.cardkingdom.com/api/product/list/hotbuy";

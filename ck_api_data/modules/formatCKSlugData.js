@@ -15,7 +15,7 @@ const createAndShapeCKData = (ckListJson, itemList) => {
     if ( itemList === 'hotlist') { addBuylistData(); }
 };
 
-const verifyAndShapeCKDataSet = (ckListJson, timestamp = null, itemList) => {
+const verifyAndShapeCKDataSet = (ckListJson, timestamp = null, itemList, buylistClick) => {
     if ( timestamp ) {
         updateAPITimestamp(timestamp['created_at']);
     }
@@ -24,13 +24,10 @@ const verifyAndShapeCKDataSet = (ckListJson, timestamp = null, itemList) => {
         return;
     }
     createAndShapeCKData(ckListJson, itemList);
-    if ( itemList === 'buylist') {
-        enableCardDataDisplayButtons();
-        displayLoadIcon();
-        setListDomInnerHTML('listDisplay',`CK inventory has been gathered, you can now process the data.`);
-    } else {
-        hotlistDisplayWorker( ckCardDataFromSlug[itemList] );
-    }
+    changeCardDataButtonDisplay(false);
+    setListDomInnerHTML('listDisplay',`CK inventory has been gathered, you can now process the data.`);
+    if ( buylistClick ) { displayLoadIcon(); } // necessary because of how the filter card section flows
+    if ( itemList === 'hotlist' ) { hotlistDisplayWorker( ckCardDataFromSlug[itemList] ); }
 }
 
 const updateAPITimestamp = (timestamp) => {
