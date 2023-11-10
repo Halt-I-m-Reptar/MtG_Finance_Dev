@@ -32,7 +32,6 @@ const fetchBuylist = ( listToPull, buylistClick = true) => {
 }
 
 const fetchHotlist = () => {
-    console.log('getting hotlist');
     setListDomInnerHTML('listDisplay',`<strong>Gathering and collating the CK Hostlist.</strong>`);
     const hostListUrl = "https://api.cardkingdom.com/api/product/list/hotbuy";
     //const hostListUrl = "https://raw.githubusercontent.com/Halt-I-m-Reptar/MtG_Finance_Dev/master/ck_api_data/ck_slug/hotbuy.json";
