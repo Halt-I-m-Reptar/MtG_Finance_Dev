@@ -1,10 +1,11 @@
-const jsonGetWorker = (listToPull) => {
+const jsonGetWorker = (listToPull, buylistClick) => {
     displayLoadIcon();
     /*
         We pull the buylist data, first thing, then run the selected data pull.
         If we have already pulled the buylist, then we just run the selected data pull.
      */
-    if ( !ckCardDataFromSlug.buylist ) { fetchBuylist(listToPull, false); }
+
+    if ( !ckCardDataFromSlug.buylist ) { fetchBuylist(listToPull, buylistClick); }
     else { listToPull(); }
 }
 
@@ -13,7 +14,7 @@ const requestOptions = {
     redirect: 'follow'
 };
 
-const fetchBuylist = ( listToPull, buylistClick = true) => {
+const fetchBuylist = ( listToPull, buylistClick = false) => {
     disableCKDataPull('getPrices', true);
     setListDomInnerHTML('listDisplay',`<strong>Gathering and collating all inventory from CK.</strong>`);
 
@@ -22,7 +23,7 @@ const fetchBuylist = ( listToPull, buylistClick = true) => {
     fetch(buylistUrl, requestOptions)
         .then(response => response.json())
         .then(result => verifyAndShapeCKDataSet(result.data, result.meta, 'buylist', buylistClick))
-        .then( () => { listToPull(); } )
+        .then( () => { if ( !buylistClick ) { listToPull(); } })
         .catch(error => {
                 disableCKDataPull('getPrices', false);
                 writeError(error);
