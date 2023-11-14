@@ -6,10 +6,10 @@
     </head>
 <body>
     <div id="buttonWrapper" class="buttonWrapper">
-        <button id="getPrices" class="getPrices" onclick="jsonGetWorker(fetchBuylist)">Get Prices</button>
+        <button id="getPrices" class="getPrices" onclick="jsonGetWorker(fetchBuylist, true)">Get Prices</button>
         <button id="filterCards" class="filterCards" disabled onclick="filterCardInputListWorker('buylist')">Filter Cards</button>
         <input type="checkbox" class="showZeros" id="showZeros" checked/><label for="showZeros">Show Zeros</label>
-        <input type="checkbox" class="whichSlug" id="whichSlug" checked/><label for="whichSlug">Use Live Slug</label>
+        <input type="checkbox" class="whichSlug" id="whichSlug" /><label for="whichSlug">Use Live Slug</label>
     </div>
     <br />
     <div id="showPercentWrapped" class="showPercentWrapped">

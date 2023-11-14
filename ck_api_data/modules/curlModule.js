@@ -1,10 +1,11 @@
-const jsonGetWorker = (listToPull) => {
+function jsonGetWorker (listToPull, buylistClick) {
     displayLoadIcon();
     /*
         We pull the buylist data, first thing, then run the selected data pull.
         If we have already pulled the buylist, then we just run the selected data pull.
      */
-    if ( !ckCardDataFromSlug.buylist ) { fetchBuylist(listToPull, false); }
+
+    if ( !ckCardDataFromSlug.buylist ) { fetchBuylist(listToPull, buylistClick); }
     else { listToPull(); }
 }
 
@@ -13,7 +14,7 @@ const requestOptions = {
     redirect: 'follow'
 };
 
-const fetchBuylist = ( listToPull, buylistClick = true) => {
+function fetchBuylist ( listToPull, buylistClick = false) {
     disableCKDataPull('getPrices', true);
     setListDomInnerHTML('listDisplay',`<strong>Gathering and collating all inventory from CK.</strong>`);
 
@@ -22,7 +23,7 @@ const fetchBuylist = ( listToPull, buylistClick = true) => {
     fetch(buylistUrl, requestOptions)
         .then(response => response.json())
         .then(result => verifyAndShapeCKDataSet(result.data, result.meta, 'buylist', buylistClick))
-        .then( () => { listToPull(); } )
+        .then( () => { if ( !buylistClick ) { listToPull(); } })
         .catch(error => {
                 disableCKDataPull('getPrices', false);
                 writeError(error);
@@ -31,7 +32,7 @@ const fetchBuylist = ( listToPull, buylistClick = true) => {
         );
 }
 
-const fetchHotlist = () => {
+function fetchHotlist() {
     setListDomInnerHTML('listDisplay',`<strong>Gathering and collating the CK Hostlist.</strong>`);
     const hostListUrl = "https://api.cardkingdom.com/api/product/list/hotbuy";
     //const hostListUrl = "https://raw.githubusercontent.com/Halt-I-m-Reptar/MtG_Finance_Dev/master/ck_api_data/ck_slug/hotbuy.json";
