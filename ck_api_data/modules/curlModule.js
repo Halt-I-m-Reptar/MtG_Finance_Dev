@@ -1,4 +1,4 @@
-function jsonGetWorker (listToPull, buylistClick) {
+const jsonGetWorker = (listToPull, buylistClick) => {
     displayLoadIcon();
     /*
         We pull the buylist data, first thing, then run the selected data pull.
@@ -14,7 +14,7 @@ const requestOptions = {
     redirect: 'follow'
 };
 
-function fetchBuylist ( listToPull, buylistClick = false) {
+const fetchBuylist = ( listToPull, buylistClick = false) => {
     disableCKDataPull('getPrices', true);
     setListDomInnerHTML('listDisplay',`<strong>Gathering and collating all inventory from CK.</strong>`);
 
@@ -32,7 +32,7 @@ function fetchBuylist ( listToPull, buylistClick = false) {
         );
 }
 
-function fetchHotlist() {
+const fetchHotlist = () => {
     setListDomInnerHTML('listDisplay',`<strong>Gathering and collating the CK Hostlist.</strong>`);
     const hostListUrl = "https://api.cardkingdom.com/api/product/list/hotbuy";
     //const hostListUrl = "https://raw.githubusercontent.com/Halt-I-m-Reptar/MtG_Finance_Dev/master/ck_api_data/ck_slug/hotbuy.json";
