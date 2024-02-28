@@ -94,7 +94,7 @@
     const writeSalesDataContainer = () => {
         const div = document.createElement('div');
         const setBottom = document.getElementsByClassName("_hj_feedback_container")[0] ? 'bottom:100px' : 'bottom:0';
-        div.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:8888;width:auto;height:0;min-height:400px;max-height:600px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff;line-height:normal"></div>`);
+        div.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:8888;width:auto;height:0;max-height:600px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff;line-height:normal"></div>`);
         document.body.prepend(div);
     }
 
@@ -180,7 +180,7 @@
 
     window.startDataRequest = function() {
         clearHtmlElements();
-        if ( !document.getElementsByClassName("price-guide__latest-sales__more")[0]?.children[0]) { alert('Please wait for the "View Sales History" link to load then click the button again.'); }
+        if ( !document.getElementsByClassName("price-guide__more")[0]?.children[0] ) { alert('Please wait for the "View Sales History" link to load then click the button again.'); }
         else if ( missingDomElements() ) { alert('TCGPlayer DOM Elements are out of alignment. This script must be updated to function properly.'); }
         else {
             toggleGatherDataButton();
