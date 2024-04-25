@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.37
+// @version      0.38
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -100,7 +100,7 @@
 
     const displaySalesData = (salesByCondition) => {
         const div = document.getElementsByClassName('salesDataDisplay')[0];
-        const qtyInViewByCondition = getQtyInView();
+        const qtyInViewByCondition = getQtyInViewByCondition();
         const totalQtyInView = getTotalQtyInView(qtyInViewByCondition);
         div.innerHTML += `<strong>Total copies in view: </strong>${totalQtyInView}<br />\
         <strong>Condition breakout:</strong><br />${buildQtyInViewDisplay(qtyInViewByCondition)}<br />`;
@@ -220,9 +220,13 @@
 
     const getTotalQtyInView = (qtyInView) => Object.keys(qtyInView).reduce( (prevVal, conditionKey) => prevVal + qtyInView[conditionKey].quantity, 0);
 
-    const getQtyInView = () => {
+    const getQtyInViewByCondition = () => {
         const qtyInView = {};
-        Array.from(document.getElementsByClassName('listing-item product-details__listings-results')).forEach( listingItem => setQtyInViewByCondition(listingItem.children[0].innerText, +listingItem.children[3].getElementsByClassName('add-to-cart__available')[0].innerText.split(' ')[1], qtyInView ));
+        Array.from(document.getElementsByClassName('listing-item product-details__listings-results')).forEach( listingItem => {
+            const condition = listingItem.children[0].getElementsByClassName('listing-item__listing-data__info__condition')[0].innerText;
+            const quantity = +listingItem.children[0].getElementsByClassName('add-to-cart__available')[0].innerText.split(' ')[1];
+            setQtyInViewByCondition(condition, quantity, qtyInView )
+        });
         return qtyInView;
     }
 
