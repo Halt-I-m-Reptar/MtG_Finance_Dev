@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Melee Decklist Dump
 // @namespace    https://melee.gg/
-// @version      0.01
+// @version      0.02
 // @description  List out decklists to console
 // @author       Peter Creutzberger
 // @match        */Tournament/View/*
@@ -29,15 +29,19 @@
 
     const displayDecklists = () => {
         const div = document.getElementsByClassName('decklistContainer')[0];
-        const deckListArr = Array.from( document.getElementsByClassName("Decklists-column") );
+        const deckListArr = Array.from( document.querySelector("#tournament-standings-table").childNodes[1].children );
         if ( deckListArr.length > 0 ) {
-            deckListArr.filter( decklistName => decklistName.innerText.trim() !== 'Decklist' && decklistName.innerText.trim() !== 'N/A').sort( (a, b) => a.innerText.trim() > b.innerText.trim() ? 1 : -1).reduce( (acc, curr) => {
-                return [ ...acc, [{ [curr.innerText.trim()]:  curr.childNodes[0].href }] ]
-            }, [] ).forEach( deckListData => {
-                div.style.height = adjustHeight(div);
-                div.innerHTML += `<a href="${Object.values(deckListData[0])}" target="_blank" style="color: #007bff;">${Object.keys(deckListData[0])}</a><br />`
-            });
-        } else {
+            Array.from( document.querySelector("#tournament-standings-table").childNodes[1].children ).reduce( (acc, curr) => {
+                if ( !curr.childNodes[2].children[0].children[0].children[0]?.href ) return [ ...acc ];
+                return [ ...acc, [{ [curr.childNodes[2].children[0].children[0].innerText.trim()]: curr.childNodes[2].children[0].children[0].children[0].href}] ]
+            }, [])
+                .filter( decklistName => Object.keys( decklistName[0] )[0].trim() !== 'Decklist' && Object.keys( decklistName[0] )[0].trim() !== 'N/A' )
+                .sort( (a, b) => Object.keys( a[0] )[0].trim() > Object.keys( b[0] )[0].trim() ? 1 : -1 )
+                .forEach( deckListData => {
+                    div.style.height = adjustHeight(div);
+                    div.innerHTML += `<a href="${Object.values(deckListData[0])}" target="_blank" style="color: #007bff;">${Object.keys(deckListData[0])}</a><br />`
+                });
+        }  else {
             div.innerHTML += 'No decklists found. Try again. :(';
         }
     }
