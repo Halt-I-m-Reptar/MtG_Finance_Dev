@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.38
+// @version      0.39
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -171,17 +171,18 @@
 
     const sleep = (milliseconds) => { return new Promise(resolve => setTimeout(resolve, milliseconds)); }
 
-    const missingDomElements = () => {
+    const missingDomElements = ( elemsToCheck) => {
         let missingElements = 0;
-        const domElementsToCheck = [document.getElementsByClassName("modal__activator")[0]];
-        domElementsToCheck.forEach( domElement => missingElements += domElement ? 0 : 1 );
-        return missingElements > 0;
+        elemsToCheck.forEach( domElement => missingElements += domElement ? 0 : 1 );
+        return missingElements > elemsToCheck.length;
     }
 
     window.startDataRequest = function() {
         clearHtmlElements();
-        if ( !document.getElementsByClassName("price-guide__more")[0]?.children[0] ) { alert('Please wait for the "View Sales History" link to load then click the button again.'); }
-        else if ( missingDomElements() ) { alert('TCGPlayer DOM Elements are out of alignment. This script must be updated to function properly.'); }
+        const priceGuide = document.getElementsByClassName("price-guide__more")[0]?.children[0];
+        const modalActivator = document.getElementsByClassName("modal__activator");
+        if ( missingDomElements( [priceGuide, modalActivator] ) ) { alert('TCGPlayer DOM Elements are out of alignment. This script must be updated to function properly.'); }
+        // else if ( !priceGuide && !modalActivator ) { alert('Please wait for the "View Sales History" link to load then click the button again.'); }
         else {
             toggleGatherDataButton();
             loadSalesDataSplash()
@@ -192,8 +193,8 @@
     }
 
     /********************
-     Pull in current quantity for sale in view
-     ********************/
+    Pull in current quantity for sale in view
+    ********************/
 
     const setQtyInViewByCondition = (condition, qty, qtyInView) => {
         const shorthandCondition = mapCondition(condition);
@@ -233,8 +234,8 @@
     const buildQtyInViewDisplay = (qtyInView) => Object.entries(qtyInView).reduce( (prevQtyData, currQty) => prevQtyData.concat(`<span style="margin-left: 20px;">${currQty[0]}: ${currQty[1].quantity} - Vendor Count: ${currQty[1].vendorCount} - Largest Qty: ${currQty[1].largestQuantity}</span><br />`), '');
 
     /********************
-     HTML element interaction
-     ********************/
+    HTML element interaction
+    ********************/
 
     const clearHtmlElements = () => {
         ['salesDataDisplay', 'salesDataToggle'].forEach( selector => {
@@ -248,8 +249,8 @@
     }
 
     /********************
-     Write interactive HTML elements
-     ********************/
+    Write interactive HTML elements
+    ********************/
 
     const writeSalesToggle = () => {
         const div = document.createElement('div');
@@ -272,8 +273,8 @@
     }
 
     /********************
-     Re-inventing the wheel of time because we are not importing the moment library.
-     ********************/
+    Re-inventing the wheel of time because we are not importing the moment library.
+    ********************/
 
     const setHistoricDateArr = (daysToLookBack) => {
         let historicDatesArr = [];
