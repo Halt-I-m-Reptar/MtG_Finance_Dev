@@ -182,7 +182,6 @@
         const priceGuide = document.getElementsByClassName("price-guide__more")[0]?.children[0];
         const modalActivator = document.getElementsByClassName("modal__activator");
         if ( missingDomElements( [priceGuide, modalActivator] ) ) { alert('TCGPlayer DOM Elements are out of alignment. This script must be updated to function properly.'); }
-        // else if ( !priceGuide && !modalActivator ) { alert('Please wait for the "View Sales History" link to load then click the button again.'); }
         else {
             toggleGatherDataButton();
             loadSalesDataSplash()
