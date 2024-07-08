@@ -5,7 +5,7 @@ const hotlistDisplayWorker = (filteredCardDataToDisplay) => {
 }
 
 const sortedHostList = (filteredCardDataToDisplay) => {
-    return  Object.keys(filteredCardDataToDisplay).map(currentCard => filteredCardDataToDisplay[currentCard])
+    return Object.keys(filteredCardDataToDisplay).map(currentCard => filteredCardDataToDisplay[currentCard])
         .reduce((acc, currentCard) => {
             currentCard.map(cardData => acc.push(cardData))
             return acc;
