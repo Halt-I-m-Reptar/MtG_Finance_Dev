@@ -1,13 +1,17 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.39
+// @version      0.40
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
 // @icon         https://www.tcgplayer.com/favicon.ico
 // @grant        none
 // ==/UserScript==
+/***********************
+    TODO:
+        getQtyInViewByCondition() update to remove the conditional check in time
+************************/
 
 (function() {
     'use strict';
@@ -192,8 +196,8 @@
     }
 
     /********************
-    Pull in current quantity for sale in view
-    ********************/
+     Pull in current quantity for sale in view
+     ********************/
 
     const setQtyInViewByCondition = (condition, qty, qtyInView) => {
         const shorthandCondition = mapCondition(condition);
@@ -222,19 +226,27 @@
 
     const getQtyInViewByCondition = () => {
         const qtyInView = {};
-        Array.from(document.getElementsByClassName('listing-item product-details__listings-results')).forEach( listingItem => {
-            const condition = listingItem.children[0].getElementsByClassName('listing-item__listing-data__info__condition')[0].innerText;
-            const quantity = +listingItem.children[0].getElementsByClassName('add-to-cart__available')[0].innerText.split(' ')[1];
-            setQtyInViewByCondition(condition, quantity, qtyInView )
-        });
+        if( document.getElementsByClassName('listing-item product-details__listings-results').length ) {
+            Array.from(document.getElementsByClassName('listing-item product-details__listings-results')).forEach( listingItem => {
+                const condition = listingItem.children[0].getElementsByClassName('listing-item__listing-data__info__condition')[0].innerText;
+                const quantity = +listingItem.children[0].getElementsByClassName('add-to-cart__available')[0].innerText.split(' ')[1];
+                setQtyInViewByCondition(condition, quantity, qtyInView );
+            });
+        } else {
+            Array.from(document.getElementsByClassName('listing-item__listing-data')).forEach( listingItem => {
+                const condition = listingItem.getElementsByClassName('listing-item__listing-data__info__condition')[0].innerText;
+                const quantity = +listingItem.getElementsByClassName('listing-item__listing-data__add')[0].innerText.split('\n')[2].split(' ')[1];
+                setQtyInViewByCondition(condition, quantity, qtyInView );
+            });
+        }
         return qtyInView;
     }
 
     const buildQtyInViewDisplay = (qtyInView) => Object.entries(qtyInView).reduce( (prevQtyData, currQty) => prevQtyData.concat(`<span style="margin-left: 20px;">${currQty[0]}: ${currQty[1].quantity} - Vendor Count: ${currQty[1].vendorCount} - Largest Qty: ${currQty[1].largestQuantity}</span><br />`), '');
 
     /********************
-    HTML element interaction
-    ********************/
+     HTML element interaction
+     ********************/
 
     const clearHtmlElements = () => {
         ['salesDataDisplay', 'salesDataToggle'].forEach( selector => {
@@ -248,8 +260,8 @@
     }
 
     /********************
-    Write interactive HTML elements
-    ********************/
+     Write interactive HTML elements
+     ********************/
 
     const writeSalesToggle = () => {
         const div = document.createElement('div');
@@ -272,8 +284,8 @@
     }
 
     /********************
-    Re-inventing the wheel of time because we are not importing the moment library.
-    ********************/
+     Re-inventing the wheel of time because we are not importing the moment library.
+     ********************/
 
     const setHistoricDateArr = (daysToLookBack) => {
         let historicDatesArr = [];
