@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MtG Stocks Currency Difference
-// @version      0.6
+// @version      0.7
 // @description  Added currency difference to interest list
 // @author       Peter Creutzberger
 // @match        *://*.mtgstocks.com/*
@@ -11,8 +11,32 @@
 
 (function() {
     'use strict';
-    writeDataRequestButton();
 
+    window.writeDataRequestButton = function( linkData ) {
+        const buttonClassName = 'dataRequestButton';
+        if ( linkData === 'pageLoad' || linkData?.attributes?.href?.value === '/interests') {
+            const buttonHtml = document.createElement('div');
+            buttonHtml.innerHTML = (`<button class="${buttonClassName}" style="position:fixed;top:0;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#00b;color:#fff;" onclick="createCells()">Enhance Price Display</button>`);
+            document.body.prepend(buttonHtml);
+            return;
+        }
+
+        if ( document.getElementsByClassName(`${buttonClassName}`).length > 0 ) {
+            document.getElementsByClassName(`${buttonClassName}`)[0].remove();
+            return;
+        }
+
+        return;
+    }
+
+    writeOnClickEvents();
+
+    function writeOnClickEvents() {
+        if ( window.location.pathname === '/interests' ) { writeDataRequestButton( 'pageLoad' ) }
+        Array.from( document.getElementsByTagName('a') ).forEach( function(elem) {
+            if ( !elem.getAttribute('onclick') ) { elem.setAttribute('onclick','writeDataRequestButton(this);'); }
+        })
+    }
     const addNewCellsToPriceTables = () => {
         Array.from(document.getElementsByTagName("table")).forEach( priceTableOnPage => {
             addHeaderToTable( priceTableOnPage.getElementsByTagName('thead')[0].getElementsByTagName('tr')[0] );
@@ -54,10 +78,5 @@
         } else { alert('Please visit the Interests page to utilize this functionality.'); }
     }
 
-    function writeDataRequestButton() {
-        const div = document.createElement('div');
-        div.innerHTML = ('<button class="dataRequestButton" style="position:fixed;top:0;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#00b;color:#fff;" onclick="createCells()">Enhance Price Display</button>');
-        document.body.prepend(div);
-    }
 
 })();
