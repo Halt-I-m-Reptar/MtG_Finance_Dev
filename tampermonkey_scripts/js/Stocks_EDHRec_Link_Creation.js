@@ -11,9 +11,6 @@
 (function() {
     'use strict';
 
-    // class = 'float-start'
-    // document.getElementsByClassName('float-start')[0].innerHTML += `\t--\t<a href='https://edhrec.com/cards/nautiloid-ship' target='_blank'>EDH Rec Link</a>`;
-    // document.getElementsByClassName('float-start')[0].innerText.split(' (')[0].replace(/\W+/g,'-').toLowerCase()
     addEDHRecLink();
 
     function addEDHRecLink() {
