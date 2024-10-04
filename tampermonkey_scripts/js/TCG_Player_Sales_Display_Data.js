@@ -1,17 +1,15 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.40
+// @version      0.41
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
 // @icon         https://www.tcgplayer.com/favicon.ico
 // @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/427950/TCG%20Player%20Sales%20Display%20Data.user.js
+// @updateURL https://update.greasyfork.org/scripts/427950/TCG%20Player%20Sales%20Display%20Data.meta.js
 // ==/UserScript==
-/***********************
-    TODO:
-        getQtyInViewByCondition() update to remove the conditional check in time
-************************/
 
 (function() {
     'use strict';
@@ -98,7 +96,7 @@
     const writeSalesDataContainer = () => {
         const div = document.createElement('div');
         const setBottom = document.getElementsByClassName("_hj_feedback_container")[0] ? 'bottom:100px' : 'bottom:0';
-        div.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:8888;width:auto;height:0;max-height:600px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff;line-height:normal"></div>`);
+        div.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:8888;width:auto;height:0;min-height:300px;max-height:600px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff;line-height:normal"></div>`);
         document.body.prepend(div);
     }
 
@@ -135,7 +133,7 @@
                         <span id="${daysAgo}-dayAgo-AvgQtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${cardConditionData.avgQtyPerOrder(historicSalesData.daysAgo[daysAgo].totalQtySold, historicSalesData.daysAgo[daysAgo].totalOrders)}</span><br />
                         <span id="${daysAgo}-dayAgo-MarketPrice" style="margin-left: 40px;">Market Price: ${cardConditionData.marketPriceByOrder( historicSalesData.daysAgo[daysAgo].totalSpend, historicSalesData.daysAgo[daysAgo].totalOrders ) }</span><br />`
             );
-        }
+        };
         cardDisplayString += `</div><br />`;
         return {cardDisplayData: cardDisplayString, timesToAdjustHeight: heightAdjustmentCount};
     }
