@@ -42,21 +42,28 @@ const addBuylistData = () => {
         const cardIds = Object.keys(ckCardDataFromSlug.hotlist[cardsInList]);
         cardIds.forEach( individualId => {
             if ( !ckCardDataFromSlug.buylist[cardsInList] ) {
-                setZeroData({ cardsInList: cardsInList, individualId: individualId, qty_buying: 0, qty_retail: 0} );
+                setHotlistData({ cardsInList: cardsInList, individualId: individualId, qty_buying: 0, qty_retail: 0, sku: 'N/A'} );
                 return;
             }
             if ( !ckCardDataFromSlug.buylist[cardsInList][individualId] ) {
-                setZeroData({ cardsInList: cardsInList, individualId: individualId, qty_buying: 0, qty_retail: 0} );
+                setHotlistData({ cardsInList: cardsInList, individualId: individualId, qty_buying: 0, qty_retail: 0, sku: 'N/A'} );
                 return;
             }
             const buylistData = ckCardDataFromSlug.buylist[cardsInList][individualId];
-            setZeroData( { cardsInList:cardsInList, individualId: individualId, qty_buying: buylistData['qty_buying'], qty_retail: buylistData['qty_retail']} )
+            setHotlistData( { cardsInList:cardsInList, individualId: individualId, qty_buying: buylistData['qty_buying'], qty_retail: buylistData['qty_retail'], sku: buylistData['sku'] })
+            /*
+                        const cardName = cardElement.name;
+            const cardId = cardElement.id;
+            //console.log( ckCardDataFromSlug.buylist[cardName][cardId]['sku'] );
+            console.log( `${cardName} - ${cardId}` );
+             */
         })
     })
 }
 
-const setZeroData = (args) => {
-    const { cardsInList, individualId, qty_buying, qty_retail } = args;
+const setHotlistData = (args) => {
+    const { cardsInList, individualId, qty_buying, qty_retail, sku } = args;
     ckCardDataFromSlug.hotlist[cardsInList][individualId]['qty_buying'] = qty_buying;
     ckCardDataFromSlug.hotlist[cardsInList][individualId]['qty_retail'] = qty_retail;
+    ckCardDataFromSlug.hotlist[cardsInList][individualId]['sku'] = sku;
 }

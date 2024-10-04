@@ -10,10 +10,6 @@
 // @downloadURL https://update.greasyfork.org/scripts/427950/TCG%20Player%20Sales%20Display%20Data.user.js
 // @updateURL https://update.greasyfork.org/scripts/427950/TCG%20Player%20Sales%20Display%20Data.meta.js
 // ==/UserScript==
-/***********************
- TODO:
- getQtyInViewByCondition() update to remove the conditional check in time
- ************************/
 
 (function() {
     'use strict';
