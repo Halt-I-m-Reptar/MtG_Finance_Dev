@@ -1,13 +1,19 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.38
+// @version      0.40
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
 // @icon         https://www.tcgplayer.com/favicon.ico
 // @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/427950/TCG%20Player%20Sales%20Display%20Data.user.js
+// @updateURL https://update.greasyfork.org/scripts/427950/TCG%20Player%20Sales%20Display%20Data.meta.js
 // ==/UserScript==
+/***********************
+ TODO:
+ getQtyInViewByCondition() update to remove the conditional check in time
+ ************************/
 
 (function() {
     'use strict';
@@ -94,7 +100,7 @@
     const writeSalesDataContainer = () => {
         const div = document.createElement('div');
         const setBottom = document.getElementsByClassName("_hj_feedback_container")[0] ? 'bottom:100px' : 'bottom:0';
-        div.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:8888;width:auto;height:0;max-height:600px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff;line-height:normal"></div>`);
+        div.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:8888;width:auto;height:0;min-height:300px;max-height:600px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff;line-height:normal"></div>`);
         document.body.prepend(div);
     }
 
@@ -171,17 +177,17 @@
 
     const sleep = (milliseconds) => { return new Promise(resolve => setTimeout(resolve, milliseconds)); }
 
-    const missingDomElements = () => {
+    const missingDomElements = ( elemsToCheck) => {
         let missingElements = 0;
-        const domElementsToCheck = [document.getElementsByClassName("modal__activator")[0]];
-        domElementsToCheck.forEach( domElement => missingElements += domElement ? 0 : 1 );
-        return missingElements > 0;
+        elemsToCheck.forEach( domElement => missingElements += domElement ? 0 : 1 );
+        return missingElements > elemsToCheck.length;
     }
 
     window.startDataRequest = function() {
         clearHtmlElements();
-        if ( !document.getElementsByClassName("price-guide__more")[0]?.children[0] ) { alert('Please wait for the "View Sales History" link to load then click the button again.'); }
-        else if ( missingDomElements() ) { alert('TCGPlayer DOM Elements are out of alignment. This script must be updated to function properly.'); }
+        const priceGuide = document.getElementsByClassName("price-guide__more")[0]?.children[0];
+        const modalActivator = document.getElementsByClassName("modal__activator");
+        if ( missingDomElements( [priceGuide, modalActivator] ) ) { alert('TCGPlayer DOM Elements are out of alignment. This script must be updated to function properly.'); }
         else {
             toggleGatherDataButton();
             loadSalesDataSplash()
@@ -222,11 +228,19 @@
 
     const getQtyInViewByCondition = () => {
         const qtyInView = {};
-        Array.from(document.getElementsByClassName('listing-item product-details__listings-results')).forEach( listingItem => {
-            const condition = listingItem.children[0].getElementsByClassName('listing-item__listing-data__info__condition')[0].innerText;
-            const quantity = +listingItem.children[0].getElementsByClassName('add-to-cart__available')[0].innerText.split(' ')[1];
-            setQtyInViewByCondition(condition, quantity, qtyInView )
-        });
+        if( document.getElementsByClassName('listing-item product-details__listings-results').length ) {
+            Array.from(document.getElementsByClassName('listing-item product-details__listings-results')).forEach( listingItem => {
+                const condition = listingItem.children[0].getElementsByClassName('listing-item__listing-data__info__condition')[0].innerText;
+                const quantity = +listingItem.children[0].getElementsByClassName('add-to-cart__available')[0].innerText.split(' ')[1];
+                setQtyInViewByCondition(condition, quantity, qtyInView );
+            });
+        } else {
+            Array.from(document.getElementsByClassName('listing-item__listing-data')).forEach( listingItem => {
+                const condition = listingItem.getElementsByClassName('listing-item__listing-data__info__condition')[0].innerText;
+                const quantity = +listingItem.getElementsByClassName('listing-item__listing-data__add')[0].innerText.split('\n')[2].split(' ')[1];
+                setQtyInViewByCondition(condition, quantity, qtyInView );
+            });
+        }
         return qtyInView;
     }
 
