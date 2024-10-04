@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.40
+// @version      0.41
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -137,7 +137,7 @@
                         <span id="${daysAgo}-dayAgo-AvgQtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${cardConditionData.avgQtyPerOrder(historicSalesData.daysAgo[daysAgo].totalQtySold, historicSalesData.daysAgo[daysAgo].totalOrders)}</span><br />
                         <span id="${daysAgo}-dayAgo-MarketPrice" style="margin-left: 40px;">Market Price: ${cardConditionData.marketPriceByOrder( historicSalesData.daysAgo[daysAgo].totalSpend, historicSalesData.daysAgo[daysAgo].totalOrders ) }</span><br />`
             );
-        }
+        };
         cardDisplayString += `</div><br />`;
         return {cardDisplayData: cardDisplayString, timesToAdjustHeight: heightAdjustmentCount};
     }
