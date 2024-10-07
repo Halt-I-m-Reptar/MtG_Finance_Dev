@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Melee Decklist Dump
 // @namespace    https://melee.gg/
-// @version      0.02
+// @version      0.03
 // @description  List out decklists to console
 // @author       Peter Creutzberger
 // @match        */Tournament/View/*
@@ -31,6 +31,7 @@
         const div = document.getElementsByClassName('decklistContainer')[0];
         const deckListArr = Array.from( document.querySelector("#tournament-standings-table").childNodes[1].children );
         if ( deckListArr.length > 0 ) {
+            div.innerHTML += 'Deck Population data found in console.<br />';
             Array.from( document.querySelector("#tournament-standings-table").childNodes[1].children ).reduce( (acc, curr) => {
                 if ( !curr.childNodes[2].children[0].children[0].children[0]?.href ) return [ ...acc ];
                 return [ ...acc, [{ [curr.childNodes[2].children[0].children[0].innerText.trim()]: curr.childNodes[2].children[0].children[0].children[0].href}] ]
@@ -46,10 +47,36 @@
         }
     }
 
+    const countDeckPopulation = function() {
+        let deckPopulationObjTemp = {};
+        let deckPopulationObj = {};
+        let deckPopulationArr = [];
+
+        if ( !Array.from( document.getElementsByClassName('decklistContainer') )[0] ) { return false; }
+
+        Array.from( document.getElementsByClassName('decklistContainer') )[0].innerText.trim().split('\n').forEach( elem => {
+            if ( deckPopulationObjTemp[elem] ) { deckPopulationObjTemp[elem] += 1; }
+            else { deckPopulationObjTemp[elem] = 1; }
+        } )
+
+        Object.entries( deckPopulationObjTemp ).forEach( (key, value) => deckPopulationArr.push( [key, value] )  );
+
+        deckPopulationArr.sort( (a, b) => b[0][1] - a[0][1] ).forEach( elem => deckPopulationObj[elem[0][0]] = elem[0][1] );
+
+        return deckPopulationObj;
+    }
+
+    const displayDecklistPopulation = function( decklistData) {
+        console.log('%cDeck Population Data:',"font-weight:bold; color:yellow");
+        if ( decklistData ) { console.table( decklistData ); }
+        else { console.log('No decklists found. Try again. :(') }
+    }
+
     window.beginDisplay = function() {
         clearHtmlElements();
         writeDecklistContainer();
         displayDecklists();
+        displayDecklistPopulation( countDeckPopulation() );
     }
     window.displayDeckLists = function() {
         if ( Array.from( document.getElementsByClassName("Decklists-column") ).length > 0 ) {
