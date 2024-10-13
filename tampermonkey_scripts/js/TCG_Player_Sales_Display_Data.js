@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.41
+// @version      0.42
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -232,7 +232,15 @@
             });
         } else {
             Array.from(document.getElementsByClassName('listing-item__listing-data')).forEach( listingItem => {
-                const condition = listingItem.getElementsByClassName('listing-item__listing-data__info__condition')[0].innerText;
+                let condition = '';
+                // desktop classing
+                if ( listingItem.getElementsByClassName('listing-item__listing-data__info__condition').length ) {
+                    condition = listingItem.getElementsByClassName('listing-item__listing-data__info__condition')[0].innerText;
+                }
+                // mobile/small resolution classing
+                if ( listingItem.getElementsByClassName('listing-item__listing-data__condition').length ) {
+                    condition = listingItem.getElementsByClassName('listing-item__listing-data__condition')[0].innerText;
+                }
                 const quantity = +listingItem.getElementsByClassName('listing-item__listing-data__add')[0].innerText.split('\n')[2].split(' ')[1];
                 setQtyInViewByCondition(condition, quantity, qtyInView );
             });
