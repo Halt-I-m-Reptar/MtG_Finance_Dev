@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.42
+// @version      0.43
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -226,8 +226,8 @@
         const qtyInView = {};
         if( document.getElementsByClassName('listing-item product-details__listings-results').length ) {
             Array.from(document.getElementsByClassName('listing-item product-details__listings-results')).forEach( listingItem => {
-                const condition = listingItem.children[0].getElementsByClassName('listing-item__listing-data__info__condition')[0].innerText;
-                const quantity = +listingItem.children[0].getElementsByClassName('add-to-cart__available')[0].innerText.split(' ')[1];
+                const condition = listingItem.getElementsByClassName('listing-item__listing-data__info__condition')[0].innerText;
+                const quantity = +listingItem.getElementsByClassName('add-to-cart__available')[0].innerText.split(' ')[1];
                 setQtyInViewByCondition(condition, quantity, qtyInView );
             });
         } else {
@@ -241,7 +241,7 @@
                 if ( listingItem.getElementsByClassName('listing-item__listing-data__condition').length ) {
                     condition = listingItem.getElementsByClassName('listing-item__listing-data__condition')[0].innerText;
                 }
-                const quantity = +listingItem.getElementsByClassName('listing-item__listing-data__add')[0].innerText.split('\n')[2].split(' ')[1];
+                const quantity = +listingItem.getElementsByClassName('add-to-cart__available')[0].innerText.split(' ')[1];
                 setQtyInViewByCondition(condition, quantity, qtyInView );
             });
         }
