@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.43
+// @version      0.44
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -33,8 +33,10 @@
 
     const strToInt = (str) => +str;
 
-    const shapeSalesData = (salesData) => salesData.length === 4 ? {date: salesData[0].innerText, condition: salesData[1].innerText, quantity: salesData[2].innerText, price: salesData[3].innerText} :
-        {date: salesData[0].innerText, condition: `${salesData[2].innerText} with Photo`, quantity: salesData[3].innerText, price: salesData[4].innerText};
+    const shapeSalesData = (salesData) => {
+        return salesData[0]?.children[0]?.className !== 'tcg-icon' ? {date: salesData[0].innerText, condition: salesData[1].innerText.split('\n')[0], quantity: salesData[3].innerText, price: salesData[4].innerText} :
+            {date: salesData[0].innerText, condition: `${salesData[1].innerText.split('\n')[0]} with Photo`, quantity: salesData[3].innerText, price: salesData[4].innerText};
+    }
 
     const checkSaleDate = (salesArray, saleDate, price) => {
         if (!salesArray.earliestSaleDateData || !salesArray.latestSaleDateData) { return {earliestSaleDateData: {date: saleDate, price: price}, latestSaleDateData: {date: saleDate, price: price}}; }
@@ -60,34 +62,24 @@
         salesArray.orderQtyOverFour += qty < 4 ? 0 : 1
     }
 
-    // moved this to its own function as it appears the TCGP ui is updating and this conditional check will cover the check
-    const getModalDisplayLength = () => {
-        const modalLength = Array.from(document.getElementsByClassName("is-modal")).length;
-        return modalLength > 2 ? modalLength - 2 : modalLength - 1;
-    }
-
     const gatherSalesData = () => {
         const salesByCondition = {};
-        const modalDisplayLength = getModalDisplayLength(); //Array.from(document.getElementsByClassName("is-modal")).length -= 2; //1;
         const historicDateArr = setHistoricDateArr(daysToLookBack());
-        Array.from(document.getElementsByClassName("is-modal")[modalDisplayLength].children).forEach( (children, index) => {
-            const listOfSales = Array.from(document.getElementsByClassName("is-modal")[modalDisplayLength].children);
-            if (listOfSales[index]?.children[1]) {
-                const reshapedSalesData = shapeSalesData( Array.from(listOfSales[index].children) );
-                const currentCondition = reshapedSalesData.condition;
-                if ( !Object.keys(salesByCondition).includes(currentCondition) ) { salesByCondition[currentCondition] = addCondition(); }
-                const cleanPrice = cleanPriceValue(reshapedSalesData.price);
-                Object.assign(salesByCondition[currentCondition],
-                    checkOrderQty(salesByCondition[currentCondition], reshapedSalesData.date, strToInt(reshapedSalesData.quantity), cleanPrice),
-                    checkSaleDate(salesByCondition[currentCondition], reshapedSalesData.date, cleanPrice)
-                );
-                updateSalesTotals(salesByCondition[currentCondition], cleanPrice, strToInt(reshapedSalesData.quantity));
-                const saleDateDiff = historicDateArr.includes(reshapedSalesData.date) ? getSaleDateDiff(todaysDate, reshapedSalesData.date) : -1;
-                if ( saleDateDiff > -1 ) {
-                    salesByCondition[currentCondition].historicSalesData.daysAgo[saleDateDiff] = historicDataSetting(salesByCondition[currentCondition], reshapedSalesData.date, saleDateDiff, cleanPrice, strToInt(reshapedSalesData.quantity));
-                }
+        Array.from(document.getElementsByClassName('latest-sales-table__tbody')[0].children).forEach( listOfSales => {
+            const reshapedSalesData = shapeSalesData( Array.from(listOfSales.getElementsByTagName('td')) );
+            const currentCondition = reshapedSalesData.condition;
+            if ( !Object.keys(salesByCondition).includes(currentCondition) ) { salesByCondition[currentCondition] = addCondition(); }
+            const cleanPrice = cleanPriceValue(reshapedSalesData.price);
+            Object.assign(salesByCondition[currentCondition],
+                checkOrderQty(salesByCondition[currentCondition], reshapedSalesData.date, strToInt(reshapedSalesData.quantity), cleanPrice),
+                checkSaleDate(salesByCondition[currentCondition], reshapedSalesData.date, cleanPrice)
+            );
+            updateSalesTotals(salesByCondition[currentCondition], cleanPrice, strToInt(reshapedSalesData.quantity));
+            const saleDateDiff = historicDateArr.includes(reshapedSalesData.date) ? getSaleDateDiff(todaysDate, reshapedSalesData.date) : -1;
+            if ( saleDateDiff > -1 ) {
+                salesByCondition[currentCondition].historicSalesData.daysAgo[saleDateDiff] = historicDataSetting(salesByCondition[currentCondition], reshapedSalesData.date, saleDateDiff, cleanPrice, strToInt(reshapedSalesData.quantity));
             }
-        });
+        })
         return salesByCondition;
     }
 
