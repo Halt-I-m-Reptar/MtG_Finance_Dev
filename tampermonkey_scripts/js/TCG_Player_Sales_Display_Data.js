@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.44
+// @version      0.46
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -34,8 +34,8 @@
     const strToInt = (str) => +str;
 
     const shapeSalesData = (salesData) => {
-        return salesData[0]?.children[0]?.className !== 'tcg-icon' ? {date: salesData[0].innerText, condition: salesData[1].innerText.split('\n')[0], quantity: salesData[3].innerText, price: salesData[4].innerText} :
-            {date: salesData[0].innerText, condition: `${salesData[1].innerText.split('\n')[0]} with Photo`, quantity: salesData[3].innerText, price: salesData[4].innerText};
+        return salesData[0]?.children[0]?.className !== 'tcg-icon' ? {date: salesData[0].innerText, condition: mapCondition(salesData[1].innerText.split('\n')[1]), quantity: salesData[3].innerText, price: salesData[4].innerText} :
+            {date: salesData[0].innerText, condition: `${ mapCondition( salesData[1].innerText.split('\n')[1]) } with Photo`, quantity: salesData[3].innerText, price: salesData[4].innerText};
     }
 
     const checkSaleDate = (salesArray, saleDate, price) => {
