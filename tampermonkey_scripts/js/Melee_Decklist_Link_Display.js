@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Melee Decklist Dump
 // @namespace    https://melee.gg/
-// @version      0.03
+// @version      0.04
 // @description  List out decklists to console
 // @author       Peter Creutzberger
 // @match        */Tournament/View/*
@@ -27,39 +27,51 @@
 
     }
 
-    const displayDecklists = () => {
+    const startDecklistDisplay = () => {
         const div = document.getElementsByClassName('decklistContainer')[0];
-        const deckListArr = Array.from( document.querySelector("#tournament-standings-table").childNodes[1].children );
+        const deckListArr = Array.from( document.querySelector("#tournament-standings-table").getElementsByTagName('tr') )
         if ( deckListArr.length > 0 ) {
-            div.innerHTML += 'Deck Population data found in console.<br />';
-            Array.from( document.querySelector("#tournament-standings-table").childNodes[1].children ).reduce( (acc, curr) => {
-                if ( !curr.childNodes[2].children[0].children[0].children[0]?.href ) return [ ...acc ];
-                return [ ...acc, [{ [curr.childNodes[2].children[0].children[0].innerText.trim()]: curr.childNodes[2].children[0].children[0].children[0].href}] ]
-            }, [])
-                .filter( decklistName => Object.keys( decklistName[0] )[0].trim() !== 'Decklist' && Object.keys( decklistName[0] )[0].trim() !== 'N/A' )
-                .sort( (a, b) => Object.keys( a[0] )[0].trim() > Object.keys( b[0] )[0].trim() ? 1 : -1 )
-                .forEach( deckListData => {
-                    div.style.height = adjustHeight(div);
-                    div.innerHTML += `<a href="${Object.values(deckListData[0])}" target="_blank" style="color: #007bff;">${Object.keys(deckListData[0])}</a><br />`
-                });
-        }  else {
+            div.innerHTML += `<strong><em>Deck Population data found in console.</em></strong><br />`;
+            const decklistObj = getDeckLists( deckListArr );
+            writeDecklists( div, decklistObj );
+            displayDecklistPopulation( countDeckPopulation( decklistObj ) );
+        } else {
             div.innerHTML += 'No decklists found. Try again. :(';
         }
     }
 
-    const countDeckPopulation = function() {
+    const getDeckLists = ( deckListArr ) => {
+        return deckListArr.reduce( (acc, curr) => {
+            const currentRow = Array.from( curr.getElementsByClassName('match-table-player-container') );
+            if( currentRow.length > 1 ) {
+                return [...acc, [{[currentRow[1].innerText.trim()]: {'href': currentRow[1].children[0].href, 'player': currentRow[0].innerText.trim(), 'playerHref': currentRow[0].children[0].href} }]]
+            }
+            return [...acc];
+        }, [])
+            .filter( decklistName => Object.keys( decklistName[0] )[0].trim() !== 'Decklist' && Object.keys( decklistName[0] )[0].trim() !== 'N/A' )
+            .sort( (a, b) => Object.keys( a[0] )[0].trim() > Object.keys( b[0] )[0].trim() ? 1 : -1 )
+    }
+
+    const writeDecklists = ( div, decklistObj ) => {
+        decklistObj.forEach( deckListData => {
+            div.style.height = adjustHeight(div);
+            div.innerHTML += `<a href="${ Object.values(deckListData[0])[0].href }" target="_blank" style="color: #007bff;">${ Object.keys(deckListData[0]) }</a>  
+                by <a href="${ Object.values(deckListData[0])[0].playerHref }" target="_blank" style="color: #007bff;">${ Object.values(deckListData[0])[0].player }</a><br />`
+        });
+    }
+
+    const countDeckPopulation = function( decklistObj ) {
         let deckPopulationObjTemp = {};
         let deckPopulationObj = {};
         let deckPopulationArr = [];
 
-        if ( !Array.from( document.getElementsByClassName('decklistContainer') )[0] ) { return false; }
-
-        Array.from( document.getElementsByClassName('decklistContainer') )[0].innerText.trim().split('\n').forEach( elem => {
-            if ( deckPopulationObjTemp[elem] ) { deckPopulationObjTemp[elem] += 1; }
-            else { deckPopulationObjTemp[elem] = 1; }
+        decklistObj.forEach( deckData => {
+            const deckName = Object.keys( deckData[0] )[0];
+            if ( deckPopulationObjTemp[deckName] ) { deckPopulationObjTemp[deckName] += 1; }
+            else { deckPopulationObjTemp[deckName] = 1; }
         } )
 
-        Object.entries( deckPopulationObjTemp ).forEach( (key, value) => deckPopulationArr.push( [key, value] )  );
+        Object.entries( deckPopulationObjTemp ).forEach( (key, value) => deckPopulationArr.push( [key, value] ) );
 
         deckPopulationArr.sort( (a, b) => b[0][1] - a[0][1] ).forEach( elem => deckPopulationObj[elem[0][0]] = elem[0][1] );
 
@@ -75,15 +87,7 @@
     window.beginDisplay = function() {
         clearHtmlElements();
         writeDecklistContainer();
-        displayDecklists();
-        displayDecklistPopulation( countDeckPopulation() );
-    }
-    window.displayDeckLists = function() {
-        if ( Array.from( document.getElementsByClassName("Decklists-column") ).length > 0 ) {
-            Array.from( document.getElementsByClassName("Decklists-column") ).filter( list => list.innerText.trim() !== 'Decklist' ).map( lists => lists.innerText.trim() ).sort( (a, b) => a > b ? 1 : -1).forEach( list => console.log( list ))
-        } else {
-            console.log( 'There are no decklists in range to output' );
-        }
+        startDecklistDisplay();
     }
 
     const adjustHeight = (div) => (parseInt(div.style.height.replace(/[a-zA-Z]/g,'')) + 20) + "px";
