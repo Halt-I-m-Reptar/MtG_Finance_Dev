@@ -44,7 +44,7 @@
         return deckListArr.reduce( (acc, curr) => {
             const currentRow = Array.from( curr.getElementsByClassName('match-table-player-container') );
             if( currentRow.length > 1 ) {
-                return [...acc, [{[currentRow[1]?.innerText.trim() || 'N/A']: {'href': currentRow[1]?.children[0]?.href || 'N/A', 'player': currentRow[0]?.innerText.trim() || 'N/A', 'playerHref': currentRow[0]?.children[0].href || 'N/A'} }]]
+                return [...acc, [{[currentRow[1]?.innerText?.trim() || 'N/A']: {'href': currentRow[1]?.children[0]?.href || 'N/A', 'player': currentRow[0]?.innerText?.trim() || 'N/A', 'playerHref': currentRow[0]?.children[0]?.href || 'N/A'} }]]
             }
             return [...acc];
         }, [])
