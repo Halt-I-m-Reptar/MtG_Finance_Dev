@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Melee Decklist Dump
 // @namespace    https://melee.gg/
-// @version      0.04
+// @version      0.05
 // @description  List out decklists to console
 // @author       Peter Creutzberger
 // @match        */Tournament/View/*
@@ -44,7 +44,7 @@
         return deckListArr.reduce( (acc, curr) => {
             const currentRow = Array.from( curr.getElementsByClassName('match-table-player-container') );
             if( currentRow.length > 1 ) {
-                return [...acc, [{[currentRow[1].innerText.trim()]: {'href': currentRow[1].children[0].href, 'player': currentRow[0].innerText.trim(), 'playerHref': currentRow[0].children[0].href} }]]
+                return [...acc, [{[currentRow[1]?.innerText.trim() || 'N/A']: {'href': currentRow[1]?.children[0]?.href || 'N/A', 'player': currentRow[0]?.innerText.trim() || 'N/A', 'playerHref': currentRow[0]?.children[0].href || 'N/A'} }]]
             }
             return [...acc];
         }, [])
