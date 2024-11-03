@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Melee Decklist Dump
 // @namespace    https://melee.gg/
-// @version      0.05
+// @version      0.06
 // @description  List out decklists to console
 // @author       Peter Creutzberger
 // @match        */Tournament/View/*
@@ -29,51 +29,71 @@
 
     const startDecklistDisplay = () => {
         const div = document.getElementsByClassName('decklistContainer')[0];
-        const deckListArr = Array.from( document.querySelector("#tournament-standings-table").getElementsByTagName('tr') )
-        if ( deckListArr.length > 0 ) {
+        const decklistsFromTabls = Array.from( document.querySelector("#tournament-standings-table").getElementsByTagName('tr') )
+        if ( decklistsFromTabls.length > 0 ) {
             div.innerHTML += `<strong><em>Deck Population data found in console.</em></strong><br />`;
-            const decklistObj = getDeckLists( deckListArr );
-            writeDecklists( div, decklistObj );
-            displayDecklistPopulation( countDeckPopulation( decklistObj ) );
+            const decklistArr = processDecklists( getDeckLists( decklistsFromTabls ), '', true );
+            writeDecklists( div, decklistArr );
+            displayDecklistPopulation( countDeckPopulation( processDecklists( decklistArr, '-', false ) ) );
         } else {
             div.innerHTML += 'No decklists found. Try again. :(';
         }
     }
 
-    const getDeckLists = ( deckListArr ) => {
-        return deckListArr.reduce( (acc, curr) => {
+    const getDeckLists = ( decklistArr ) => {
+        return decklistArr.reduce( (acc, curr) => {
             const currentRow = Array.from( curr.getElementsByClassName('match-table-player-container') );
             if( currentRow.length > 1 ) {
-                return [...acc, [{[currentRow[1]?.innerText?.trim() || 'N/A']: {'href': currentRow[1]?.children[0]?.href || 'N/A', 'player': currentRow[0]?.innerText?.trim() || 'N/A', 'playerHref': currentRow[0]?.children[0]?.href || 'N/A'} }]]
+                return [...acc, [{[currentRow[1]?.innerText?.trim() || null]: {'href': currentRow[1]?.children[0]?.href || null, 'player': currentRow[0]?.innerText?.trim() || null, 'playerHref': currentRow[0]?.children[0]?.href || null} }]]
             }
-            return [...acc];
-        }, [])
-            .filter( decklistName => Object.keys( decklistName[0] )[0].trim() !== 'Decklist' && Object.keys( decklistName[0] )[0].trim() !== 'N/A' )
-            .sort( (a, b) => Object.keys( a[0] )[0].trim() > Object.keys( b[0] )[0].trim() ? 1 : -1 )
+            return acc;
+        }, []);
     }
 
-    const writeDecklists = ( div, decklistObj ) => {
-        decklistObj.forEach( deckListData => {
+    const buildDecklistFilters = ( additionalFilters ) => {
+        let decklistFilter = ['Desklist', 'N/A'];
+
+        if( Array.isArray( additionalFilters ) ) { decklistFilter.concat( additionalFilters ); }
+        if( typeof( additionalFilters) === 'string' && additionalFilters ) { decklistFilter.push( additionalFilters ); }
+
+        return decklistFilter;
+    }
+
+    const processDecklists = ( decklistArr, additionalFilters = '', sortStatus = false ) => {
+        const decklistFilters = buildDecklistFilters( additionalFilters );
+
+        decklistArr = decklistArr.filter( decklistName => !decklistFilters.includes( Object.keys( decklistName[0] )[0].trim() ) );
+
+        if( sortStatus ) { decklistArr.sort( (a, b) => Object.keys( a[0] )[0].trim() > Object.keys( b[0] )[0].trim() ? 1 : -1 ); }
+
+        return decklistArr;
+    }
+
+    const writeDecklists = ( div, decklistArr ) => {
+        decklistArr.forEach( decklistData => {
             div.style.height = adjustHeight(div);
-            div.innerHTML += `<a href="${ Object.values(deckListData[0])[0].href }" target="_blank" style="color: #007bff;">${ Object.keys(deckListData[0]) }</a>  
-                by <a href="${ Object.values(deckListData[0])[0].playerHref }" target="_blank" style="color: #007bff;">${ Object.values(deckListData[0])[0].player }</a><br />`
+
+            let innerHtml = Object.values( decklistData[0]) [0].href ? `<a href="${ Object.values( decklistData[0] )[0].href }" target="_blank" style="color: #007bff;">${ Object.keys( decklistData[0] ) }</a>` : `No decklist found`;
+            innerHtml += ` by `;
+            innerHtml += Object.values( decklistData[0] )[0].playerHref ? `<a href="${ Object.values( decklistData[0] )[0].playerHref }" target="_blank" style="color: #007bff;">${ Object.values( decklistData[0] )[0].player }</a><br />` : `No player name found.`;
+            div.innerHTML += innerHtml;
         });
     }
 
-    const countDeckPopulation = function( decklistObj ) {
+    const countDeckPopulation = function( decklistArr ) {
         let deckPopulationObjTemp = {};
         let deckPopulationObj = {};
         let deckPopulationArr = [];
 
-        decklistObj.forEach( deckData => {
+        decklistArr.forEach( deckData => {
             const deckName = Object.keys( deckData[0] )[0];
             if ( deckPopulationObjTemp[deckName] ) { deckPopulationObjTemp[deckName] += 1; }
             else { deckPopulationObjTemp[deckName] = 1; }
         } )
 
-        Object.entries( deckPopulationObjTemp ).forEach( (key, value) => deckPopulationArr.push( [key, value] ) );
+        Object.entries( deckPopulationObjTemp ).forEach( ( deckName, population) => deckPopulationArr.push( [deckName, population] ) );
 
-        deckPopulationArr.sort( (a, b) => b[0][1] - a[0][1] ).forEach( elem => deckPopulationObj[elem[0][0]] = elem[0][1] );
+        deckPopulationArr.sort( ( a, b ) => b[0][1] - a[0][1] ).forEach( elem => deckPopulationObj[ elem[0][0] ] = elem[0][1] );
 
         return deckPopulationObj;
     }
@@ -90,7 +110,7 @@
         startDecklistDisplay();
     }
 
-    const adjustHeight = (div) => (parseInt(div.style.height.replace(/[a-zA-Z]/g,'')) + 20) + "px";
+    const adjustHeight = ( div ) => ( parseInt(div.style.height.replace(/[a-zA-Z]/g,'' ) ) + 20 ) + "px";
 
     const clearHtmlElements = () => {
         const htmlElementsToClear = ['decklistContainer'];
