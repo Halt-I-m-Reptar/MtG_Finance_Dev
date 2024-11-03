@@ -29,12 +29,12 @@
 
     const startDecklistDisplay = () => {
         const div = document.getElementsByClassName('decklistContainer')[0];
-        const decklistArr = Array.from( document.querySelector("#tournament-standings-table").getElementsByTagName('tr') )
-        if ( decklistArr.length > 0 ) {
+        const decklistsFromTabls = Array.from( document.querySelector("#tournament-standings-table").getElementsByTagName('tr') )
+        if ( decklistsFromTabls.length > 0 ) {
             div.innerHTML += `<strong><em>Deck Population data found in console.</em></strong><br />`;
-            const decklistObj = processDecklists( getDeckLists( decklistArr ), '', true );
-            writeDecklists( div, decklistObj );
-            displayDecklistPopulation( countDeckPopulation( processDecklists( decklistObj, '-', false ) ) );
+            const decklistArr = processDecklists( getDeckLists( decklistsFromTabls ), '', true );
+            writeDecklists( div, decklistArr );
+            displayDecklistPopulation( countDeckPopulation( processDecklists( decklistArr, '-', false ) ) );
         } else {
             div.innerHTML += 'No decklists found. Try again. :(';
         }
@@ -46,49 +46,54 @@
             if( currentRow.length > 1 ) {
                 return [...acc, [{[currentRow[1]?.innerText?.trim() || null]: {'href': currentRow[1]?.children[0]?.href || null, 'player': currentRow[0]?.innerText?.trim() || null, 'playerHref': currentRow[0]?.children[0]?.href || null} }]]
             }
-            return [...acc];
+            return acc;
         }, []);
     }
 
-    const processDecklists = ( decklistArr, additionalFilters = '', sortStatus = false ) => {
+    const buildDecklistFilters = ( additionalFilters ) => {
         let decklistFilter = ['Desklist', 'N/A'];
 
         if( Array.isArray( additionalFilters ) ) { decklistFilter.concat( additionalFilters ); }
-        if( typeof( additionalFilters) === 'string' ) { decklistFilter.push( additionalFilters ); }
+        if( typeof( additionalFilters) === 'string' && additionalFilters ) { decklistFilter.push( additionalFilters ); }
 
-        decklistArr = decklistArr.filter( decklistName => !decklistFilter.includes( Object.keys( decklistName[0] )[0].trim() ) );
+        return decklistFilter;
+    }
+
+    const processDecklists = ( decklistArr, additionalFilters = '', sortStatus = false ) => {
+        const decklistFilters = buildDecklistFilters( additionalFilters );
+
+        decklistArr = decklistArr.filter( decklistName => !decklistFilters.includes( Object.keys( decklistName[0] )[0].trim() ) );
 
         if( sortStatus ) { decklistArr.sort( (a, b) => Object.keys( a[0] )[0].trim() > Object.keys( b[0] )[0].trim() ? 1 : -1 ); }
 
         return decklistArr;
     }
 
-    const writeDecklists = ( div, decklistObj ) => {
-        decklistObj.forEach( deckListData => {
+    const writeDecklists = ( div, decklistArr ) => {
+        decklistArr.forEach( decklistData => {
             div.style.height = adjustHeight(div);
 
-            let innerHtml = Object.values(deckListData[0])[0].href ? `<a href="${ Object.values(deckListData[0])[0].href }" target="_blank" style="color: #007bff;">${ Object.keys(deckListData[0]) }</a>` : `No decklist found`;
+            let innerHtml = Object.values( decklistData[0]) [0].href ? `<a href="${ Object.values( decklistData[0] )[0].href }" target="_blank" style="color: #007bff;">${ Object.keys( decklistData[0] ) }</a>` : `No decklist found`;
             innerHtml += ` by `;
-            innerHtml += Object.values(deckListData[0])[0].playerHref ? `<a href="${ Object.values(deckListData[0])[0].playerHref }" target="_blank" style="color: #007bff;">${ Object.values(deckListData[0])[0].player }</a><br />` : `No player name found.`;
+            innerHtml += Object.values( decklistData[0] )[0].playerHref ? `<a href="${ Object.values( decklistData[0] )[0].playerHref }" target="_blank" style="color: #007bff;">${ Object.values( decklistData[0] )[0].player }</a><br />` : `No player name found.`;
             div.innerHTML += innerHtml;
-
         });
     }
 
-    const countDeckPopulation = function( decklistObj ) {
+    const countDeckPopulation = function( decklistArr ) {
         let deckPopulationObjTemp = {};
         let deckPopulationObj = {};
         let deckPopulationArr = [];
 
-        decklistObj.forEach( deckData => {
+        decklistArr.forEach( deckData => {
             const deckName = Object.keys( deckData[0] )[0];
             if ( deckPopulationObjTemp[deckName] ) { deckPopulationObjTemp[deckName] += 1; }
             else { deckPopulationObjTemp[deckName] = 1; }
         } )
 
-        Object.entries( deckPopulationObjTemp ).forEach( (key, value) => deckPopulationArr.push( [key, value] ) );
+        Object.entries( deckPopulationObjTemp ).forEach( ( deckName, population) => deckPopulationArr.push( [deckName, population] ) );
 
-        deckPopulationArr.sort( (a, b) => b[0][1] - a[0][1] ).forEach( elem => deckPopulationObj[elem[0][0]] = elem[0][1] );
+        deckPopulationArr.sort( ( a, b ) => b[0][1] - a[0][1] ).forEach( elem => deckPopulationObj[ elem[0][0] ] = elem[0][1] );
 
         return deckPopulationObj;
     }
@@ -105,7 +110,7 @@
         startDecklistDisplay();
     }
 
-    const adjustHeight = (div) => (parseInt(div.style.height.replace(/[a-zA-Z]/g,'')) + 20) + "px";
+    const adjustHeight = ( div ) => ( parseInt(div.style.height.replace(/[a-zA-Z]/g,'' ) ) + 20 ) + "px";
 
     const clearHtmlElements = () => {
         const htmlElementsToClear = ['decklistContainer'];
