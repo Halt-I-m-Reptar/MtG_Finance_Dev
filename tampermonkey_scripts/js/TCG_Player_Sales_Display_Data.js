@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.46
+// @version      0.47
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -196,7 +196,7 @@
             qtyInView[shorthandCondition].vendorCount += 1;
             if( !qtyInView[shorthandCondition].largestQuantity || qtyInView[shorthandCondition].largestQuantity < qty) { qtyInView[shorthandCondition].largestQuantity = qty; }
         }
-        else { qtyInView[shorthandCondition] = {quantity: qty, vendorCount: 1, largestQuantity: 0}; }
+        else { qtyInView[shorthandCondition] = {quantity: qty, vendorCount: 1, largestQuantity: qty}; }
     }
 
     const mapCondition = (condition) => {
