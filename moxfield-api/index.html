@@ -1,0 +1,28 @@
+<html lang="en">
+<head>
+    <title>Moxfield API Pull</title>
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+    <link rel="stylesheet" type="text/css" href="css/loader.css">
+    <link rel="stylesheet" type="text/css" href="css/table.css">
+</head>
+<body>
+
+<div id="informationBlock">
+    <button class="dataPull" onclick="startDataFetch('predh')">Pull preDH Deck Lists</button>
+    <button class="dataPull" onclick="startDataFetch('oathbreaker')">Pull Oathbreaker Deck Lists</button>
+    <strong>This script will only work with the <a href="https://mybrowseraddon.com/access-control-allow-origin.html" target="_blank">Allow CORS: Access-Control-Allow-Origin</a> browser plugin.</strong>
+</div>
+<br class="clear"/>
+<br />
+<div id="displayStatus"></div>
+<br />
+<br />
+<div id="cardListDisplay" class="cardListDisplay"></div>
+<div class="loader" id="loader"></div>
+
+<script src="js/genericFunctions.js"></script>
+<script src="modules/curlModule.js"></script>
+<script src="modules/objectWorkerModule.js"></script>
+<script src="js/worker.js"></script>
+</body>
+</html>

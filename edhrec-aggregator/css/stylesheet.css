@@ -1,0 +1,17 @@
+#topCardsSelector,
+#topCommandersByColorSelector,
+#individualCardSearchSelector,
+#topCardsByMonthSelector {
+    float: left;
+    margin-right: 15px;
+}
+
+.clear {
+    clear: both;
+}
+
+#topCardsByType,
+#topCardsByColor {
+    margin-left: 5px;
+}
+
