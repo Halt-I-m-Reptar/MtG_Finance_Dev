@@ -240,11 +240,15 @@
     const buildQtyInViewDisplay = (qtyInView) => Object.entries(qtyInView).reduce( (prevQtyData, currQty) => prevQtyData.concat(`<span style="margin-left: 20px;">${currQty[0]}: ${currQty[1].quantity} - Vendor Count: ${currQty[1].vendorCount} - Largest Qty: ${currQty[1].largestQuantity}</span><br />`), '');
 
     window.gatherTotalQtyInView = function( salesDataDisplayDiv = undefined) {
-        if ( !salesDataDisplayDiv ) { salesDataDisplayDiv = writeSalesDataContainer(); }
+        if ( !salesDataDisplayDiv ) {
+            clearHtmlElements();
+            salesDataDisplayDiv = writeSalesDataContainer();
+        }
         const qtyInViewByCondition = getQtyInViewByCondition();
         const totalQtyInView = getTotalQtyInView(qtyInViewByCondition);
         salesDataDisplayDiv.innerHTML += `<strong>Total copies in view: </strong>${totalQtyInView}<br />\
         <strong>Condition breakout:</strong><br />${buildQtyInViewDisplay(qtyInViewByCondition)}<br />`;
+        writeSalesToggle();
     }
 
     /********************
@@ -267,9 +271,11 @@
     ********************/
 
     const writeSalesToggle = () => {
-        const div = document.createElement('div');
-        div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:60px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
-        document.body.prepend(div);
+        if ( !document.getElementsByClassName('salesDataToggle')[0] ) {
+            const div = document.createElement('div');
+            div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:60px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
+            document.body.prepend(div);
+        }
     }
 
     function writeDaysToLookBackSpinner() {
