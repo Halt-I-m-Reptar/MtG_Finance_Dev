@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.47
+// @version      0.48
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -86,22 +86,19 @@
     const adjustSalesDataDivHeight = (div, timesToAdjustHeight) => (parseInt(div.style.height.replace(/[^0-9]/g,'')) + 115 * timesToAdjustHeight) + "px";
 
     const writeSalesDataContainer = () => {
-        const div = document.createElement('div');
+        const salesDataDisplayDiv = document.createElement('div');
         const setBottom = document.getElementsByClassName("_hj_feedback_container")[0] ? 'bottom:100px' : 'bottom:0';
-        div.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:8888;width:auto;height:0;min-height:300px;max-height:600px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff;line-height:normal"></div>`);
-        document.body.prepend(div);
+        salesDataDisplayDiv.innerHTML = (`<div class="salesDataDisplay" style="position:fixed;${setBottom};left:0;z-index:8888;width:auto;height:0;min-height:300px;max-height:600px;overflow-y:scroll;padding:0 5px 0 0;border:1px solid #d00;background:#999;color:#fff;line-height:normal"></div>`);
+        document.body.prepend(salesDataDisplayDiv);
+        return document.getElementsByClassName('salesDataDisplay')[0];
     }
 
-    const displaySalesData = (salesByCondition) => {
-        const div = document.getElementsByClassName('salesDataDisplay')[0];
-        const qtyInViewByCondition = getQtyInViewByCondition();
-        const totalQtyInView = getTotalQtyInView(qtyInViewByCondition);
-        div.innerHTML += `<strong>Total copies in view: </strong>${totalQtyInView}<br />\
-        <strong>Condition breakout:</strong><br />${buildQtyInViewDisplay(qtyInViewByCondition)}<br />`;
+    const displaySalesData = (salesByCondition, salesDataDisplayDiv) => {
+        gatherTotalQtyInView( salesDataDisplayDiv );
         salesByCondition.forEach(cardConditionData => {
             const cardDisplayData = buildSalesDataDisplay(cardConditionData[0], cardConditionData[1]);
-            div.innerHTML += cardDisplayData.cardDisplayData;
-            div.style.height = adjustSalesDataDivHeight(div, cardDisplayData.timesToAdjustHeight);
+            salesDataDisplayDiv.innerHTML += cardDisplayData.cardDisplayData;
+            salesDataDisplayDiv.style.height = adjustSalesDataDivHeight(salesDataDisplayDiv, cardDisplayData.timesToAdjustHeight);
         });
     }
 
@@ -125,7 +122,7 @@
                         <span id="${daysAgo}-dayAgo-AvgQtyPerOrder" style="margin-left: 40px;">Avg Qty Per Order: ${cardConditionData.avgQtyPerOrder(historicSalesData.daysAgo[daysAgo].totalQtySold, historicSalesData.daysAgo[daysAgo].totalOrders)}</span><br />
                         <span id="${daysAgo}-dayAgo-MarketPrice" style="margin-left: 40px;">Market Price: ${cardConditionData.marketPriceByOrder( historicSalesData.daysAgo[daysAgo].totalSpend, historicSalesData.daysAgo[daysAgo].totalOrders ) }</span><br />`
             );
-        };
+        }
         cardDisplayString += `</div><br />`;
         return {cardDisplayData: cardDisplayString, timesToAdjustHeight: heightAdjustmentCount};
     }
@@ -148,8 +145,8 @@
     const beginSalesDataDisplay = (salesByCondition) => {
         //close sales modal
         document.getElementsByClassName('modal__close')[0].click()
-        writeSalesDataContainer();
-        displaySalesData(Object.entries(salesByCondition).sort((conditionOne, conditionTwo) => conditionOne[1].totalQtySold - conditionTwo[1].totalQtySold ).reverse());
+        const salesDataDisplayDiv = writeSalesDataContainer();
+        displaySalesData( Object.entries(salesByCondition).sort((conditionOne, conditionTwo) => conditionOne[1].totalQtySold - conditionTwo[1].totalQtySold ).reverse(), salesDataDisplayDiv );
     }
 
     async function loadMoreSalesData() {
@@ -186,8 +183,8 @@
     }
 
     /********************
-     Pull in current quantity for sale in view
-     ********************/
+    Pull in current quantity for sale in view
+    ********************/
 
     const setQtyInViewByCondition = (condition, qty, qtyInView) => {
         const shorthandCondition = mapCondition(condition);
@@ -242,9 +239,17 @@
 
     const buildQtyInViewDisplay = (qtyInView) => Object.entries(qtyInView).reduce( (prevQtyData, currQty) => prevQtyData.concat(`<span style="margin-left: 20px;">${currQty[0]}: ${currQty[1].quantity} - Vendor Count: ${currQty[1].vendorCount} - Largest Qty: ${currQty[1].largestQuantity}</span><br />`), '');
 
+    window.gatherTotalQtyInView = function( salesDataDisplayDiv = undefined) {
+        if ( !salesDataDisplayDiv ) { salesDataDisplayDiv = writeSalesDataContainer(); }
+        const qtyInViewByCondition = getQtyInViewByCondition();
+        const totalQtyInView = getTotalQtyInView(qtyInViewByCondition);
+        salesDataDisplayDiv.innerHTML += `<strong>Total copies in view: </strong>${totalQtyInView}<br />\
+        <strong>Condition breakout:</strong><br />${buildQtyInViewDisplay(qtyInViewByCondition)}<br />`;
+    }
+
     /********************
-     HTML element interaction
-     ********************/
+    HTML element interaction
+    ********************/
 
     const clearHtmlElements = () => {
         ['salesDataDisplay', 'salesDataToggle'].forEach( selector => {
@@ -258,12 +263,12 @@
     }
 
     /********************
-     Write interactive HTML elements
-     ********************/
+    Write interactive HTML elements
+    ********************/
 
     const writeSalesToggle = () => {
         const div = document.createElement('div');
-        div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:40px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
+        div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:60px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
         document.body.prepend(div);
     }
 
@@ -279,11 +284,18 @@
         const div = document.createElement('div');
         div.innerHTML = ('<button class="dataRequestButton" style="position:fixed;top:20px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#00b;color:#fff;font-weight:bold;" onclick="startDataRequest()">Gather Sales Data</button>');
         document.body.prepend(div);
+        writeGatherTotalCopiesButton()
+    }
+
+    function writeGatherTotalCopiesButton() {
+        const div = document.createElement('div');
+        div.innerHTML = ('<button class="qtyInViewButton" style="position:fixed;top:40px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#AC00FF;color:#fff;font-weight:bold;" onclick="gatherTotalQtyInView()">Gather Quantity in View</button>');
+        document.body.prepend(div);
     }
 
     /********************
-     Re-inventing the wheel of time because we are not importing the moment library.
-     ********************/
+    Re-inventing the wheel of time because we are not importing the moment library.
+    ********************/
 
     const setHistoricDateArr = (daysToLookBack) => {
         let historicDatesArr = [];
