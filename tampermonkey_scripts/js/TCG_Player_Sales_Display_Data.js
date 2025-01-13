@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.48
+// @version      0.49
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -34,8 +34,8 @@
     const strToInt = (str) => +str;
 
     const shapeSalesData = (salesData) => {
-        return salesData[0]?.children[0]?.className !== 'tcg-icon' ? {date: salesData[0].innerText, condition: mapCondition(salesData[1].innerText.split('\n')[1]), quantity: salesData[3].innerText, price: salesData[4].innerText} :
-            {date: salesData[0].innerText, condition: `${ mapCondition( salesData[1].innerText.split('\n')[1]) } with Photo`, quantity: salesData[3].innerText, price: salesData[4].innerText};
+        return !salesData[1]?.children[1]?.innerHTML.includes('tcg-icon') ? {date: salesData[0].innerText, condition: mapCondition( salesData[1].getElementsByTagName('span')[0].innerText ), quantity: salesData[2].innerText, price: salesData[3].innerText} :
+            {date: salesData[0].innerText, condition: `${ mapCondition( salesData[1].getElementsByTagName('span')[0].innerText ) } with Photo`, quantity: salesData[2].innerText, price: salesData[3].innerText};
     }
 
     const checkSaleDate = (salesArray, saleDate, price) => {
@@ -153,9 +153,9 @@
         const maxClicks = 50;
         await sleep(500);
         for (let clickCount = 0; clickCount < maxClicks; clickCount++) {
-            await sleep(500);
+            await sleep(600);
             decorateSalesHistoryHeader(clickCount);
-            if ( document.getElementsByClassName("sales-history-snapshot__load-more")[0] ) { document.getElementsByClassName("sales-history-snapshot__load-more")[0].click(); }
+            if ( document.getElementsByClassName("sales-history-snapshot__load-more")[0] ) { document.getElementsByClassName("sales-history-snapshot__load-more__button")[0].click(); }
             else {clickCount = maxClicks; }
         }
     }
