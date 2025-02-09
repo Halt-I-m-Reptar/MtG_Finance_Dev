@@ -29,10 +29,10 @@
 
     const startDecklistDisplay = () => {
         const div = document.getElementsByClassName('decklistContainer')[0];
-        const decklistsFromTabls = Array.from( document.querySelector("#tournament-standings-table").getElementsByTagName('tr') )
-        if ( decklistsFromTabls.length > 0 ) {
+        const decklistsFromTable = Array.from( document.querySelector("#tournament-standings-table").getElementsByTagName('tr') )
+        if ( decklistsFromTable.length > 0 ) {
             div.innerHTML += `<strong><em>Deck Population data found in console.</em></strong><br />`;
-            const decklistArr = processDecklists( getDeckLists( decklistsFromTabls ), '', true );
+            const decklistArr = processDecklists( getDeckLists( decklistsFromTable ), '', true );
             writeDecklists( div, decklistArr );
             displayDecklistPopulation( countDeckPopulation( processDecklists( decklistArr, '-', false ) ) );
         } else {
