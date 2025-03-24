@@ -63,13 +63,17 @@ td {
 }
 
 .warning,
-.lowBuyPrice{
+.lowBuyPrice {
     background-color: #fdbac4;
 }
 
 .highBuyPrice {
     background-color: blueviolet;
     color: white;
+}
+
+.belowFifty {
+    background-color: #e7e7e7;
 }
 
 #warningText {
