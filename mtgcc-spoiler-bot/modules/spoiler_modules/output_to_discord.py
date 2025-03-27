@@ -1,5 +1,5 @@
 async def send_text_only_output( client, set_name_data, spoiled_card_count=0 ):
-    from .return_channels import return_text_only_channels
+    from ..generic.return_channels import return_text_only_channels
     from .create_embed_objects import build_text_only_output
 
     channel_id = await return_text_only_channels()
@@ -10,7 +10,7 @@ async def send_text_only_output( client, set_name_data, spoiled_card_count=0 ):
 
 
 async def send_embedded_images_output( client, embed_object ):
-    from .return_channels import return_channel_list
+    from ..generic.return_channels import return_channel_list
 
     channel_list = await return_channel_list()
 

@@ -1,6 +1,6 @@
-from modules.open_mythicspoier import open_and_read_target_url
-from modules.set_file_creation_funcions import check_for_new_set_file
-from modules.html_processing import gather_set_data, gather_card_images_urls
+from modules.spoiler_modules.open_mythicspoier import open_and_read_target_url
+from modules.spoiler_modules.set_file_creation_funcions import check_for_new_set_file
+from modules.spoiler_modules.html_processing import gather_set_data, gather_card_images_urls
 
 
 def bot_main():
@@ -15,7 +15,7 @@ def bot_main():
 
         return  set_name_data, card_data_object
     else:
-        from modules.read_set_file import check_if_card_exists
+        from modules.spoiler_modules.read_set_file import check_if_card_exists
 
         print( 'file exists' )
 
