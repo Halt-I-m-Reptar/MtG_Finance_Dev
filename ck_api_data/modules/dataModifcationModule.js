@@ -12,7 +12,8 @@ function createCreditBuyPrice(buyPrice) {
 
 function setBuyPercentBackgroundColor(retailBuyPricePercent) {
     if ( retailBuyPricePercent >= 70 ) { return "highBuyPrice";}
-    if ( retailBuyPricePercent >= 65 ) { return "decentBuyPrice"; }
-    if ( retailBuyPricePercent < 60 ) { return "lowBuyPrice"; }
+    if ( retailBuyPricePercent >= 60 ) { return "decentBuyPrice"; }
+    if ( retailBuyPricePercent >= 52 ) { return "lowBuyPrice"; }
+    if ( retailBuyPricePercent < 52 ) { return "belowFifty"; }
     return "retailPrice";
 }

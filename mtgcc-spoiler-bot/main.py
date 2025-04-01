@@ -4,7 +4,7 @@ import os
 import asyncio
 from datetime import datetime, timedelta
 from bot_main import bot_main
-from modules.set_file_creation_funcions import write_card_data_to_file
+from modules.spoiler_modules.set_file_creation_funcions import write_card_data_to_file
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -17,8 +17,8 @@ member: Member = Member
 
 
 async def schedule_spoiler_search():
-    from modules.output_to_discord import send_text_only_output, stage_embed_object_for_send
-    from modules.create_embed_objects import build_discord_embed_object
+    from modules.spoiler_modules.output_to_discord import send_text_only_output, stage_embed_object_for_send
+    from modules.spoiler_modules.create_embed_objects import build_discord_embed_object
 
     current_time = datetime.now()
     next_run = current_time + timedelta(seconds=10)

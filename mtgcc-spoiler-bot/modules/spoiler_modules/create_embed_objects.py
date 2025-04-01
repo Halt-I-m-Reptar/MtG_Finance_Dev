@@ -1,6 +1,6 @@
 async def build_discord_embed_object( set_name_data, card_data_object ):
     import discord
-    from .time_functions import get_curr_datetime
+    from ..generic.time_functions import get_curr_datetime
 
     set_code = set_name_data['set_code']
     set_name = set_name_data['set_name'].title()
@@ -19,7 +19,7 @@ async def build_discord_embed_object( set_name_data, card_data_object ):
 
 async def build_text_only_output(set_name_data, spoiled_card_count):
     import discord
-    from .time_functions import get_curr_datetime
+    from ..generic.time_functions import get_curr_datetime
 
     set_code = set_name_data['set_code']
     set_name = set_name_data['set_name'].title()
