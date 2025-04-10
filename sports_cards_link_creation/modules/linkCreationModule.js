@@ -1,38 +1,36 @@
-const readTextArea = () => document.getElementById("productNames").value.length ? document.getElementById("productNames").value.split("\n").sort() : false;
+const readTextArea = () => document.getElementById( "productNames" ).value.length ? document.getElementById( "productNames" ).value.split( "\n" ).sort() : null;
 
-const createTable = () => document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>Store Name</th><th>Product Name</th><th>Product URL</th></tr></thead><tbody id="productDisplayTable"></tbody></table>';
+const createTable = () => document.getElementById( "listDisplay" ).innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>Store Name</th><th>Product Name</th><th>Product URL</th></tr></thead><tbody id="productDisplayTable"></tbody></table>';
 
-const createLinkForDisplay = url  => `<a href="${url}" target="_blank">${url}</a>`;
+const createLinkForDisplay = url => `<a href="${ url }" target="_blank">${ url }</a>`;
 
-const errObject = () => ({0: "<h1>Please enter a list of products to search.</h1>"});
-
-function linkWorker() { tableWorker(); }
-
-function tableWorker() {
+function linkWorker() {
     try {
         const productArr = readTextArea();
-        if (!productArr) { throw 0; }
-        createTable();
-        const storeListObj = getStoreList();
-        productArr.forEach(productName => {
-            Object.keys(storeListObj).forEach(storeKey => {
-                writeTableData(storeKey, storeListObj, productName)
-            });
-        });
-    } catch (err) {
-        document.getElementById("listDisplay").innerHTML = errObject()[err];
+        if ( !productArr ) { throw 0; }
+        tableWorker( productArr );
+    } catch ( err ) {
+        document.getElementById( "listDisplay" ).innerHTML = errObject()[ err ];
     }
 }
 
-function writeTableData(storeKey, storeListObj, productName) {
-    const table = document.getElementById("displayData");
+function tableWorker( productArr ) {
+    const storeListObj = getStoreList();
+    createTable();
+    productArr.forEach( productName => {
+        Object.keys( storeListObj ).forEach( storeName => {
+            writeTableData( [ storeName, productName, storeListObj[ storeName ].url ] );
+        });
+    });
+}
+
+function writeTableData( displayDataArr ) {
+    const table = document.getElementById( "displayData" );
     let cell;
     let row;
     row = table.insertRow();
-    cell = row.insertCell(0);
-    cell.innerHTML = `${storeKey}`;
-    cell = row.insertCell(1);
-    cell.innerHTML = `${productName}`;
-    cell = row.insertCell(2);
-    cell.innerHTML = createLinkForDisplay(`${storeListObj[storeKey].url}${productName}` );
+    displayDataArr.forEach( ( dataToDisplay, index )  => {
+        cell = row.insertCell ( index );
+        cell.innerHTML = index === 2 ? createLinkForDisplay(`${ displayDataArr[ index ] }${ displayDataArr[ 1 ] }` ) : `${ dataToDisplay }`;
+    })
 }
