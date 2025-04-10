@@ -10,27 +10,27 @@ function linkWorker() {
         if ( !productArr ) { throw 0; }
         tableWorker( productArr );
     } catch ( err ) {
-        document.getElementById("listDisplay" ).innerHTML = errObject()[err];
+        document.getElementById("listDisplay" ).innerHTML = errObject()[ err ];
     }
 }
 
 function tableWorker( productArr ) {
     const storeListObj = getStoreList();
     createTable();
-    productArr.forEach(productName => {
+    productArr.forEach( productName => {
         Object.keys( storeListObj ).forEach( storeName => {
             writeTableData( [ storeName, productName, storeListObj[ storeName ].url ] );
         });
     });
 }
 
-function writeTableData( dataArr ) {
+function writeTableData( displayDataArr ) {
     const table = document.getElementById("displayData");
     let cell;
     let row;
     row = table.insertRow();
-    dataArr.forEach( ( data, index )  => {
+    displayDataArr.forEach( ( dataToDisplay, index )  => {
         cell = row.insertCell ( index );
-        cell.innerHTML = index === 2 ? createLinkForDisplay(`${ dataArr[ index ] }${ dataArr[ 1 ] }` ) : `${ data }`;
+        cell.innerHTML = index === 2 ? createLinkForDisplay(`${ displayDataArr[ index ] }${ displayDataArr[ 1 ] }` ) : `${ dataToDisplay }`;
     })
 }
