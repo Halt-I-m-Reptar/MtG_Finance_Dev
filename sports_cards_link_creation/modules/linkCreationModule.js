@@ -25,7 +25,7 @@ function tableWorker( productArr ) {
 }
 
 function writeTableData( displayDataArr ) {
-    const table = document.getElementById( "displayData");
+    const table = document.getElementById( "displayData" );
     let cell;
     let row;
     row = table.insertRow();
