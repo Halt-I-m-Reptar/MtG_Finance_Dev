@@ -1,16 +1,16 @@
-const readTextArea = () => document.getElementById("productNames").value.length ? document.getElementById("productNames").value.split("\n").sort() : false;
+const readTextArea = () => document.getElementById("productNames" ).value.length ? document.getElementById("productNames" ).value.split( "\n" ).sort() : null;
 
-const createTable = () => document.getElementById("listDisplay").innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>Store Name</th><th>Product Name</th><th>Product URL</th></tr></thead><tbody id="productDisplayTable"></tbody></table>';
+const createTable = () => document.getElementById("listDisplay" ).innerHTML = '<table id="displayData" class="displayData"><thead><tr><th>Store Name</th><th>Product Name</th><th>Product URL</th></tr></thead><tbody id="productDisplayTable"></tbody></table>';
 
-const createLinkForDisplay = url => `<a href="${url}" target="_blank">${url}</a>`;
+const createLinkForDisplay = url => `<a href="${ url }" target="_blank">${ url }</a>`;
 
 function linkWorker() {
     try {
         const productArr = readTextArea();
-        if (!productArr) { throw 0; }
+        if ( !productArr ) { throw 0; }
         tableWorker( productArr );
-    } catch (err) {
-        document.getElementById("listDisplay").innerHTML = errObject()[err];
+    } catch ( err ) {
+        document.getElementById("listDisplay" ).innerHTML = errObject()[err];
     }
 }
 
@@ -18,8 +18,8 @@ function tableWorker( productArr ) {
     const storeListObj = getStoreList();
     createTable();
     productArr.forEach(productName => {
-        Object.keys(storeListObj).forEach( storeName => {
-            writeTableData( [storeName, productName, storeListObj[storeName].url ] );
+        Object.keys( storeListObj ).forEach( storeName => {
+            writeTableData( [ storeName, productName, storeListObj[ storeName ].url ] );
         });
     });
 }
@@ -29,8 +29,8 @@ function writeTableData( dataArr ) {
     let cell;
     let row;
     row = table.insertRow();
-    dataArr.forEach( (data, index)  => {
+    dataArr.forEach( ( data, index )  => {
         cell = row.insertCell ( index );
-        cell.innerHTML = index === 2 ? createLinkForDisplay(`${dataArr[index]}${dataArr[1]}` ) : `${data}`;
+        cell.innerHTML = index === 2 ? createLinkForDisplay(`${ dataArr[ index ] }${ dataArr[ 1 ] }` ) : `${ data }`;
     })
 }
