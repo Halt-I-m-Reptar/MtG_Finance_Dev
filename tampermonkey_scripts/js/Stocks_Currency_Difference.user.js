@@ -53,8 +53,8 @@
     }
 
     const addPriceDifference = (cardDataInRow) => {
-        const cardNewPrice = +(cardDataInRow.getElementsByTagName('td')[2].innerText).replace(/\$/g,'');
-        const cardOldPrice = +(cardDataInRow.getElementsByTagName('td')[3].innerText).replace(/\$/g,'');
+        const cardNewPrice = +(cardDataInRow.getElementsByTagName('td')[2].innerText).replace(/[$,]/g,'');
+        const cardOldPrice = +(cardDataInRow.getElementsByTagName('td')[3].innerText).replace(/[$,]/g,'');
         const cardPriceDiff = (cardNewPrice - cardOldPrice).toFixed(2);
         const cellToInsert = cardDataInRow.insertCell(5);
         cellToInsert.innerHTML = `<span style="color: #212529;">$${cardPriceDiff}</span>`
