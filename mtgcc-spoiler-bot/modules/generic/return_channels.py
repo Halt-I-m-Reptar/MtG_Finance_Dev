@@ -1,9 +1,10 @@
 async def return_text_only_channels():
     import os
 
-    channel_id = os.getenv('TEXT_ONLY_CHANNEL_LIST')
+    channel_list_str = os.getenv('TEXT_ONLY_CHANNEL_LIST')
+    channel_list_arr = list(map(int, channel_list_str.split(',')))
 
-    return int(channel_id)
+    return channel_list_arr
 
 
 async def return_channel_list():
