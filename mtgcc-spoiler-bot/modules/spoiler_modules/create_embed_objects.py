@@ -23,10 +23,10 @@ async def build_text_only_output(set_name_data, spoiled_card_count):
 
     set_code = set_name_data['set_code']
     set_name = set_name_data['set_name'].title()
+
     embed_title = f'{get_curr_datetime( "YYYY-MM-DD HH:mm" )} New {set_name} Spoilers Found!'
     embed_url = f'https://mythicspoiler.com/{set_code}/index.html'
     embed = discord.Embed(title=embed_title, url=embed_url, description=f'Click through to see the {spoiled_card_count} new {set_name} spoilers!')
-    embed.set_thumbnail(url=f'http://mythicspoiler.com/images/buttons/menubutton{set_code}.png')
+    embed.set_thumbnail(url=f'https://mythicspoiler.com/images/buttons/menubutton{set_code}.png')
 
     return embed
-
