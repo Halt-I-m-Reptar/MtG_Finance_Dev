@@ -29,7 +29,9 @@ const displayTopCardList = (topCardsList, cardStatus) => {
                 if( ['cards','names','is_partner', 'synergy'].includes(cardElements) ) { return; }
                 if( cardStatus === 'asCommander' && ['inclusion','num_decks','potential_decks'].includes(cardElements) ) { return; }
                 cell = row.insertCell();
-                cell.innerHTML = cardsInList[cardElements];
+                cell.innerHTML = cardElements === 'url' ?
+                    `<a href="https://edhrec.com${cardsInList[cardElements]}" target="_blank">${cardsInList[cardElements]}</a>`
+                    : cardsInList[cardElements];
             });
             if ( cardStatus !== 'asCommander' ) {
                 cell = row.insertCell();
