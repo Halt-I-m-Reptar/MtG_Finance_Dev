@@ -7,7 +7,7 @@ def read_in_set_file_data():
     return release_date_data_from_file.read()
 
 
-def check_if_set_exists( set_release_dates_from_url ) :
+def check_if_set_exists( set_release_dates_from_url ):
     set_data_from_file = read_in_set_file_data()
     data_to_write = []
 

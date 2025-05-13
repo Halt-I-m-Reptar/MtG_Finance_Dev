@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 import os
 import asyncio
 from datetime import datetime, timedelta
-from modules.spoiler_modules.set_file_creation_funcions import write_card_data_to_file
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -18,6 +17,7 @@ member: Member = Member
 async def schedule_spoiler_search():
     from modules.spoiler_modules.output_to_discord import send_text_only_output, stage_embed_object_for_send
     from modules.spoiler_modules.create_embed_objects import build_discord_embed_object
+    from modules.spoiler_modules.set_file_creation_funcions import write_card_data_to_file
     from bot_main import check_for_new_spoilers
 
     current_time = datetime.now()
@@ -48,6 +48,7 @@ async def check_for_new_set_release_date():
         await send_text_only_output( client, set_release_datas_to_write )
 
     return
+
 
 @client.event
 async def on_ready():
