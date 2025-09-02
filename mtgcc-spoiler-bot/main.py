@@ -39,12 +39,12 @@ async def schedule_spoiler_search():
 
 async def check_for_new_set_release_date():
     from bot_main import check_for_new_set_release_date
-    from modules.set_release_dates.set_release_date_funcions import write_card_data_to_file
+    from modules.set_release_dates.set_release_date_funcions import write_set_data_to_file
     from modules.set_release_dates.output_to_discord import send_text_only_output
 
     set_release_datas_to_write = check_for_new_set_release_date()
     if set_release_datas_to_write:
-        await write_card_data_to_file( set_release_datas_to_write )
+        await write_set_data_to_file( set_release_datas_to_write )
         await send_text_only_output( client, set_release_datas_to_write )
 
     return
