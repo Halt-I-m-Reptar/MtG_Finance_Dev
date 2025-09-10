@@ -5,7 +5,7 @@ def return_file_path():
     return f'./{set_files_dir}/{file_name}.json'
 
 
-async def write_card_data_to_file( set_release_dates ):
+async def write_set_data_to_file( set_release_dates ):
     from pathlib import Path
 
     release_date_file_path = return_file_path()

@@ -1,9 +1,11 @@
 async def build_discord_embed_object( set_name_data, card_data_object ):
     import discord
+    import string
     from ..generic.time_functions import get_curr_datetime
 
     set_code = set_name_data['set_code']
-    set_name = set_name_data['set_name'].title()
+    set_name = string.capwords(set_name_data['set_name'])
+
     embed_text = f'{get_curr_datetime( "YYYY-MM-DD HH:mm" )} New {set_name} Spoilers Found!'
     embed_url = f'https://mythicspoiler.com/{set_code}/index.html'
     embed_array = []
@@ -19,10 +21,11 @@ async def build_discord_embed_object( set_name_data, card_data_object ):
 
 async def build_text_only_output(set_name_data, spoiled_card_count):
     import discord
+    import string
     from ..generic.time_functions import get_curr_datetime
 
     set_code = set_name_data['set_code']
-    set_name = set_name_data['set_name'].title()
+    set_name = string.capwords(set_name_data['set_name'])
 
     embed_title = f'{get_curr_datetime( "YYYY-MM-DD HH:mm" )} New {set_name} Spoilers Found!'
     embed_url = f'https://mythicspoiler.com/{set_code}/index.html'

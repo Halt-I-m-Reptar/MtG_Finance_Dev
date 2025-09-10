@@ -1,9 +1,13 @@
 def gather_set_data( html_to_process ):
     set_location = 3
     li_list = html_to_process.find_all('li')[set_location]
-    set_name = li_list.find('a').text.split()
+
+    set_name_raw_split = li_list.find('a').text.split()
+    set_name = " ".join(set_name_raw_split[:-1])
+
     set_url = li_list.find('a').attrs.get('href').split('/')
-    set_naming_data = { 'set_name': set_name[0].lower(), 'set_code': set_url[0] }
+
+    set_naming_data = { 'set_name': set_name.lower(), 'set_code': set_url[0] }
 
     return set_naming_data
 
