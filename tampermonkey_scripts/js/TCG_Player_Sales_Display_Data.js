@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.50
+// @version      0.51
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -197,7 +197,7 @@
     }
 
     const mapCondition = (condition) => {
-        const hasFoil = condition.includes('Foil') ? ' Foil' : '';
+        const hasFoil = condition.search(/foil/gi) ? ' Foil' : '';
         const conditionMap = {
             'Near Mint': 'NM',
             'Lightly Played': 'LP',
@@ -206,7 +206,7 @@
             'Damaged': 'DMG',
             'Unopened': 'Sealed'
         };
-        return (conditionMap[condition.replace(' Foil', '')] || 'Unlisted') + hasFoil;
+        return (conditionMap[condition.replace(/( holofoil| foil)/gi, '')] || 'Unlisted') + hasFoil;
     }
 
     const getTotalQtyInView = (qtyInView) => Object.keys(qtyInView).reduce( (prevVal, conditionKey) => prevVal + qtyInView[conditionKey].quantity, 0);
