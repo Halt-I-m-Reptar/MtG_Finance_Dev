@@ -19,8 +19,7 @@ const fetchBuylist = ( listToPull, buylistClick = false) => {
     setListDomInnerHTML('listDisplay',`<strong>Gathering and collating all inventory from CK.</strong>`);
 
     const buylistUrl = getCheckedValue('whichSlug') ? "https://api.cardkingdom.com/api/pricelist" :
-        //"https://raw.githubusercontent.com/Halt-I-m-Reptar/MtG_Finance_Dev/master/ck_api_data/ck_slug/pricelist.json";
-        "ck_slug/pricelist.json";
+        "https://raw.githubusercontent.com/Halt-I-m-Reptar/MtG_Finance_Dev/master/ck_api_data/ck_slug/pricelist.json";
 
     fetch(buylistUrl, requestOptions)
         .then(response => response.json())

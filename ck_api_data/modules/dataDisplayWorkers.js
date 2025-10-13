@@ -1,40 +1,19 @@
 const setBackgroundColor = ( row ) => row.forEach( cell => cell.style.backgroundColor = cell.style.backgroundColor === '' ? 'darkorange' : '')
 const attributesToSkip = ( cardAttribute ) => ['border_color','display_style','edition_slug','image_uri','price_sale','primary_category_id'].includes( cardAttribute );
+const classNameMap = {
+    name: "cardName",
+    price: "retailPrice",
+    price_buy: "buyPrice",
+    price_retail: "retailPrice"
+};
 
-const setCellClassName = ( cardElement, cardAttribute ) => {
-    let className;
-
-    switch ( cardAttribute )  {
-        case 'name':
-            className = "cardName";
-            break;
-        case 'price':
-            className = "retailPrice";
-            break;
-        case 'price_buy':
-            className = "buyPrice";
-            break;
-        case 'model':
-            className = cardElement[ cardAttribute ] === 'mtg_foil' ? "isFoil" : "";
-            break;
-        case 'retailBuyPricePercent':
-            className = setBuyPercentBackgroundColor( cardElement[ cardAttribute ] );
-            break;
-        case 'is_foil':
-            className = cardElement[ cardAttribute ] === 'true' ? "isFoil" : "";
-            break;
-        case 'price_retail':
-            className = "retailPrice";
-            break;
-        case 'qty_buying':
-            className = cardElement[ cardAttribute ] === 0 ? "warning" : "";
-            break;
-        default:
-            className = "";
-    }
-
-    return className;
-}
+const setCellClassName = (cardElement, cardAttribute) => {
+    if (cardAttribute === 'model') return cardElement[cardAttribute] === 'mtg_foil' ? "isFoil" : "";
+    if (cardAttribute === 'retailBuyPricePercent') return setBuyPercentBackgroundColor(cardElement[cardAttribute]);
+    if (cardAttribute === 'is_foil') return cardElement[cardAttribute] === 'true' ? "isFoil" : "";
+    if (cardAttribute === 'qty_buying') return cardElement[cardAttribute] === 0 ? "warning" : "";
+    return classNameMap[cardAttribute] || "";
+};
 
 const addDataToTable = ( table, cardElement ) => {
     let cell;
