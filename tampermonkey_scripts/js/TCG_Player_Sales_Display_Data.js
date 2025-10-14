@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.51
+// @version      0.52
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -197,7 +197,7 @@
     }
 
     const mapCondition = (condition) => {
-        const hasFoil = condition.search(/foil/gi) ? ' Foil' : '';
+        const hasFoil = condition.match(/foil/gi) ? ' Foil' : '';
         const conditionMap = {
             'Near Mint': 'NM',
             'Lightly Played': 'LP',
