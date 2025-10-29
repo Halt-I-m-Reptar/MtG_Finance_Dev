@@ -1,3 +1,4 @@
 .DS_Store
 .idea/*
 mtgcc-spoiler-bot/.env
+*.pyc
