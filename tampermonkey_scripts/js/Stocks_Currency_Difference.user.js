@@ -39,7 +39,7 @@
     }
 
     function widenDisplayTable() {
-        document.getElementsByClassName("container")[1].style['max-width'] = '80%';
+        document.getElementsByClassName( "container" )[1].style['max-width'] = '80%';
     }
 
     const addNewCellsToPriceTables = () => {
