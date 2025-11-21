@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MtG Stocks Currency Difference
-// @version      0.7
+// @version      0.8
 // @description  Added currency difference to interest list
 // @author       Peter Creutzberger
 // @match        *://*.mtgstocks.com/*
@@ -37,6 +37,11 @@
             if ( !elem.getAttribute('onclick') ) { elem.setAttribute('onclick','writeDataRequestButton(this);'); }
         })
     }
+
+    function widenDisplayTable() {
+        document.getElementsByClassName("container")[1].style['max-width'] = '80%';
+    }
+
     const addNewCellsToPriceTables = () => {
         Array.from(document.getElementsByTagName("table")).forEach( priceTableOnPage => {
             addHeaderToTable( priceTableOnPage.getElementsByTagName('thead')[0].getElementsByTagName('tr')[0] );
@@ -74,6 +79,7 @@
 
     window.createCells = () => {
         if (window.location.pathname.match('interests')) {
+            widenDisplayTable();
             addNewCellsToPriceTables();
         } else { alert('Please visit the Interests page to utilize this functionality.'); }
     }
