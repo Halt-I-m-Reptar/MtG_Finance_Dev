@@ -15,3 +15,5 @@ Allows you to pull the entire CK MtG inventory and filter for specific cards you
 * Click "Clear Filters" to reset the card display
 
 ## TODO
+- Add filter to only show 0 stock items
+- Add filter to show only items with buy % equal to the dropdown selection
