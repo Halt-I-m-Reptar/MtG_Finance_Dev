@@ -1,12 +1,14 @@
 // ==UserScript==
 // @name         MtG Stocks Currency Difference
-// @version      0.8
+// @version      0.9
 // @description  Added currency difference to interest list
 // @author       Peter Creutzberger
 // @match        *://*.mtgstocks.com/*
 // @match        *://*.pikastocks.com/*
 // @grant        none
 // @namespace https://www.mtgstocks.com/
+// @downloadURL https://update.greasyfork.org/scripts/416095/MtG%20Stocks%20Currency%20Difference.user.js
+// @updateURL https://update.greasyfork.org/scripts/416095/MtG%20Stocks%20Currency%20Difference.meta.js
 // ==/UserScript==
 
 (function() {
@@ -29,6 +31,13 @@
         return;
     }
 
+    window.createCells = () => {
+        if (window.location.pathname.match('interests')) {
+            widenDisplayTable();
+            addNewCellsToPriceTables();
+        } else { alert('Please visit the Interests page to utilize this functionality.'); }
+    }
+
     writeOnClickEvents();
 
     function writeOnClickEvents() {
@@ -38,11 +47,7 @@
         })
     }
 
-    function widenDisplayTable() {
-        document.getElementsByClassName( "container" )[1].style['max-width'] = '80%';
-    }
-
-    const addNewCellsToPriceTables = () => {
+    function addNewCellsToPriceTables() {
         Array.from(document.getElementsByTagName("table")).forEach( priceTableOnPage => {
             addHeaderToTable( priceTableOnPage.getElementsByTagName('thead')[0].getElementsByTagName('tr')[0] );
 
@@ -57,32 +62,24 @@
         });
     }
 
-    const addPriceDifference = (cardDataInRow) => {
+    function addPriceDifference(cardDataInRow) {
         const cardNewPrice = +(cardDataInRow.getElementsByTagName('td')[2].innerText).replace(/[$,]/g,'');
         const cardOldPrice = +(cardDataInRow.getElementsByTagName('td')[3].innerText).replace(/[$,]/g,'');
         const cardPriceDiff = (cardNewPrice - cardOldPrice).toFixed(2);
         const cellToInsert = cardDataInRow.insertCell(5);
-        cellToInsert.innerHTML = `<span style="color: #212529;">$${cardPriceDiff}</span>`
+        cellToInsert.innerHTML = `<span style="color: #212529; text-align: right; padding: 10px;">$${cardPriceDiff}</span>`
         cellToInsert.className = cardPriceDiff > 0 ? "table-success" : "table-danger";
     }
 
-    const addCKBLLink = (cardDataInRow) => {
+    function addCKBLLink(cardDataInRow) {
         const buylistURLBase = "https://cardkingdom.com/purchasing/mtg_singles?filter%5Bsearch%5D=mtg_advanced&filter%5Bname%5D=";
         const cardName = cardDataInRow.getElementsByTagName('td')[0].innerText;
-        cardDataInRow.insertCell(6).innerHTML = `<span style=\"color: #007bff;\"><a href=\"${buylistURLBase + cardName.replace(/ /g,'+')}" target=\"_blank\">${cardName}</a></span>`;
+        cardDataInRow.insertCell(6).innerHTML = `<span style="color: #007bff; text-align: right; padding: 10px;"><a href="${buylistURLBase + cardName.replace(/ /g,'+')}" target="_blank">${cardName}</a></span>`;
     }
 
-    const addHeaderToTable = (tableHeaderArray) => {
+    function addHeaderToTable(tableHeaderArray) {
         tableHeaderArray.insertCell(5).innerHTML = '<span style="font-weight:bold; color: #212529;">$ Diff</span>';
         tableHeaderArray.insertCell(6).innerHTML = '<span style="font-weight:bold; color: #212529;">CK BL</span>';
     }
-
-    window.createCells = () => {
-        if (window.location.pathname.match('interests')) {
-            widenDisplayTable();
-            addNewCellsToPriceTables();
-        } else { alert('Please visit the Interests page to utilize this functionality.'); }
-    }
-
 
 })();
