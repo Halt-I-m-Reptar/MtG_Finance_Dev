@@ -47,10 +47,6 @@
         })
     }
 
-    function widenDisplayTable() {
-        //document.getElementsByClassName( "container" )[1].style['max-width'] = '80%';
-    }
-
     function addNewCellsToPriceTables() {
         Array.from(document.getElementsByTagName("table")).forEach( priceTableOnPage => {
             addHeaderToTable( priceTableOnPage.getElementsByTagName('thead')[0].getElementsByTagName('tr')[0] );
