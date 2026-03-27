@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.52
+// @version      0.53
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -168,7 +168,7 @@
         return missingElements > elemsToCheck.length;
     }
 
-    window.startDataRequest = function() {
+    function startDataRequest() {
         clearHtmlElements();
         const priceGuide = document.getElementsByClassName("price-guide__more")[0]?.children[0];
         const modalActivator = document.getElementsByClassName("modal__activator");
@@ -239,7 +239,7 @@
 
     const buildQtyInViewDisplay = (qtyInView) => Object.entries(qtyInView).reduce( (prevQtyData, currQty) => prevQtyData.concat(`<span style="margin-left: 20px;">${currQty[0]}: ${currQty[1].quantity} - Vendor Count: ${currQty[1].vendorCount} - Largest Qty: ${currQty[1].largestQuantity}</span><br />`), '');
 
-    window.gatherTotalQtyInView = function( salesDataDisplayDiv = undefined) {
+    function gatherTotalQtyInView( salesDataDisplayDiv = undefined) {
         if ( !salesDataDisplayDiv ) {
             clearHtmlElements();
             salesDataDisplayDiv = writeSalesDataContainer();
@@ -255,13 +255,13 @@
     HTML element interaction
     ********************/
 
-    const clearHtmlElements = () => {
+    function clearHtmlElements() {
         ['salesDataDisplay', 'salesDataToggle'].forEach( selector => {
             if ( document.getElementsByClassName(selector)[0] ) { document.getElementsByClassName(selector)[0].remove(); }
         });
     }
 
-    window.toggleSalesData = function() {
+    function toggleSalesData() {
         const display = document.getElementsByClassName('salesDataDisplay')[0].style.display;
         document.getElementsByClassName('salesDataDisplay')[0].style.display = display === 'none' ? 'inline' : 'none';
     }
@@ -270,10 +270,12 @@
     Write interactive HTML elements
     ********************/
 
-    const writeSalesToggle = () => {
+    function writeSalesToggle() {
         if ( !document.getElementsByClassName('salesDataToggle')[0] ) {
             const div = document.createElement('div');
-            div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:60px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
+            //div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:60px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
+            div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:60px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;">Toggle Sales Data Display</button>');
+            div.onclick = toggleSalesData;
             document.body.prepend(div);
         }
     }
@@ -288,14 +290,16 @@
     function writeDataRequestButton() {
         writeDaysToLookBackSpinner();
         const div = document.createElement('div');
-        div.innerHTML = ('<button class="dataRequestButton" style="position:fixed;top:20px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#00b;color:#fff;font-weight:bold;" onclick="startDataRequest()">Gather Sales Data</button>');
+        div.innerHTML = ('<button class="dataRequestButton" style="position:fixed;top:20px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#00b;color:#fff;font-weight:bold;">Gather Sales Data</button>');
+        div.onclick = () => startDataRequest();
         document.body.prepend(div);
         writeGatherTotalCopiesButton()
     }
 
     function writeGatherTotalCopiesButton() {
         const div = document.createElement('div');
-        div.innerHTML = ('<button class="qtyInViewButton" style="position:fixed;top:40px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#AC00FF;color:#fff;font-weight:bold;" onclick="gatherTotalQtyInView()">Gather Quantity in View</button>');
+        div.innerHTML = ('<button class="qtyInViewButton" style="position:fixed;top:40px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#AC00FF;color:#fff;font-weight:bold;">Gather Quantity in View</button>');
+        div.onclick = () => gatherTotalQtyInView();
         document.body.prepend(div);
     }
 
