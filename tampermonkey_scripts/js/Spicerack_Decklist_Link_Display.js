@@ -1,18 +1,20 @@
 // ==UserScript==
-// @name         Melee Decklist Dump
-// @namespace    https://melee.gg/
-// @version      0.07
+// @name         Spicerack Decklist Dump
+// @namespace    https://www.spicerack.gg/
+// @version      0.01
 // @description  List out decklists to console
 // @author       Peter Creutzberger
-// @match        */Tournament/View/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=melee.gg
+// @match        */events/decklists?event_id=*
+// @icon         https://www.spicerack.gg/favicon.ico
 // @grant        none
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    createDataRequestButton();
+    setTimeout(() => {
+        createDataRequestButton();
+    }, 2000);
 
     function createDataRequestButton() {
         const div = document.createElement('div');
@@ -29,12 +31,11 @@
 
     const startDecklistDisplay = () => {
         const div = document.getElementsByClassName('decklistContainer')[0];
-        const decklistsFromTable = Array.from( document.querySelector("#tournament-standings-table").getElementsByTagName('tr') )
+        const decklistsFromTable = Array.from( document.getElementsByTagName('tr') );
         if ( decklistsFromTable.length > 0 ) {
             div.innerHTML += `<strong><em>Deck Population data found in console.</em></strong><br />`;
-            const decklistArr = processDecklists( getDeckLists( decklistsFromTable ), '', true );
-            writeDecklists( div, decklistArr );
-            displayDecklistPopulation( countDeckPopulation( processDecklists( decklistArr, '-', false ) ) );
+            writeDecklists( div, decklistsFromTable );
+            displayDecklistPopulation( countDeckPopulation( decklistsFromTable ) );
         } else {
             div.innerHTML += 'No decklists found. Try again. :(';
         }
@@ -59,23 +60,13 @@
         return decklistFilter;
     }
 
-    const processDecklists = ( decklistArr, additionalFilters = '', sortStatus = false ) => {
-        const decklistFilters = buildDecklistFilters( additionalFilters );
-
-        decklistArr = decklistArr.filter( decklistName => !decklistFilters.includes( Object.keys( decklistName[0] )[0].trim() ) );
-
-        if( sortStatus ) { decklistArr.sort( (a, b) => Object.keys( a[0] )[0].trim() > Object.keys( b[0] )[0].trim() ? 1 : -1 ); }
-
-        return decklistArr;
-    }
-
     const writeDecklists = ( div, decklistArr ) => {
-        decklistArr.forEach( decklistData => {
+        decklistArr.forEach( ( decklistData, index ) => {
+            if ( index === 0 ) { return; }
             div.style.height = adjustHeight(div);
-
-            let innerHtml = Object.values( decklistData[0]) [0].href ? `<a href="${ Object.values( decklistData[0] )[0].href }" target="_blank" style="color: #007bff;">${ Object.keys( decklistData[0] ) }</a>` : `No decklist found`;
+            let innerHtml = decklistData.children[1].innerText ? `<a href="${ decklistData.children[3].firstChild.href }" target="_blank" style="color: #007bff;">${ decklistData.children[1].innerHTML }</a>` : `No decklist found`;
             innerHtml += ` by `;
-            innerHtml += Object.values( decklistData[0] )[0].playerHref ? `<a href="${ Object.values( decklistData[0] )[0].playerHref }" target="_blank" style="color: #007bff;">${ Object.values( decklistData[0] )[0].player }</a><br />` : `No player name found.<br />`;
+            innerHtml += decklistData.children[2].innerText ? `${ decklistData.children[2].innerText }<br />` : `No player name found. <br />`;
             div.innerHTML += innerHtml;
         });
     }
@@ -86,7 +77,7 @@
         let deckPopulationArr = [];
 
         decklistArr.forEach( deckData => {
-            const deckName = Object.keys( deckData[0] )[0];
+            const deckName = deckData.children[1].innerText;
             if ( deckPopulationObjTemp[deckName] ) { deckPopulationObjTemp[deckName] += 1; }
             else { deckPopulationObjTemp[deckName] = 1; }
         } )
