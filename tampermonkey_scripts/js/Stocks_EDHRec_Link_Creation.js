@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MtG Stock EDH Rec Link Addition
-// @version      0.03
+// @version      0.04
 // @description  Add link to EDHRec page of the card being viewed
 // @author       Peter Creutzberger
 // @match        *://*.mtgstocks.com/prints/*
@@ -13,11 +13,13 @@
 (function() {
     'use strict';
 
-    addEDHRecLink();
+    setTimeout(function() {
+        addEDHRecLink();
+    }, 1000)
 
     function addEDHRecLink() {
         console.log('adding link');
-        const cleanedName = document.getElementsByClassName('content-title')[0].innerText.split("\n")[0].replace(/\W+/g, '-').toLowerCase();
+        const cleanedName = document.getElementsByClassName('content-title')[0].innerText.split(/[\n\(]/)[0].trim().replace(/\W+/g, '-').toLowerCase();
         document.getElementsByClassName('content-title')[0].innerHTML += `\t<a href='https://edhrec.com/cards/${cleanedName}' target='_blank'>EDH Rec Link</a>`;
     }
 

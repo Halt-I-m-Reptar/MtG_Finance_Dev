@@ -1,13 +1,15 @@
 // ==UserScript==
 // @name         EDHRec Ad Container Removal
-// @namespace    https://edhrec.com/sets/
-// @namespace    https://edhrec.com/commanders/
-// @version      0.01
+// @namespace    https://edhrec.com/
+// @version      0.02
 // @description  Remove ad containers on EDHRec
 // @author       Peter Creutzberger
-// @match        */*
+// @match        *://*.edhrec.com/sets/*
+// @match        *://*.edhrec.com/commanders/*
 // @icon         chrome-extension://llcpfkbjgkpmapiidpnohffjmmnhpmpb/tabs/ImageViewer.html
 // @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/573775/EDHRec%20Ad%20Container%20Removal.user.js
+// @updateURL https://update.greasyfork.org/scripts/573775/EDHRec%20Ad%20Container%20Removal.meta.js
 // ==/UserScript==
 
 (function() {
