@@ -1,4 +1,4 @@
-def read_in_set_file_data():
+def read_in_set_file_data() -> str:
     from .set_release_date_funcions import return_file_path
 
     release_date_file_path = return_file_path()
@@ -7,7 +7,7 @@ def read_in_set_file_data():
     return release_date_data_from_file.read()
 
 
-def check_if_set_exists( set_release_dates_from_url ):
+def check_if_set_exists( set_release_dates_from_url: list[str] ) -> list[str]:
     set_data_from_file = read_in_set_file_data()
     data_to_write = []
 
@@ -24,7 +24,7 @@ def check_if_set_exists( set_release_dates_from_url ):
 
 
 #Did not account for sets that use a colon in the name and now need to merge the name parts back together
-def return_clean_set_name( set_name_raw ):
+def return_clean_set_name( set_name_raw: list[str] ) -> str:
     set_name_clean = clean_set_name(set_name_raw[0])
 
     if len(set_name_raw) > 2:
@@ -33,12 +33,23 @@ def return_clean_set_name( set_name_raw ):
     return set_name_clean
 
 
-def merge_names( set_name_parts ):
+def merge_names( set_name_parts: list[str] ) -> str:
     return ': '.join(set_name_parts[:-1])
 
 
-def clean_set_name( set_name ):
-    # In time this might need to be more robust
-    import re
+def clean_set_name( set_name: str ) -> str:
+    """
+    Clean the set name using a list of found values
+    :param set_name: Raw set name as pulled via beautifulsoup
+    :return: a cleaned set name
+    """
 
-    return re.sub("×", "x", set_name.encode("utf-8").decode("utf-8"))
+    chars_to_replace = {
+        '×': 'x',
+        '—': '-',
+    }
+
+    for key, value in chars_to_replace.items():
+        set_name = set_name.replace(key, value)
+
+    return set_name
