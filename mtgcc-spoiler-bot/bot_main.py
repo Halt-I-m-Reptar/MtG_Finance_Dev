@@ -10,16 +10,14 @@ def check_for_new_spoilers():
 
     if not file_exists:
         print( 'new set file created' )
-
-        return set_name_data, card_data_object
     else:
         from modules.spoiler_modules.check_if_exists import check_if_card_exists
 
         print( 'set file exists' )
 
-        set_name_data, data_to_write = check_if_card_exists( set_name_data, card_data_object )
+        card_data_object = check_if_card_exists( set_name_data, card_data_object )
 
-        return set_name_data, data_to_write
+    return set_name_data, card_data_object
 
 
 def check_for_new_set_release_date():

@@ -23,6 +23,6 @@ def check_if_card_exists( set_name_data, cards_to_check_list ):
 
     if len(data_to_write):
         print( 'writing out cards' )
-        return set_name_data, data_to_write
+        return data_to_write
 
-    return False, False
+    return False

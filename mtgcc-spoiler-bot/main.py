@@ -15,7 +15,7 @@ member: Member = Member
 
 
 async def schedule_spoiler_search():
-    from modules.spoiler_modules.output_to_discord import send_text_only_output, stage_embed_object_for_send
+    from modules.spoiler_modules.output_to_discord import send_text_only_output, stage_embed_object_and_send
     from modules.spoiler_modules.create_embed_objects import build_discord_embed_object
     from modules.spoiler_modules.set_file_creation_funcions import write_card_data_to_file
     from bot_main import check_for_new_spoilers
@@ -31,7 +31,9 @@ async def schedule_spoiler_search():
     if card_data_object:
         await write_card_data_to_file( set_name_data, card_data_object )
         embed_object = await build_discord_embed_object( set_name_data, card_data_object )
-        await stage_embed_object_for_send( client, embed_object )
+        print('printing out card image spoilers')
+        await stage_embed_object_and_send( client, embed_object )
+        print('printing out text only spoiler info')
         await send_text_only_output( client, set_name_data, len(embed_object) )
 
     return
@@ -45,6 +47,7 @@ async def check_for_new_set_release_date():
     set_release_datas_to_write = check_for_new_set_release_date()
     if set_release_datas_to_write:
         await write_set_data_to_file( set_release_datas_to_write )
+        print('print out set release information')
         await send_text_only_output( client, set_release_datas_to_write )
 
     return
