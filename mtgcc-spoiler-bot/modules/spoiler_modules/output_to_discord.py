@@ -20,7 +20,7 @@ async def send_embedded_images_output( client, embed_object ):
         await channel.send( embeds=embed_object )
 
 
-async def stage_embed_object_for_send( client, embed_object ):
+async def stage_embed_object_and_send( client, embed_object ):
     import math
 
     embed_image_count = len(embed_object)

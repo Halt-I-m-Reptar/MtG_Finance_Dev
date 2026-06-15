@@ -9,17 +9,15 @@ def check_for_new_spoilers():
     card_data_object = gather_card_images_urls( set_name_data, html_to_process )
 
     if not file_exists:
-        print( 'new file created' )
-
-        return set_name_data, card_data_object
+        print( 'new set file created' )
     else:
         from modules.spoiler_modules.check_if_exists import check_if_card_exists
 
-        print( 'file exists' )
+        print( 'set file exists' )
 
-        set_name_data, data_to_write = check_if_card_exists( set_name_data, card_data_object )
+        card_data_object = check_if_card_exists( set_name_data, card_data_object )
 
-        return set_name_data, data_to_write
+    return set_name_data, card_data_object
 
 
 def check_for_new_set_release_date():
@@ -29,6 +27,9 @@ def check_for_new_set_release_date():
 
     html_to_process = open_and_read_target_url( "https://aetherhub.com/Card/Set")
     set_release_dates = gather_and_process_set_data( html_to_process )
-    set_release_datas_to_write = check_if_set_exists( set_release_dates )
+    set_release_dates_to_write = check_if_set_exists( set_release_dates )
 
-    return set_release_datas_to_write
+    if set_release_dates_to_write:
+        print( 'new set information found' )
+
+    return set_release_dates_to_write
