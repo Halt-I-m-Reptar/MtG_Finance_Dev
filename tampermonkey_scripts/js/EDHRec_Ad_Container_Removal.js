@@ -8,7 +8,7 @@
 // @author       Peter Creutzberger
 // @match        *://*.edhrec.com/sets/*
 // @match        *://*.edhrec.com/commanders/*
-// @match        *//*/edhrec.com/cards/*
+// @match        *://*.edhrec.com/cards/*
 // @icon         chrome-extension://llcpfkbjgkpmapiidpnohffjmmnhpmpb/tabs/ImageViewer.html
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/573775/EDHRec%20Ad%20Container%20Removal.user.js
