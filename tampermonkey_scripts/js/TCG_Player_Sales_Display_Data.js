@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TCG Player Sales Display Data
 // @namespace    https://www.tcgplayer.com/
-// @version      0.53
+// @version      0.54
 // @description  Remove obfuscation around TCG Player Sales Data
 // @author       Peter Creutzberger
 // @match        https://www.tcgplayer.com/product/*
@@ -183,8 +183,8 @@
     }
 
     /********************
-    Pull in current quantity for sale in view
-    ********************/
+     Pull in current quantity for sale in view
+     ********************/
 
     const setQtyInViewByCondition = (condition, qty, qtyInView) => {
         const shorthandCondition = mapCondition(condition);
@@ -213,13 +213,14 @@
 
     const getQtyInViewByCondition = () => {
         const qtyInView = {};
-        if( document.getElementsByClassName('listing-item product-details__listings-results').length ) {
-            Array.from(document.getElementsByClassName('listing-item product-details__listings-results')).forEach( listingItem => {
-                const condition = listingItem.getElementsByClassName('listing-item__listing-data__info__condition')[0].innerText;
+        if( document.getElementsByClassName('listing-item__sku').length ) {
+            Array.from(document.getElementsByClassName('listing-item__sku')).forEach( listingItem => {
+                const condition = listingItem.getElementsByClassName('listing-item__condition')[0].innerText;
                 const quantity = +listingItem.getElementsByClassName('add-to-cart__available')[0].innerText.split(' ')[1];
                 setQtyInViewByCondition(condition, quantity, qtyInView );
             });
-        } else {
+        } /*
+        else {
             Array.from(document.getElementsByClassName('listing-item__listing-data')).forEach( listingItem => {
                 let condition = '';
                 // desktop classing
@@ -232,101 +233,101 @@
                 }
                 const quantity = +listingItem.getElementsByClassName('add-to-cart__available')[0].innerText.split(' ')[1];
                 setQtyInViewByCondition(condition, quantity, qtyInView );
-            });
-        }
-        return qtyInView;
+            });*/
     }
+    return qtyInView;
+}
 
-    const buildQtyInViewDisplay = (qtyInView) => Object.entries(qtyInView).reduce( (prevQtyData, currQty) => prevQtyData.concat(`<span style="margin-left: 20px;">${currQty[0]}: ${currQty[1].quantity} - Vendor Count: ${currQty[1].vendorCount} - Largest Qty: ${currQty[1].largestQuantity}</span><br />`), '');
+const buildQtyInViewDisplay = (qtyInView) => Object.entries(qtyInView).reduce( (prevQtyData, currQty) => prevQtyData.concat(`<span style="margin-left: 20px;">${currQty[0]}: ${currQty[1].quantity} - Vendor Count: ${currQty[1].vendorCount} - Largest Qty: ${currQty[1].largestQuantity}</span><br />`), '');
 
-    function gatherTotalQtyInView( salesDataDisplayDiv = undefined) {
-        if ( !salesDataDisplayDiv ) {
-            clearHtmlElements();
-            salesDataDisplayDiv = writeSalesDataContainer();
-        }
-        const qtyInViewByCondition = getQtyInViewByCondition();
-        const totalQtyInView = getTotalQtyInView(qtyInViewByCondition);
-        salesDataDisplayDiv.innerHTML += `<strong>Total copies in view: </strong>${totalQtyInView}<br />\
+function gatherTotalQtyInView( salesDataDisplayDiv = undefined) {
+    if ( !salesDataDisplayDiv ) {
+        clearHtmlElements();
+        salesDataDisplayDiv = writeSalesDataContainer();
+    }
+    const qtyInViewByCondition = getQtyInViewByCondition();
+    const totalQtyInView = getTotalQtyInView(qtyInViewByCondition);
+    salesDataDisplayDiv.innerHTML += `<strong>Total copies in view: </strong>${totalQtyInView}<br />\
         <strong>Condition breakout:</strong><br />${buildQtyInViewDisplay(qtyInViewByCondition)}<br />`;
-        writeSalesToggle();
-    }
+    writeSalesToggle();
+}
 
-    /********************
-    HTML element interaction
-    ********************/
+/********************
+ HTML element interaction
+ ********************/
 
-    function clearHtmlElements() {
-        ['salesDataDisplay', 'salesDataToggle'].forEach( selector => {
-            if ( document.getElementsByClassName(selector)[0] ) { document.getElementsByClassName(selector)[0].remove(); }
-        });
-    }
+function clearHtmlElements() {
+    ['salesDataDisplay', 'salesDataToggle'].forEach( selector => {
+        if ( document.getElementsByClassName(selector)[0] ) { document.getElementsByClassName(selector)[0].remove(); }
+    });
+}
 
-    function toggleSalesData() {
-        const display = document.getElementsByClassName('salesDataDisplay')[0].style.display;
-        document.getElementsByClassName('salesDataDisplay')[0].style.display = display === 'none' ? 'inline' : 'none';
-    }
+function toggleSalesData() {
+    const display = document.getElementsByClassName('salesDataDisplay')[0].style.display;
+    document.getElementsByClassName('salesDataDisplay')[0].style.display = display === 'none' ? 'inline' : 'none';
+}
 
-    /********************
-    Write interactive HTML elements
-    ********************/
+/********************
+ Write interactive HTML elements
+ ********************/
 
-    function writeSalesToggle() {
-        if ( !document.getElementsByClassName('salesDataToggle')[0] ) {
-            const div = document.createElement('div');
-            //div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:60px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
-            div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:60px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;">Toggle Sales Data Display</button>');
-            div.onclick = toggleSalesData;
-            document.body.prepend(div);
-        }
-    }
-
-    function writeDaysToLookBackSpinner() {
+function writeSalesToggle() {
+    if ( !document.getElementsByClassName('salesDataToggle')[0] ) {
         const div = document.createElement('div');
-        div.style.cssText = 'position:fixed;top:0;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#a00;color:#fff;font-size:10pt;font-weight:bold;appearance:inherit;';
-        div.innerHTML = ('Days to Look Back <input type="number" class="daysToLookBack" id="daysToLookBack" min="0" max="7" step="1" value="2" style="height:20px;font-size:10pt!important"/>');
+        //div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:60px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;" onclick="toggleSalesData()">Toggle Sales Data Display</button>');
+        div.innerHTML = ('<button class="salesDataToggle" style="position:fixed;top:60px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#0b0;color:#fff;font-weight:bold;">Toggle Sales Data Display</button>');
+        div.onclick = toggleSalesData;
         document.body.prepend(div);
     }
+}
 
-    function writeDataRequestButton() {
-        writeDaysToLookBackSpinner();
-        const div = document.createElement('div');
-        div.innerHTML = ('<button class="dataRequestButton" style="position:fixed;top:20px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#00b;color:#fff;font-weight:bold;">Gather Sales Data</button>');
-        div.onclick = () => startDataRequest();
-        document.body.prepend(div);
-        writeGatherTotalCopiesButton()
+function writeDaysToLookBackSpinner() {
+    const div = document.createElement('div');
+    div.style.cssText = 'position:fixed;top:0;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#a00;color:#fff;font-size:10pt;font-weight:bold;appearance:inherit;';
+    div.innerHTML = ('Days to Look Back <input type="number" class="daysToLookBack" id="daysToLookBack" min="0" max="7" step="1" value="2" style="height:20px;font-size:10pt!important"/>');
+    document.body.prepend(div);
+}
+
+function writeDataRequestButton() {
+    writeDaysToLookBackSpinner();
+    const div = document.createElement('div');
+    div.innerHTML = ('<button class="dataRequestButton" style="position:fixed;top:20px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#00b;color:#fff;font-weight:bold;">Gather Sales Data</button>');
+    div.onclick = () => startDataRequest();
+    document.body.prepend(div);
+    writeGatherTotalCopiesButton()
+}
+
+function writeGatherTotalCopiesButton() {
+    const div = document.createElement('div');
+    div.innerHTML = ('<button class="qtyInViewButton" style="position:fixed;top:40px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#AC00FF;color:#fff;font-weight:bold;">Gather Quantity in View</button>');
+    div.onclick = () => gatherTotalQtyInView();
+    document.body.prepend(div);
+}
+
+/********************
+ Re-inventing the wheel of time because we are not importing the moment library.
+ ********************/
+
+const setHistoricDateArr = (daysToLookBack) => {
+    let historicDatesArr = [];
+    for (let dayCount = 0; dayCount <= daysToLookBack; dayCount++) {
+        historicDatesArr.push( formatDateToTCG( new Date(Date.now() - (daysInMilliseconds(dayCount) ))) );
     }
+    return historicDatesArr;
+}
 
-    function writeGatherTotalCopiesButton() {
-        const div = document.createElement('div');
-        div.innerHTML = ('<button class="qtyInViewButton" style="position:fixed;top:40px;left:0;z-index:9999;width:auto;height:20px;padding:0 5px 0 0;background:#AC00FF;color:#fff;font-weight:bold;">Gather Quantity in View</button>');
-        div.onclick = () => gatherTotalQtyInView();
-        document.body.prepend(div);
-    }
+const formatDateToTCG = (date) => (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear().toString().slice(2);
 
-    /********************
-    Re-inventing the wheel of time because we are not importing the moment library.
-    ********************/
+const parseStrDate = (stringDate) => {
+    const dateArr = stringDate.split('/');
+    return new Date(dateArr[2], dateArr[0] - 1, dateArr[1]);
+}
 
-    const setHistoricDateArr = (daysToLookBack) => {
-        let historicDatesArr = [];
-        for (let dayCount = 0; dayCount <= daysToLookBack; dayCount++) {
-            historicDatesArr.push( formatDateToTCG( new Date(Date.now() - (daysInMilliseconds(dayCount) ))) );
-        }
-        return historicDatesArr;
-    }
+const getSaleDateDiff = (firstDate, secondDate) => Math.ceil((parseStrDate(firstDate) - parseStrDate(secondDate)) / daysInMilliseconds(1) );
 
-    const formatDateToTCG = (date) => (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear().toString().slice(2);
+const daysInMilliseconds = (days = 1) => 1000 * 60 * 60 * (24 * days);
 
-    const parseStrDate = (stringDate) => {
-        const dateArr = stringDate.split('/');
-        return new Date(dateArr[2], dateArr[0] - 1, dateArr[1]);
-    }
+const daysToLookBack = () => +document.getElementsByClassName('daysToLookBack')[0].value >= 0 ? +document.getElementsByClassName('daysToLookBack')[0].value : 2;
 
-    const getSaleDateDiff = (firstDate, secondDate) => Math.ceil((parseStrDate(firstDate) - parseStrDate(secondDate)) / daysInMilliseconds(1) );
-
-    const daysInMilliseconds = (days = 1) => 1000 * 60 * 60 * (24 * days);
-
-    const daysToLookBack = () => +document.getElementsByClassName('daysToLookBack')[0].value >= 0 ? +document.getElementsByClassName('daysToLookBack')[0].value : 2;
-
-    const todaysDate = formatDateToTCG(new Date());
+const todaysDate = formatDateToTCG(new Date());
 })();
