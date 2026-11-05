@@ -1,5 +1,5 @@
 const setBackgroundColor = ( row ) => row.forEach( cell => cell.style.backgroundColor = cell.style.backgroundColor === '' ? 'darkorange' : '')
-const attributesToSkip = ( cardAttribute ) => ['border_color','display_style','edition_slug','image_uri','price_sale','primary_category_id'].includes( cardAttribute );
+const attributesToSkip = ( cardAttribute ) => ['border_color','display_style','edition_slug','imgix','image_uri','price_sale','primary_category_id'].includes( cardAttribute );
 
 const setCellClassName = ( cardElement, cardAttribute ) => {
     let className;
